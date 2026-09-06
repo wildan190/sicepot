@@ -333,8 +333,9 @@
                                 </button>
                                 <button @click="mapViewMode = 'geofence'; updateMap()" type="button"
                                     :class="mapViewMode === 'geofence' ? 'bg-rose-600 text-white font-bold shadow-xs' : 'text-slate-600 hover:text-slate-900'"
-                                    class="px-2.5 py-1 rounded-lg transition-colors cursor-pointer text-[11px]">
-                                    ⭕ Geofencing Kluster (500m)
+                                    class="px-2.5 py-1 rounded-lg transition-colors cursor-pointer text-[11px] inline-flex items-center gap-1">
+                                    <span class="w-2 h-2 rounded-full border border-current"></span>
+                                    <span>Geofencing Kluster (500m)</span>
                                 </button>
                             </div>
                             <div class="flex items-center gap-3 text-xs ml-2">

@@ -79,17 +79,49 @@ class DashboardService
             ->whereNotNull('kelurahan')->where('kelurahan', '!=', '')
             ->groupBy('kelurahan')->orderByDesc('total')->limit(10)->get();
 
-        // Monthly trend
+        // Monthly trend (ensure 12 months display or non-zero months sorted)
         $monthOrder = [
             'Januari' => 1, 'Februari' => 2, 'Maret' => 3, 'April' => 4,
             'Mei' => 5, 'Juni' => 6, 'Juli' => 7, 'Agustus' => 8,
             'September' => 9, 'Oktober' => 10, 'November' => 11, 'Desember' => 12,
         ];
-        $monthlyDist   = (clone $base)
+        $monthlyRaw = (clone $base)
             ->select('bulan', DB::raw('count(*) as total'))
             ->whereNotNull('bulan')->where('bulan', '!=', '')
-            ->groupBy('bulan')->get();
-        $sortedMonthly = $monthlyDist->sortBy(fn ($i) => $monthOrder[$i->bulan] ?? 99)->values();
+            ->groupBy('bulan')->pluck('total', 'bulan')->all();
+
+        // If bulan column was not populated, fallback to created_at or hpht month
+        if (empty($monthlyRaw)) {
+            $dateRecords = (clone $base)->select('hpht', 'created_at', 'tanggal_kunjungan')->get();
+            $indonesianMonthMap = [
+                1 => 'Januari', 2 => 'Februari', 3 => 'Maret', 4 => 'April',
+                5 => 'Mei', 6 => 'Juni', 7 => 'Juli', 8 => 'Agustus',
+                9 => 'September', 10 => 'Oktober', 11 => 'November', 12 => 'Desember'
+            ];
+            foreach ($dateRecords as $rec) {
+                $mNum = null;
+                if (!empty($rec->tanggal_kunjungan)) {
+                    $mNum = (int) \Carbon\Carbon::parse($rec->tanggal_kunjungan)->format('n');
+                } elseif (!empty($rec->hpht) && $rec->hpht->year > 2000) {
+                    $mNum = (int) $rec->hpht->format('n');
+                } elseif (!empty($rec->created_at)) {
+                    $mNum = (int) $rec->created_at->format('n');
+                }
+                if ($mNum && isset($indonesianMonthMap[$mNum])) {
+                    $mName = $indonesianMonthMap[$mNum];
+                    $monthlyRaw[$mName] = ($monthlyRaw[$mName] ?? 0) + 1;
+                }
+            }
+        }
+
+        $allMonths = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+        $monthlyLabels = [];
+        $monthlyValues = [];
+
+        foreach ($allMonths as $m) {
+            $monthlyLabels[] = $m;
+            $monthlyValues[] = (int) ($monthlyRaw[$m] ?? 0);
+        }
 
         // Kunjungan breakdown chart
         $kunjunganDist = (clone $base)
@@ -192,8 +224,8 @@ class DashboardService
                 'values' => $kelurahanDist->pluck('total')->all(),
             ],
             'monthly_chart' => [
-                'labels' => $sortedMonthly->pluck('bulan')->all(),
-                'values' => $sortedMonthly->pluck('total')->all(),
+                'labels' => $monthlyLabels,
+                'values' => $monthlyValues,
             ],
             'kunjungan_chart' => [
                 'labels' => $kunjunganDist->pluck('kunjungan_ke')->all(),

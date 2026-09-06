@@ -447,6 +447,28 @@ class ImportService
             }
         }
 
+        // Auto-derive bulan and tahun if missing
+        if (empty($data['bulan'])) {
+            $refDate = null;
+            if (!empty($data['tanggal_kunjungan'])) {
+                $refDate = \Carbon\Carbon::parse($data['tanggal_kunjungan']);
+            } elseif (!empty($data['hpht'])) {
+                $refDate = \Carbon\Carbon::parse($data['hpht']);
+            }
+
+            if ($refDate && $refDate->year > 2000) {
+                $indonesianMonths = [
+                    1 => 'Januari', 2 => 'Februari', 3 => 'Maret', 4 => 'April',
+                    5 => 'Mei', 6 => 'Juni', 7 => 'Juli', 8 => 'Agustus',
+                    9 => 'September', 10 => 'Oktober', 11 => 'November', 12 => 'Desember'
+                ];
+                $data['bulan'] = $indonesianMonths[(int)$refDate->format('n')] ?? null;
+                if (empty($data['tahun'])) {
+                    $data['tahun'] = (int) $refDate->format('Y');
+                }
+            }
+        }
+
         return $data;
     }
 
