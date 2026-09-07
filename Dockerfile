@@ -36,7 +36,7 @@ RUN docker-php-ext-install intl
 
 RUN docker-php-ext-install zip
 
-RUN docker-php-ext-install opcache
+RUN docker-php-ext-enable opcache
 
 # =========================================================
 # Composer
