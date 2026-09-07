@@ -1,6 +1,5 @@
 FROM php:8.5-fpm-bookworm
 
-# System dependencies
 RUN apt-get update && apt-get install -y \
     git \
     curl \
@@ -11,35 +10,23 @@ RUN apt-get update && apt-get install -y \
     libicu-dev \
     libonig-dev \
     libxml2-dev \
-    libpng-dev \
-    libjpeg62-turbo-dev \
-    libfreetype6-dev \
-    libwebp-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# PHP extensions
-RUN docker-php-ext-configure gd \
-        --with-freetype \
-        --with-jpeg \
-        --with-webp \
-    && docker-php-ext-install -j$(nproc) \
-        pdo_pgsql \
-        pgsql \
-        mbstring \
-        bcmath \
-        exif \
-        pcntl \
-        intl \
-        zip \
-        opcache \
-        gd
+RUN docker-php-ext-install -j$(nproc) \
+    pdo_pgsql \
+    pgsql \
+    mbstring \
+    bcmath \
+    exif \
+    pcntl \
+    intl \
+    zip \
+    opcache
 
-# Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www/html
 
-# Copy composer files first for Docker layer caching
 COPY composer.json composer.lock ./
 
 RUN composer install \
@@ -49,16 +36,13 @@ RUN composer install \
     --optimize-autoloader \
     --no-scripts
 
-# Copy application
 COPY . .
 
-# Run Laravel package discovery after application is copied
 RUN composer dump-autoload \
     --optimize \
     --no-dev \
     --classmap-authoritative
 
-# Laravel writable directories
 RUN mkdir -p \
     storage/framework/cache \
     storage/framework/sessions \
@@ -74,7 +58,6 @@ RUN chmod -R 775 \
     storage \
     bootstrap/cache
 
-# PHP production configuration
 RUN { \
         echo 'opcache.enable=1'; \
         echo 'opcache.enable_cli=1'; \
