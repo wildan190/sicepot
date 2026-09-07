@@ -2,6 +2,9 @@ FROM php:8.5-fpm-bookworm
 
 ENV DEBIAN_FRONTEND=noninteractive
 
+# =========================================================
+# System dependencies
+# =========================================================
 RUN apt-get update && apt-get install -y \
     git \
     curl \
@@ -10,8 +13,12 @@ RUN apt-get update && apt-get install -y \
     libpq-dev \
     libzip-dev \
     libicu-dev \
+    libonig-dev \
     && rm -rf /var/lib/apt/lists/*
 
+# =========================================================
+# PHP Extensions
+# =========================================================
 RUN docker-php-ext-install -j2 \
     pdo_pgsql \
     mbstring \
@@ -22,8 +29,14 @@ RUN docker-php-ext-install -j2 \
     zip \
     opcache
 
+# =========================================================
+# Composer
+# =========================================================
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
+# =========================================================
+# Laravel
+# =========================================================
 WORKDIR /var/www/html
 
 COPY composer.json composer.lock ./
@@ -42,15 +55,25 @@ RUN composer dump-autoload \
     --no-dev \
     --classmap-authoritative
 
+# =========================================================
+# Laravel permissions
+# =========================================================
 RUN mkdir -p \
     storage/framework/cache \
     storage/framework/sessions \
     storage/framework/views \
     storage/logs \
     bootstrap/cache \
-    && chown -R www-data:www-data storage bootstrap/cache \
-    && chmod -R 775 storage bootstrap/cache
+    && chown -R www-data:www-data \
+        storage \
+        bootstrap/cache \
+    && chmod -R 775 \
+        storage \
+        bootstrap/cache
 
+# =========================================================
+# PHP Production Configuration
+# =========================================================
 RUN { \
     echo "opcache.enable=1"; \
     echo "opcache.enable_cli=1"; \
@@ -63,8 +86,12 @@ RUN { \
     echo "upload_max_filesize=50M"; \
     echo "post_max_size=50M"; \
     echo "max_execution_time=120"; \
+    echo "max_input_time=120"; \
 } > /usr/local/etc/php/conf.d/production.ini
 
+# =========================================================
+# PHP-FPM
+# =========================================================
 EXPOSE 9000
 
 CMD ["php-fpm", "-F"]
