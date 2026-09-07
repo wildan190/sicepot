@@ -6,11 +6,7 @@
                 <!-- Logo & Brand -->
                 <div class="shrink-0 flex items-center">
                     <a href="{{ route('dashboard') }}" class="flex items-center gap-3 group">
-                        <div class="p-1.5 rounded-xl bg-indigo-600 text-white shadow-xs group-hover:bg-indigo-700 transition-colors">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-                            </svg>
-                        </div>
+                        <img src="{{ asset('images/logo.png') }}" alt="SICEPOT Logo" class="w-10 h-10 rounded-xl object-cover shadow-sm group-hover:scale-105 transition-transform">
                         <div class="flex flex-col">
                             <span class="font-extrabold text-lg text-slate-800 tracking-tight leading-none group-hover:text-indigo-600 transition-colors">SICEPOT</span>
                             <span class="text-[10px] text-slate-500 font-semibold tracking-wide">Sistem Cepat Post & Tracking</span>
