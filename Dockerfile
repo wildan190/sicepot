@@ -14,20 +14,29 @@ RUN apt-get update && apt-get install -y \
     libzip-dev \
     libicu-dev \
     libonig-dev \
+    pkg-config \
     && rm -rf /var/lib/apt/lists/*
 
 # =========================================================
 # PHP Extensions
+# Install one by one to avoid parallel build conflicts
 # =========================================================
-RUN docker-php-ext-install -j2 \
-    pdo_pgsql \
-    mbstring \
-    bcmath \
-    exif \
-    pcntl \
-    intl \
-    zip \
-    opcache
+
+RUN docker-php-ext-install pdo_pgsql
+
+RUN docker-php-ext-install mbstring
+
+RUN docker-php-ext-install bcmath
+
+RUN docker-php-ext-install exif
+
+RUN docker-php-ext-install pcntl
+
+RUN docker-php-ext-install intl
+
+RUN docker-php-ext-install zip
+
+RUN docker-php-ext-install opcache
 
 # =========================================================
 # Composer
