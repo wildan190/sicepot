@@ -14,7 +14,7 @@ class ImportPreviewRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'file' => 'required|file|mimes:xlsx,xls,csv,txt|max:51200',
+            'file' => 'required|file|extensions:xlsx,xls,csv,txt|max:51200',
         ];
     }
 
