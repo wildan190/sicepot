@@ -1300,11 +1300,11 @@
                                 <div class="p-3.5 bg-blue-50/50 rounded-2xl border border-blue-100 flex flex-wrap items-center justify-between gap-3 text-[11px]">
                                     <div>
                                         <span class="text-slate-400 block">Tanggal Daftar</span>
-                                        <span class="font-bold text-slate-700" x-text="viewingPatient?.tanggal_daftar || '-'"></span>
+                                        <span class="font-bold text-slate-700" x-text="formatDate(viewingPatient?.tanggal_daftar)"></span>
                                     </div>
                                     <div>
                                         <span class="text-slate-400 block">Mulai Pengobatan OAT</span>
-                                        <span class="font-bold text-blue-700" x-text="viewingPatient?.tanggal_mulai_pengobatan || '-'"></span>
+                                        <span class="font-bold text-blue-700" x-text="formatDate(viewingPatient?.tanggal_mulai_pengobatan)"></span>
                                     </div>
                                     <div>
                                         <span class="text-slate-400 block">Hasil Akhir Pengobatan</span>
@@ -1490,6 +1490,23 @@
                     // View / Detail Modal State
                     showViewModal: false,
                     viewingPatient: null,
+
+                    formatDate(dateVal) {
+                        if (!dateVal) return '-';
+                        const raw = String(dateVal).split('T')[0];
+                        const parts = raw.split('-');
+                        if (parts.length === 3) {
+                            const months = ['', 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+                            const day = parseInt(parts[2], 10);
+                            const monthIdx = parseInt(parts[1], 10);
+                            const year = parts[0];
+                            if (monthIdx >= 1 && monthIdx <= 12 && !isNaN(day)) {
+                                return `${day} ${months[monthIdx]} ${year}`;
+                            }
+                            return raw;
+                        }
+                        return raw;
+                    },
 
                     openViewModal(patient) {
                         this.viewingPatient = JSON.parse(JSON.stringify(patient));

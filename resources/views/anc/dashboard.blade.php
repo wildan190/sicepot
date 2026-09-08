@@ -1500,7 +1500,7 @@
                                     </h4>
                                     <div class="space-y-1.5 text-[11px]">
                                         <div class="flex justify-between"><span class="text-slate-400">Umur:</span><span class="font-semibold text-slate-700" x-text="viewingPatient?.umur ? viewingPatient.umur + ' Tahun' : '-'"></span></div>
-                                        <div class="flex justify-between"><span class="text-slate-400">Tgl Lahir:</span><span class="font-semibold text-slate-700" x-text="viewingPatient?.tanggal_lahir || '-'"></span></div>
+                                        <div class="flex justify-between"><span class="text-slate-400">Tgl Lahir:</span><span class="font-semibold text-slate-700" x-text="formatDate(viewingPatient?.tanggal_lahir)"></span></div>
                                         <div class="flex justify-between"><span class="text-slate-400">Pekerjaan:</span><span class="font-semibold text-slate-700" x-text="viewingPatient?.pekerjaan || '-'"></span></div>
                                         <div class="flex justify-between"><span class="text-slate-400">Pendidikan:</span><span class="font-semibold text-slate-700" x-text="viewingPatient?.pendidikan || '-'"></span></div>
                                         <div class="flex justify-between"><span class="text-slate-400">Golongan Darah:</span><span class="font-bold text-rose-600" x-text="viewingPatient?.golongan_darah || '-'"></span></div>
@@ -1517,9 +1517,9 @@
                                     <div class="space-y-1.5 text-[11px]">
                                         <div class="flex justify-between"><span class="text-slate-400">Gravida / Para / Abortus:</span><span class="font-bold text-indigo-700" x-text="'G' + (viewingPatient?.gravida ?? '-') + ' P' + (viewingPatient?.para ?? '-') + ' A' + (viewingPatient?.abortus ?? '-')"></span></div>
                                         <div class="flex justify-between"><span class="text-slate-400">Usia Kehamilan:</span><span class="font-semibold text-slate-700" x-text="viewingPatient?.usia_kehamilan || '-'"></span></div>
-                                        <div class="flex justify-between"><span class="text-slate-400">HPHT:</span><span class="font-semibold text-slate-700" x-text="viewingPatient?.hpht || '-'"></span></div>
-                                        <div class="flex justify-between"><span class="text-slate-400">HPL (Taksiran Persalinan):</span><span class="font-bold text-rose-700" x-text="viewingPatient?.hpl || '-'"></span></div>
-                                        <div class="flex justify-between"><span class="text-slate-400">Tgl Kunjungan Terakhir:</span><span class="font-semibold text-slate-700" x-text="viewingPatient?.tanggal_kunjungan || '-'"></span></div>
+                                        <div class="flex justify-between"><span class="text-slate-400">HPHT:</span><span class="font-semibold text-slate-700" x-text="formatDate(viewingPatient?.hpht)"></span></div>
+                                        <div class="flex justify-between"><span class="text-slate-400">HPL (Taksiran Persalinan):</span><span class="font-bold text-rose-700" x-text="formatDate(viewingPatient?.hpl)"></span></div>
+                                        <div class="flex justify-between"><span class="text-slate-400">Tgl Kunjungan Terakhir:</span><span class="font-semibold text-slate-700" x-text="formatDate(viewingPatient?.tanggal_kunjungan)"></span></div>
                                         <div class="flex justify-between"><span class="text-slate-400">Status Kehamilan:</span><span class="font-semibold text-slate-700" x-text="viewingPatient?.status_kehamilan || 'Aktif'"></span></div>
                                     </div>
                                 </div>
@@ -1776,6 +1776,24 @@
                 // View / Detail Modal State
                 showViewModal: false,
                 viewingPatient: null,
+
+                formatDate(dateVal) {
+                    if (!dateVal) return '-';
+                    // If contains ISO time e.g. 2026-08-30T00:00:00...
+                    const raw = String(dateVal).split('T')[0];
+                    const parts = raw.split('-');
+                    if (parts.length === 3) {
+                        const months = ['', 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+                        const day = parseInt(parts[2], 10);
+                        const monthIdx = parseInt(parts[1], 10);
+                        const year = parts[0];
+                        if (monthIdx >= 1 && monthIdx <= 12 && !isNaN(day)) {
+                            return `${day} ${months[monthIdx]} ${year}`;
+                        }
+                        return raw;
+                    }
+                    return raw;
+                },
 
                 openViewModal(patient) {
                     this.viewingPatient = JSON.parse(JSON.stringify(patient));
@@ -2459,9 +2477,9 @@
                     Swal.fire({
                         title: 'Uji Coba Sirine Siaga',
                         html: `
-                            <div class="text-left text-sm space-y-2 mt-2">
-                                <p class="text-slate-600">Audio sirine siaga sedang berbunyi dari berkas: <br><code class="text-rose-600 font-bold bg-rose-50 px-2 py-0.5 rounded text-xs">public/assets/sounds/sirine.mp3</code></p>
-                                <p class="text-slate-500 text-xs">Sirine ini akan otomatis dibunyikan bersama pop-up SweetAlert saat sistem mendeteksi ada ibu hamil yang mendekati <strong>H-1 Hari Perkiraan Lahir (HPL)</strong>.</p>
+                            <div class="text-left text-xs sm:text-sm space-y-2 mt-2">
+                                <p class="text-slate-600">Audio sirine siaga sedang berbunyi dari berkas: <br><code class="text-rose-600 font-bold bg-rose-50 px-2 py-0.5 rounded text-[11px] sm:text-xs break-all">public/assets/sounds/sirine.mp3</code></p>
+                                <p class="text-slate-500 text-[11px] sm:text-xs">Sirine ini akan otomatis dibunyikan bersama pop-up SweetAlert saat sistem mendeteksi ada ibu hamil yang mendekati <strong>H-1 Hari Perkiraan Lahir (HPL)</strong>.</p>
                             </div>
                         `,
                         icon: 'warning',
@@ -2469,8 +2487,8 @@
                         confirmButtonColor: '#e11d48',
                         allowOutsideClick: false,
                         customClass: {
-                            popup: 'rounded-3xl shadow-2xl border border-rose-100',
-                            confirmButton: 'rounded-xl font-bold px-6 py-2.5 shadow-md'
+                            popup: 'rounded-2xl sm:rounded-3xl shadow-2xl border border-rose-100 !w-[92vw] !max-w-md !p-4 sm:!p-6 !m-auto',
+                            confirmButton: 'rounded-xl font-bold px-6 py-2.5 text-xs sm:text-sm shadow-md !w-full sm:!w-auto'
                         }
                     }).then(() => {
                         this.stopSirine();
@@ -2504,7 +2522,10 @@
                             icon: 'info',
                             confirmButtonText: 'Tutup',
                             confirmButtonColor: '#ec4899',
-                            customClass: { popup: 'rounded-3xl' }
+                            customClass: {
+                                popup: 'rounded-2xl sm:rounded-3xl !w-[90vw] !max-w-sm !p-4 sm:!p-6 !m-auto',
+                                confirmButton: 'rounded-xl font-bold px-6 py-2.5 text-xs sm:text-sm !w-full sm:!w-auto'
+                            }
                         });
                         return;
                     }
@@ -2513,20 +2534,20 @@
                     this.playSirine();
 
                     // Generate patient rows HTML
-                    let patientListHtml = '<div class="space-y-2 mt-3 max-h-60 overflow-y-auto pr-1 text-left">';
+                    let patientListHtml = '<div class="space-y-2 mt-3 max-h-56 sm:max-h-60 overflow-y-auto pr-1 text-left">';
                     this.imminentDeliveries.forEach((p, idx) => {
                         const ristiBadge = p.status_risti && p.status_risti.toLowerCase().includes('tinggi')
-                            ? '<span class="px-2 py-0.5 bg-rose-100 text-rose-700 text-[10px] font-bold rounded-full">RISTI</span>'
-                            : '<span class="px-2 py-0.5 bg-emerald-100 text-emerald-700 text-[10px] font-semibold rounded-full">Normal</span>';
+                            ? '<span class="px-2 py-0.5 bg-rose-100 text-rose-700 text-[10px] font-bold rounded-full whitespace-nowrap">RISTI</span>'
+                            : '<span class="px-2 py-0.5 bg-emerald-100 text-emerald-700 text-[10px] font-semibold rounded-full whitespace-nowrap">Normal</span>';
                         
                         patientListHtml += `
-                            <div class="p-3 bg-rose-50/80 border border-rose-200 rounded-2xl flex items-center justify-between text-xs">
-                                <div>
-                                    <div class="font-bold text-slate-800 text-sm">${idx + 1}. ${p.nama_lengkap} (${p.umur || '-'} th)</div>
-                                    <div class="text-slate-500 text-[11px] mt-0.5">NIK: ${p.nik || '-'} | Kel: ${p.kelurahan || '-'}, ${p.kabupaten || '-'}</div>
-                                    <div class="text-rose-700 font-semibold text-[11px] mt-0.5">HPL: ${p.hpl ? p.hpl.substring(0, 10) : '-'} (Besok)</div>
+                            <div class="p-2.5 sm:p-3 bg-rose-50/80 border border-rose-200 rounded-xl sm:rounded-2xl flex items-start sm:items-center justify-between gap-2 text-xs">
+                                <div class="min-w-0 flex-1">
+                                    <div class="font-bold text-slate-800 text-xs sm:text-sm break-words">${idx + 1}. ${p.nama_lengkap} (${p.umur || '-'} th)</div>
+                                    <div class="text-slate-500 text-[10px] sm:text-[11px] mt-0.5 break-words">NIK: ${p.nik || '-'} | Kel: ${p.kelurahan || '-'}, ${p.kabupaten || '-'}</div>
+                                    <div class="text-rose-700 font-semibold text-[10px] sm:text-[11px] mt-0.5">HPL: ${p.hpl ? p.hpl.substring(0, 10) : '-'} (Besok)</div>
                                 </div>
-                                <div class="text-right shrink-0 ml-2">
+                                <div class="text-right shrink-0 mt-0.5 sm:mt-0">
                                     ${ristiBadge}
                                 </div>
                             </div>
@@ -2535,14 +2556,14 @@
                     patientListHtml += '</div>';
 
                     Swal.fire({
-                        title: `<span class="text-rose-600 flex items-center justify-center gap-2">
-                            <span class="animate-ping inline-flex h-3 w-3 rounded-full bg-rose-500 opacity-75"></span>
-                            PERINGATAN H-1 PERSALINAN!
+                        title: `<span class="text-rose-600 flex items-center justify-center gap-1.5 sm:gap-2 text-base sm:text-xl font-bold leading-snug">
+                            <span class="animate-ping inline-flex h-2.5 w-2.5 sm:h-3 sm:w-3 rounded-full bg-rose-500 opacity-75 shrink-0"></span>
+                            <span>PERINGATAN H-1 PERSALINAN!</span>
                         </span>`,
                         html: `
-                            <div class="text-sm text-slate-600">
-                                <p class="font-bold text-slate-800">Ditemukan <span class="text-rose-600 font-extrabold text-base">${count} Ibu Hamil</span> dengan Hari Perkiraan Lahir (HPL) <u>BESOK</u>!</p>
-                                <p class="text-xs text-slate-500 mt-1">Sirine siaga diaktifkan. Klik di mana saja pada layar jika browser Anda meminta interaksi suara untuk memutar sirine.</p>
+                            <div class="text-xs sm:text-sm text-slate-600">
+                                <p class="font-bold text-slate-800">Ditemukan <span class="text-rose-600 font-extrabold text-sm sm:text-base">${count} Ibu Hamil</span> dengan Hari Perkiraan Lahir (HPL) <u>BESOK</u>!</p>
+                                <p class="text-[11px] sm:text-xs text-slate-500 mt-1">Sirine siaga diaktifkan. Klik di mana saja pada layar jika browser Anda meminta interaksi suara untuk memutar sirine.</p>
                                 ${patientListHtml}
                             </div>
                         `,
@@ -2555,8 +2576,8 @@
                             this.playSirine();
                         },
                         customClass: {
-                            popup: 'rounded-3xl shadow-2xl border-2 border-rose-200 max-w-lg',
-                            confirmButton: 'rounded-xl font-bold px-6 py-3 shadow-md'
+                            popup: 'rounded-2xl sm:rounded-3xl shadow-2xl border-2 border-rose-200 !w-[94vw] !max-w-lg !p-4 sm:!p-6 !m-auto',
+                            confirmButton: 'rounded-xl font-bold px-4 sm:px-6 py-2.5 sm:py-3 text-xs sm:text-sm shadow-md !w-full sm:!w-auto'
                         }
                     }).then(() => {
                         this.stopSirine();
