@@ -50,6 +50,14 @@
                             <span>Tes Sirine</span>
                         </button>
 
+                        <!-- Tombol Uji Coba Alert Kelahiran (PieSocket WebSocket) -->
+                        <button @click="triggerTestBirthAlert()" :disabled="isTestingBirthAlert" type="button" title="Kirim Sinyal Uji Coba WebSocket Alert Kelahiran ke HP & Desktop"
+                            class="inline-flex items-center gap-1.5 px-3 py-2 bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-300 text-xs font-bold rounded-xl shadow-xs transition-all duration-150 cursor-pointer disabled:opacity-50">
+                            <span class="text-sm leading-none">👶</span>
+                            <span x-show="!isTestingBirthAlert">Tes Alert Kelahiran</span>
+                            <span x-show="isTestingBirthAlert">Mengirim...</span>
+                        </button>
+
                         <!-- Import Excel / CSV -->
                         <button @click="showImportModal = true" type="button" title="Import Data Excel atau CSV"
                             class="inline-flex items-center gap-1.5 px-3 py-2 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white text-xs font-semibold rounded-xl shadow-xs hover:shadow transition-all duration-150 cursor-pointer">
@@ -631,6 +639,13 @@
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                             d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                                                     </svg>
+                                                </button>
+
+                                                <!-- Catat Kelahiran & Siarkan Alert Realtime -->
+                                                <button @click="openRecordBirthModal(p)" type="button"
+                                                    class="p-1.5 text-amber-600 hover:text-amber-800 hover:bg-amber-50 rounded-lg transition-colors cursor-pointer"
+                                                    title="Catat Kelahiran & Kirim Alert Realtime">
+                                                    <span class="text-sm leading-none">👶</span>
                                                 </button>
 
                                                 <!-- Hapus Pasien -->
@@ -1622,6 +1637,99 @@
                 </div>
             </div>
 
+            <!-- ================= MODAL: CATAT KELAHIRAN (REALTIME PIESOCKET ALERT) ================= -->
+            <div x-show="showRecordBirthModal" x-cloak class="fixed inset-0 z-[9999] overflow-y-auto" style="display: none;">
+                <div class="min-h-screen px-4 text-center flex items-center justify-center">
+                    <div @click="showRecordBirthModal = false" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs transition-opacity"></div>
+                    <div class="inline-block w-full max-w-lg p-6 my-8 text-left align-middle transition-all transform bg-white shadow-2xl rounded-3xl z-10 border border-slate-100">
+                        <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+                            <div class="flex items-center gap-2.5">
+                                <span class="p-2 rounded-xl bg-amber-100 text-amber-800 text-lg">👶</span>
+                                <div>
+                                    <h3 class="text-base font-bold text-slate-800">Catat Kelahiran Pasien</h3>
+                                    <p class="text-xs text-slate-500" x-text="targetBirthPatient?.nama_lengkap"></p>
+                                </div>
+                            </div>
+                            <button @click="showRecordBirthModal = false" class="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100 cursor-pointer">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                            </button>
+                        </div>
+
+                        <form @submit.prevent="submitRecordBirth()" class="mt-4 space-y-3 text-xs">
+                            <div class="p-3 bg-amber-50/60 rounded-xl border border-amber-200/80 text-amber-900">
+                                <p class="font-semibold flex items-center gap-1.5">
+                                    <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
+                                    Sistem akan otomatis menyiarkan sinyal WebSocket PieSocket!
+                                </p>
+                                <p class="text-[11px] text-amber-800/80 mt-0.5">
+                                    Alert sirine & notifikasi kelahiran akan seketika berbunyi di browser HP nakes/petugas yang sedang aktif.
+                                </p>
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block font-semibold text-slate-700 mb-1">Tanggal Bersalin *</label>
+                                    <input type="date" x-model="birthForm.tanggal_bersalin" required
+                                        class="w-full px-3 py-2 text-xs border border-slate-300 rounded-xl focus:ring-2 focus:ring-pink-500 font-medium">
+                                </div>
+                                <div>
+                                    <label class="block font-semibold text-slate-700 mb-1">Berat Lahir Bayi (kg)</label>
+                                    <input type="number" step="0.01" x-model="birthForm.berat_lahir_bayi" placeholder="Contoh: 3.20"
+                                        class="w-full px-3 py-2 text-xs border border-slate-300 rounded-xl focus:ring-2 focus:ring-pink-500">
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block font-semibold text-slate-700 mb-1">Tempat Bersalin</label>
+                                    <input type="text" x-model="birthForm.tempat_bersalin" placeholder="Puskesmas PONED / BPM"
+                                        class="w-full px-3 py-2 text-xs border border-slate-300 rounded-xl focus:ring-2 focus:ring-pink-500">
+                                </div>
+                                <div>
+                                    <label class="block font-semibold text-slate-700 mb-1">Penolong Persalinan</label>
+                                    <input type="text" x-model="birthForm.penolong_persalinan" placeholder="Bidan / Dokter SpOG"
+                                        class="w-full px-3 py-2 text-xs border border-slate-300 rounded-xl focus:ring-2 focus:ring-pink-500">
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block font-semibold text-slate-700 mb-1">Kondisi Bayi Saat Lahir</label>
+                                <select x-model="birthForm.kondisi_bayi"
+                                    class="w-full px-3 py-2 text-xs border border-slate-300 rounded-xl focus:ring-2 focus:ring-pink-500">
+                                    <option value="Lahir Hidup, Sehat & Menangis Kuat">Lahir Hidup, Sehat & Menangis Kuat</option>
+                                    <option value="Lahir Hidup, Asfiksia Ringan">Lahir Hidup, Asfiksia Ringan</option>
+                                    <option value="Lahir Hidup, Asfiksia Berat">Lahir Hidup, Asfiksia Berat</option>
+                                    <option value="Berat Badan Lahir Rendah (BBLR)">Berat Badan Lahir Rendah (BBLR < 2.5 kg)</option>
+                                    <option value="Lahir Mati (Stillbirth)">Lahir Mati (Stillbirth)</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="block font-semibold text-slate-700 mb-1">Komplikasi / Catatan Persalinan (Opsional)</label>
+                                <textarea rows="2" x-model="birthForm.komplikasi_persalinan" placeholder="Catatan komplikasi robekan perineum, perdarahan, dsb."
+                                    class="w-full px-3 py-2 text-xs border border-slate-300 rounded-xl focus:ring-2 focus:ring-pink-500"></textarea>
+                            </div>
+
+                            <div class="mt-5 pt-3 border-t border-slate-100 flex items-center justify-end gap-2">
+                                <button @click="showRecordBirthModal = false" type="button"
+                                    class="px-4 py-2 text-slate-600 hover:bg-slate-100 rounded-xl font-semibold cursor-pointer">Batal</button>
+                                <button type="submit" :disabled="isSubmittingBirth"
+                                    class="px-5 py-2 bg-gradient-to-r from-amber-500 to-rose-600 hover:from-amber-600 hover:to-rose-700 text-white rounded-xl font-bold shadow-md flex items-center gap-2 cursor-pointer disabled:opacity-50">
+                                    <span x-show="!isSubmittingBirth">Simpan & Siarkan Alert Realtime</span>
+                                    <span x-show="isSubmittingBirth" class="flex items-center gap-2">
+                                        <svg class="animate-spin h-3.5 w-3.5" viewBox="0 0 24 24">
+                                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+                                        </svg>
+                                        Menyiarkan Alert...
+                                    </span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
             <div x-show="toast.show" x-cloak x-transition:enter="transition ease-out duration-300 transform"
                 x-transition:enter-start="opacity-0 translate-y-2 sm:translate-y-0 sm:translate-x-4"
                 x-transition:enter-end="opacity-100 translate-y-0 sm:translate-x-0"
@@ -1748,6 +1856,20 @@
                     kabupaten: 'Kab. Tangerang',
                     kelurahan: '',
                     alamat_lengkap: ''
+                },
+
+                // Realtime Birth Recording & PieSocket Alert State
+                showRecordBirthModal: false,
+                isSubmittingBirth: false,
+                isTestingBirthAlert: false,
+                targetBirthPatient: null,
+                birthForm: {
+                    tanggal_bersalin: new Date().toISOString().substring(0, 10),
+                    tempat_bersalin: 'Puskesmas PONED',
+                    penolong_persalinan: 'Bidan Desa / Nakes',
+                    kondisi_bayi: 'Lahir Hidup, Sehat & Menangis Kuat',
+                    berat_lahir_bayi: '',
+                    komplikasi_persalinan: ''
                 },
 
                 // GIS Heatmap View Mode
@@ -1924,6 +2046,12 @@
                         setTimeout(() => {
                             this.checkAndTriggerH1Alert();
                         }, 800);
+                    });
+
+                    // Dengarkan event WebSocket kelahiran untuk auto refresh tabel dan KPI
+                    window.addEventListener('birth-alert-received', (e) => {
+                        console.log('Realtime event received in ANC Dashboard:', e.detail);
+                        this.applyFilters(this.patientsData.current_page || 1);
                     });
                 },
 
@@ -2582,6 +2710,77 @@
                     }).then(() => {
                         this.stopSirine();
                     });
+                },
+
+                // Modal & Aksi Pencatatan Kelahiran
+                openRecordBirthModal(patient) {
+                    this.targetBirthPatient = JSON.parse(JSON.stringify(patient));
+                    this.birthForm = {
+                        tanggal_bersalin: new Date().toISOString().substring(0, 10),
+                        tempat_bersalin: patient.rekomendasi_faskes || 'Puskesmas PONED',
+                        penolong_persalinan: 'Bidan Desa / Nakes',
+                        kondisi_bayi: 'Lahir Hidup, Sehat & Menangis Kuat',
+                        berat_lahir_bayi: '',
+                        komplikasi_persalinan: ''
+                    };
+                    this.showRecordBirthModal = true;
+                },
+
+                async submitRecordBirth() {
+                    if (!this.targetBirthPatient) return;
+                    this.isSubmittingBirth = true;
+
+                    try {
+                        const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+                        const res = await fetch(`/anc/patients/${this.targetBirthPatient.id}/record-birth`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': token,
+                                'Accept': 'application/json'
+                            },
+                            body: JSON.stringify(this.birthForm)
+                        });
+
+                        const data = await res.json();
+                        if (data.success) {
+                            this.showRecordBirthModal = false;
+                            this.applyFilters(this.patientsData.current_page || 1);
+                            this.notify('success', 'Kelahiran Berhasil Dicatat', data.message);
+                        } else {
+                            this.notify('error', 'Gagal Mencatat', data.message || 'Terjadi kesalahan sistem.');
+                        }
+                    } catch (e) {
+                        this.notify('error', 'Kesalahan Jaringan', 'Gagal mengirim data kelahiran: ' + e.message);
+                    } finally {
+                        this.isSubmittingBirth = false;
+                    }
+                },
+
+                // Uji Coba Sinyal WebSocket Alert Kelahiran
+                async triggerTestBirthAlert() {
+                    this.isTestingBirthAlert = true;
+                    try {
+                        const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+                        const res = await fetch(`{{ route('anc.test-birth-alert') }}`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': token,
+                                'Accept': 'application/json'
+                            }
+                        });
+                        const data = await res.json();
+                        if (data.success) {
+                            this.notify('success', 'Sinyal WebSocket Terkirim', 'Event kelahiran disiarkan ke PieSocket.');
+                        } else {
+                            this.notify('warning', 'Pemberitahuan', data.message || 'Sinyal terkirim');
+                        }
+                    } catch (e) {
+                        this.notify('error', 'Gagal Tes Alert', 'Kesalahan jaringan: ' + e.message);
+                    } finally {
+                        this.isTestingBirthAlert = false;
+                    }
                 }
             };
         }

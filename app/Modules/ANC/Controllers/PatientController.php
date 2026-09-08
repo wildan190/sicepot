@@ -79,4 +79,72 @@ class PatientController extends Controller
             'message' => 'Data ibu hamil berhasil dihapus.',
         ]);
     }
+
+    /**
+     * Record a birth delivery and immediately broadcast birth alert via PieSocket WebSocket.
+     */
+    public function recordBirth(\Illuminate\Http\Request $request, AncPatient $patient)
+    {
+        $validated = $request->validate([
+            'tanggal_bersalin'      => 'required|date',
+            'tempat_bersalin'       => 'nullable|string|max:150',
+            'penolong_persalinan'   => 'nullable|string|max:150',
+            'kondisi_bayi'          => 'nullable|string|max:100',
+            'berat_lahir_bayi'      => 'nullable|numeric|min:0.5|max:10',
+            'komplikasi_persalinan' => 'nullable|string|max:255',
+            'catatan'               => 'nullable|string',
+        ]);
+
+        $validated['status_kehamilan'] = 'Selesai Bersalin';
+
+        $patient->update($validated);
+
+        // Broadcast to PieSocket
+        \App\Services\PieSocketService::broadcastBirthAlert($patient->toArray(), $validated);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Kelahiran berhasil dicatat dan alert realtime telah disiarkan ke seluruh perangkat!',
+            'data'    => $patient->fresh(),
+        ]);
+    }
+
+    /**
+     * Send test birth alert via PieSocket without modifying permanent database.
+     */
+    public function testBirthAlert(\Illuminate\Http\Request $request)
+    {
+        $samplePatient = [
+            'id'                       => rand(100, 999),
+            'nama_lengkap'             => 'Ny. Siti Aminah (Simulasi Uji Coba)',
+            'nama_suami'               => 'Tn. Ahmad Fauzi',
+            'umur'                     => 28,
+            'nik'                      => '360322' . rand(1000000000, 9999999999),
+            'no_telepon'               => '08123456789',
+            'kelurahan'                => 'Pagedangan',
+            'kabupaten'                => 'Kab. Tangerang',
+            'status_risti'             => 'Risiko Tinggi',
+            'kategori_poedji_rochjati' => 'KRT',
+        ];
+
+        $sampleBirthData = [
+            'tanggal_bersalin'      => now()->format('Y-m-d'),
+            'tempat_bersalin'       => 'Puskesmas PONED Pagedangan',
+            'penolong_persalinan'   => 'Bidan Desa & Tim PONED',
+            'kondisi_bayi'          => 'Lahir Hidup, Menangis Kuat (Apgar 8/9)',
+            'berat_lahir_bayi'      => '3.15',
+            'komplikasi_persalinan' => 'Tidak Ada Komplikasi Mayor',
+        ];
+
+        $broadcasted = \App\Services\PieSocketService::broadcastBirthAlert($samplePatient, $sampleBirthData);
+
+        return response()->json([
+            'success'     => $broadcasted,
+            'message'     => $broadcasted 
+                ? 'Alert kelahiran berhasil disiarkan melalui PieSocket WebSocket!' 
+                : 'Peringatan terkirim, periksa koneksi internet ke PieSocket.',
+            'sample_data' => array_merge($samplePatient, $sampleBirthData),
+        ]);
+    }
 }
+

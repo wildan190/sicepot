@@ -34,4 +34,8 @@ Route::prefix('anc')->name('anc.')->group(function () {
     Route::get('/patients/{patient}', [PatientController::class, 'show'])->name('patients.show');
     Route::put('/patients/{patient}', [PatientController::class, 'update'])->name('patients.update');
     Route::delete('/patients/{patient}', [PatientController::class, 'destroy'])->name('patients.destroy');
+
+    // Realtime Birth Alert (PieSocket WebSocket)
+    Route::post('/patients/{patient}/record-birth', [PatientController::class, 'recordBirth'])->name('patients.record-birth');
+    Route::post('/test-birth-alert', [PatientController::class, 'testBirthAlert'])->name('test-birth-alert');
 });

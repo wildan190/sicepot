@@ -25,8 +25,28 @@
                 </div>
             </div>
 
-            <!-- Settings Dropdown -->
-            <div class="hidden sm:flex sm:items-center sm:ms-6">
+            <!-- Settings & Realtime WebSocket Status -->
+            <div class="hidden sm:flex sm:items-center sm:ms-6 gap-3">
+                <!-- PieSocket Realtime Live Indicator & Audio/Notification Activator -->
+                <div class="flex items-center gap-2" id="piesocket-nav-status">
+                    <button type="button" 
+                        onclick="window.pieSocketClient && window.pieSocketClient.enableAlertNotifications()"
+                        id="btn-enable-hp-alert"
+                        title="Klik untuk mengaktifkan Sirine Audio & Notifikasi Browser di HP/Desktop"
+                        class="inline-flex items-center gap-1.5 px-2.5 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 text-xs font-bold rounded-xl transition-all shadow-xs cursor-pointer">
+                        <svg class="w-3.5 h-3.5 text-rose-600 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+                        </svg>
+                        <span class="hidden md:inline" id="txt-enable-hp-alert">Aktifkan Alert di HP</span>
+                    </button>
+
+                    <!-- WebSocket Connection Status Badge -->
+                    <div id="piesocket-badge" class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-slate-100 text-slate-600 border border-slate-200 text-[11px] font-semibold rounded-xl">
+                        <span id="piesocket-dot" class="w-2 h-2 rounded-full bg-slate-400"></span>
+                        <span id="piesocket-label" class="hidden lg:inline">Menghubungkan...</span>
+                    </div>
+                </div>
+
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
                         <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
@@ -59,8 +79,17 @@
                 </x-dropdown>
             </div>
 
-            <!-- Hamburger -->
-            <div class="-me-2 flex items-center sm:hidden">
+            <!-- Hamburger & Mobile Quick Status -->
+            <div class="-me-2 flex items-center gap-2 sm:hidden">
+                <button type="button" 
+                    onclick="window.pieSocketClient && window.pieSocketClient.enableAlertNotifications()"
+                    class="inline-flex items-center gap-1 px-2 py-1 bg-rose-50 text-rose-700 border border-rose-200 text-[10px] font-bold rounded-lg cursor-pointer">
+                    <svg class="w-3 h-3 text-rose-600 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+                    </svg>
+                    <span>Alert HP</span>
+                </button>
+                <div id="piesocket-badge-mobile" class="w-2.5 h-2.5 rounded-full bg-slate-400" title="Status WebSocket"></div>
                 <button @click="open = ! open" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out">
                     <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
                         <path :class="{'hidden': open, 'inline-flex': ! open }" class="inline-flex" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />

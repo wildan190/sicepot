@@ -40,4 +40,11 @@ return [
         'model' => env('GEMINI_MODEL', 'gemini-2.5-flash'),
     ],
 
+    'piesocket' => [
+        'cluster_id' => env('PIESOCKET_CLUSTER_ID', 'free.blr2'),
+        'api_key'    => env('PIESOCKET_API_KEY', '8Z72V1NXBvXdXABPTyxgAvUvLWUl8ZsTAJdaqskK'),
+        'api_secret' => env('PIESOCKET_API_SECRET', 'jjYOsAJO0iYDRadfcMJtWa2knahuEjzt'),
+        'room_id'    => env('PIESOCKET_ROOM_ID', '1'),
+    ],
+
 ];
