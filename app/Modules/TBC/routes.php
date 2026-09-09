@@ -18,6 +18,8 @@ use Illuminate\Support\Facades\Route;
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 Route::get('/tb/stats-json', [DashboardController::class, 'statsJson'])->name('tb.stats.json');
 Route::get('/tb/kelurahan-list', [DashboardController::class, 'kelurahanList'])->name('tb.kelurahan.list');
+Route::get('/tb/kecamatan-list', [DashboardController::class, 'kecamatanList'])->name('tb.kecamatan.list');
+Route::get('/tb/map-data', [DashboardController::class, 'mapData'])->name('tb.map.data');
 Route::get('/tb/export/excel', [DashboardController::class, 'exportExcel'])->name('tb.export.excel');
 Route::get('/tb/report/executive', [DashboardController::class, 'executiveReport'])->name('tb.report.executive');
 

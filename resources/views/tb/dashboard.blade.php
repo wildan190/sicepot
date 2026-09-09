@@ -307,54 +307,186 @@
                     </div>
                 </div>
 
-                <!-- INNOVATION: PETA GEOSPASIAL SEBARAN KASUS TBC (LEAFLET GIS) -->
-                <div class="bg-white p-5 rounded-2xl shadow-xs border border-slate-200/80">
-                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 pb-3 border-b border-slate-100">
-                        <div class="flex items-center gap-3">
-                            <span class="p-2.5 rounded-xl bg-indigo-50 text-indigo-600 border border-indigo-100">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                <!-- ============================================================ -->
+                <!-- PETA GEOSPASIAL TBC — Per-Kecamatan, Configurable Widget   -->
+                <!-- ============================================================ -->
+                <div class="bg-white rounded-2xl shadow-xs border border-slate-200/80 overflow-hidden">
+
+                    {{-- ── Widget Header ── --}}
+                    <div class="px-6 pt-6 pb-5 border-b border-slate-100">
+                        <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
+                            <div class="flex items-center gap-3">
+                                <span class="p-2.5 rounded-xl bg-indigo-50 text-indigo-600 border border-indigo-100 shrink-0">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                    </svg>
+                                </span>
+                                <div>
+                                    <h3 class="font-bold text-base text-slate-800">Peta Sebaran Kasus TBC Berbasis Geospasial (GIS)</h3>
+                                    <p class="text-xs text-slate-500">Visualisasi densitas kasus per kelurahan & kluster fasyankes — fokus 1 kecamatan</p>
+                                </div>
+                            </div>
+
+                            {{-- Config / Save toggle button --}}
+                            <button @click="tbMapCfgOpen = !tbMapCfgOpen" type="button"
+                                :class="tbMapCfgOpen ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white text-slate-600 border-slate-300 hover:bg-slate-50'"
+                                class="inline-flex items-center gap-1.5 px-3 py-1.5 border text-xs font-semibold rounded-xl transition-colors cursor-pointer shrink-0 self-start">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/>
                                 </svg>
-                            </span>
+                                <span x-text="tbMapCfgOpen ? 'Tutup Konfigurasi' : 'Konfigurasi Peta'"></span>
+                            </button>
+                        </div>
+
+                        {{-- ── Collapsible Config Panel ── --}}
+                        <div x-show="tbMapCfgOpen" x-transition:enter="transition ease-out duration-200"
+                             x-transition:enter-start="opacity-0 -translate-y-1" x-transition:enter-end="opacity-100 translate-y-0"
+                             class="mt-5 p-5 bg-slate-50 rounded-xl border border-slate-200 space-y-5">
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                                {{-- Kecamatan selector --}}
+                                <div>
+                                    <label class="block text-[11px] font-bold text-slate-600 uppercase tracking-wider mb-1.5">
+                                        Fokus Kecamatan
+                                    </label>
+                                    <select x-model="tbMapCfg.kecamatan"
+                                        @change="onTbMapKecamatanChange()"
+                                        class="w-full px-3 py-2 text-xs bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500">
+                                        <option value="">Semua Kecamatan</option>
+                                        <template x-for="kec in tbMapKecamatanList" :key="kec">
+                                            <option :value="kec" x-text="kec"></option>
+                                        </template>
+                                    </select>
+                                </div>
+
+                                {{-- Layer mode --}}
+                                <div>
+                                    <label class="block text-[11px] font-bold text-slate-600 uppercase tracking-wider mb-1.5">
+                                        Mode Tampilan Layer
+                                    </label>
+                                    <div class="inline-flex w-full rounded-xl p-0.5 bg-slate-200 border border-slate-300">
+                                        <button @click="tbMapCfg.viewMode = 'markers'; saveTbMapCfg(); updateMap()" type="button"
+                                            :class="tbMapCfg.viewMode === 'markers' ? 'bg-white text-indigo-700 font-bold shadow-xs' : 'text-slate-600 hover:text-slate-800'"
+                                            class="flex-1 px-2 py-1.5 rounded-lg transition-colors cursor-pointer text-[11px]">Titik</button>
+                                        <button @click="tbMapCfg.viewMode = 'density'; saveTbMapCfg(); updateMap()" type="button"
+                                            :class="tbMapCfg.viewMode === 'density' ? 'bg-white text-indigo-700 font-bold shadow-xs' : 'text-slate-600 hover:text-slate-800'"
+                                            class="flex-1 px-2 py-1.5 rounded-lg transition-colors cursor-pointer text-[11px]">Densitas</button>
+                                        <button @click="tbMapCfg.viewMode = 'geofence'; saveTbMapCfg(); updateMap()" type="button"
+                                            :class="tbMapCfg.viewMode === 'geofence' ? 'bg-rose-600 text-white font-bold shadow-xs' : 'text-slate-600 hover:text-slate-800'"
+                                            class="flex-1 px-2 py-1.5 rounded-lg transition-colors cursor-pointer text-[11px]">Geofence</button>
+                                    </div>
+                                </div>
+
+                                {{-- Map height --}}
+                                <div>
+                                    <label class="block text-[11px] font-bold text-slate-600 uppercase tracking-wider mb-1.5">
+                                        Tinggi Peta
+                                    </label>
+                                    <div class="inline-flex w-full rounded-xl p-0.5 bg-slate-200 border border-slate-300">
+                                        <button @click="tbMapCfg.height = 320; saveTbMapCfg(); resizeTbMap()" type="button"
+                                            :class="tbMapCfg.height === 320 ? 'bg-white text-indigo-700 font-bold shadow-xs' : 'text-slate-600'"
+                                            class="flex-1 px-2 py-1.5 rounded-lg transition-colors cursor-pointer text-[11px]">Kecil</button>
+                                        <button @click="tbMapCfg.height = 460; saveTbMapCfg(); resizeTbMap()" type="button"
+                                            :class="tbMapCfg.height === 460 ? 'bg-white text-indigo-700 font-bold shadow-xs' : 'text-slate-600'"
+                                            class="flex-1 px-2 py-1.5 rounded-lg transition-colors cursor-pointer text-[11px]">Sedang</button>
+                                        <button @click="tbMapCfg.height = 600; saveTbMapCfg(); resizeTbMap()" type="button"
+                                            :class="tbMapCfg.height === 600 ? 'bg-white text-indigo-700 font-bold shadow-xs' : 'text-slate-600'"
+                                            class="flex-1 px-2 py-1.5 rounded-lg transition-colors cursor-pointer text-[11px]">Besar</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {{-- Layer toggles --}}
                             <div>
-                                <h3 class="font-bold text-base text-slate-800">Peta Sebaran Kasus TBC Berbasis Geospasial (GIS)</h3>
-                                <p class="text-xs text-slate-500">Visualisasi sebaran densitas kasus per kelurahan & wilayah kerja fasyankes</p>
+                                <label class="block text-[11px] font-bold text-slate-600 uppercase tracking-wider mb-2">Overlay Layer</label>
+                                <div class="flex flex-wrap gap-2">
+                                    <label class="inline-flex items-center gap-1.5 px-2.5 py-1.5 bg-white border border-slate-300 rounded-lg cursor-pointer text-xs select-none hover:bg-slate-50">
+                                        <input type="checkbox" x-model="tbMapCfg.showFasyankes" @change="saveTbMapCfg(); updateMap()" class="rounded accent-indigo-600">
+                                        <span class="font-medium text-slate-700">Kluster Fasyankes</span>
+                                    </label>
+                                    <label class="inline-flex items-center gap-1.5 px-2.5 py-1.5 bg-white border border-slate-300 rounded-lg cursor-pointer text-xs select-none hover:bg-slate-50">
+                                        <input type="checkbox" x-model="tbMapCfg.showRO" @change="saveTbMapCfg(); updateMap()" class="rounded accent-rose-600">
+                                        <span class="font-medium text-slate-700">Tandai Kasus RO</span>
+                                    </label>
+                                    <label class="inline-flex items-center gap-1.5 px-2.5 py-1.5 bg-white border border-slate-300 rounded-lg cursor-pointer text-xs select-none hover:bg-slate-50">
+                                        <input type="checkbox" x-model="tbMapCfg.showHIV" @change="saveTbMapCfg(); updateMap()" class="rounded accent-purple-600">
+                                        <span class="font-medium text-slate-700">Tandai Ko-infeksi HIV</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            {{-- Save / Reset --}}
+                            <div class="flex items-center justify-between pt-1">
+                                <span x-show="tbMapCfgSaved" x-transition
+                                    class="text-[11px] text-emerald-600 font-semibold flex items-center gap-1">
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
+                                    </svg>
+                                    Konfigurasi tersimpan
+                                </span>
+                                <span x-show="!tbMapCfgSaved"></span>
+                                <div class="flex gap-2">
+                                    <button @click="resetTbMapCfg()" type="button"
+                                        class="px-3 py-1.5 text-xs text-slate-500 hover:text-slate-700 border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors cursor-pointer">
+                                        Reset Default
+                                    </button>
+                                    <button @click="saveTbMapCfg(true)" type="button"
+                                        class="px-3.5 py-1.5 text-xs bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg transition-colors cursor-pointer flex items-center gap-1.5">
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"/>
+                                        </svg>
+                                        Simpan Konfigurasi
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                        <div class="flex items-center flex-wrap gap-2 text-xs">
-                            <div class="inline-flex rounded-xl p-0.5 bg-slate-100 border border-slate-200">
-                                <button @click="mapViewMode = 'markers'; updateMap()" type="button"
-                                    :class="mapViewMode === 'markers' ? 'bg-white text-slate-800 font-bold shadow-xs' : 'text-slate-600 hover:text-slate-900'"
-                                    class="px-2.5 py-1 rounded-lg transition-colors cursor-pointer text-[11px]">
-                                    Titik Sebaran
-                                </button>
-                                <button @click="mapViewMode = 'geofence'; updateMap()" type="button"
-                                    :class="mapViewMode === 'geofence' ? 'bg-rose-600 text-white font-bold shadow-xs' : 'text-slate-600 hover:text-slate-900'"
-                                    class="px-2.5 py-1 rounded-lg transition-colors cursor-pointer text-[11px] inline-flex items-center gap-1">
-                                    <span class="w-2 h-2 rounded-full border border-current"></span>
-                                    <span>Geofencing Kluster (500m)</span>
-                                </button>
+
+                        {{-- ── Active Layer Badges (always visible) ── --}}
+                        <div class="mt-4 space-y-3">
+                            {{-- Baris 1: badge status aktif --}}
+                            <div class="flex items-center flex-wrap gap-2">
+                                <span x-show="tbMapCfg.kecamatan"
+                                    class="inline-flex items-center gap-1 px-2 py-0.5 bg-indigo-100 text-indigo-700 text-[11px] font-semibold rounded-lg">
+                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0zM15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                                    Kec. <span x-text="tbMapCfg.kecamatan"></span>
+                                    <button @click="tbMapCfg.kecamatan=''; onTbMapKecamatanChange()" type="button" class="ml-1 text-indigo-500 hover:text-indigo-800 cursor-pointer">✕</button>
+                                </span>
+                                <span class="inline-flex items-center gap-1 px-2 py-0.5 bg-slate-100 text-slate-600 text-[11px] font-semibold rounded-lg capitalize"
+                                    x-text="{ markers:'Titik Sebaran', density:'Densitas Heatmap', geofence:'Geofence 500m' }[tbMapCfg.viewMode] || tbMapCfg.viewMode"></span>
+                                <span x-show="tbMapCfg.showFasyankes" class="inline-flex items-center gap-1 px-2 py-0.5 bg-sky-100 text-sky-700 text-[11px] font-semibold rounded-lg">Fasyankes</span>
+                                <span x-show="tbMapCfg.showRO" class="inline-flex items-center gap-1 px-2 py-0.5 bg-rose-100 text-rose-700 text-[11px] font-semibold rounded-lg">RO</span>
+                                <span x-show="tbMapCfg.showHIV" class="inline-flex items-center gap-1 px-2 py-0.5 bg-purple-100 text-purple-700 text-[11px] font-semibold rounded-lg">HIV</span>
+                                <span x-show="tbMapLoading" class="inline-flex items-center gap-1 text-[11px] text-slate-500">
+                                    <svg class="animate-spin w-3 h-3" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"/></svg>
+                                    Memuat data peta...
+                                </span>
                             </div>
-                            <div class="flex items-center gap-3 text-xs ml-2">
+
+                            {{-- Baris 2: legenda warna --}}
+                            <div class="flex items-center gap-4 pt-2 border-t border-slate-100 text-xs">
+                                <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Legenda</span>
                                 <div class="flex items-center gap-1.5">
-                                    <span class="w-3 h-3 rounded-full bg-rose-500"></span>
-                                    <span class="text-slate-600 font-medium">≥ 10 Kasus (Hotspot)</span>
+                                    <span class="w-3 h-3 rounded-full bg-rose-500 shrink-0"></span>
+                                    <span class="text-slate-500">≥ 10 Kasus</span>
                                 </div>
                                 <div class="flex items-center gap-1.5">
-                                    <span class="w-3 h-3 rounded-full bg-amber-500"></span>
-                                    <span class="text-slate-600 font-medium">4 - 9 Kasus</span>
+                                    <span class="w-3 h-3 rounded-full bg-amber-500 shrink-0"></span>
+                                    <span class="text-slate-500">4–9 Kasus</span>
                                 </div>
                                 <div class="flex items-center gap-1.5">
-                                    <span class="w-3 h-3 rounded-full bg-indigo-500"></span>
-                                    <span class="text-slate-600 font-medium">1 - 3 Kasus</span>
+                                    <span class="w-3 h-3 rounded-full bg-indigo-400 shrink-0"></span>
+                                    <span class="text-slate-500">1–3 Kasus</span>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div id="tbMap" style="height: 380px; width: 100%; min-height: 350px; isolation: isolate;" class="map-container w-full rounded-xl border border-slate-200 z-0 overflow-hidden shadow-inner relative"></div>
+
+                    {{-- ── Map Container ── --}}
+                    <div id="tbMap"
+                        :style="'height:' + tbMapCfg.height + 'px; width:100%; isolation:isolate;'"
+                        class="map-container w-full z-0 overflow-hidden relative">
+                    </div>
                 </div>
 
                 <!-- DATA TABLE SECTION -->
@@ -1403,7 +1535,8 @@
                 monthly: null,
                 gender: null,
                 map: null,
-                markersLayer: null
+                markersLayer: null,
+                fasyanksLayer: null,
             };
 
             function tbDashboard() {
@@ -1465,8 +1598,22 @@
                         hasil_diagnosis: 'Terkonfirmasi TBC'
                     },
 
-                    // GIS Geofencing View Mode
-                    mapViewMode: 'markers', // 'markers' or 'geofence'
+                    // GIS Map Widget Config (per-kecamatan, saveable)
+                    tbMapCfgOpen: false,
+                    tbMapCfgSaved: false,
+                    tbMapLoading: false,
+                    tbMapKecamatanList: [],
+                    tbMapCfg: {
+                        kecamatan: '',
+                        viewMode: 'markers',
+                        height: 460,
+                        showFasyankes: true,
+                        showRO: false,
+                        showHIV: false,
+                    },
+
+                    // Legacy (kept for updateMap compatibility)
+                    mapViewMode: 'markers',
 
                     // Target Patient & Innovation Modal States
                     targetPatient: null,
@@ -1514,7 +1661,18 @@
                     },
 
                     initDashboard() {
+                        // Restore saved map config from localStorage
+                        try {
+                            const saved = localStorage.getItem('tb_map_cfg');
+                            if (saved) {
+                                const parsed = JSON.parse(saved);
+                                this.tbMapCfg = Object.assign({}, this.tbMapCfg, parsed);
+                                this.mapViewMode = this.tbMapCfg.viewMode;
+                            }
+                        } catch (e) {}
+
                         this.loadKelurahanList();
+                        this.loadTbMapKecamatanList();
                         this.$nextTick(() => {
                             this.renderCharts();
                             this.initMap();
@@ -1703,6 +1861,70 @@
                         }
                     },
 
+                    // ── TBC Map Config Helpers ──────────────────────────────────────
+
+                    async loadTbMapKecamatanList() {
+                        try {
+                            const res = await fetch(`{{ route('tb.kecamatan.list') }}?kabupaten=${encodeURIComponent(this.selectedKabupaten || '')}`);
+                            this.tbMapKecamatanList = await res.json();
+                        } catch (e) {}
+                    },
+
+                    saveTbMapCfg(showFeedback = false) {
+                        try {
+                            localStorage.setItem('tb_map_cfg', JSON.stringify(this.tbMapCfg));
+                            if (showFeedback) {
+                                this.tbMapCfgSaved = true;
+                                setTimeout(() => { this.tbMapCfgSaved = false; }, 2500);
+                            }
+                        } catch (e) {}
+                    },
+
+                    resetTbMapCfg() {
+                        this.tbMapCfg = { kecamatan: '', viewMode: 'markers', height: 460, showFasyankes: true, showRO: false, showHIV: false };
+                        try { localStorage.removeItem('tb_map_cfg'); } catch (e) {}
+                        this.tbMapCfgSaved = true;
+                        setTimeout(() => { this.tbMapCfgSaved = false; }, 1800);
+                        this.onTbMapKecamatanChange();
+                    },
+
+                    resizeTbMap() {
+                        this.$nextTick(() => {
+                            if (tbCharts.map) {
+                                tbCharts.map.invalidateSize();
+                            }
+                        });
+                    },
+
+                    async onTbMapKecamatanChange() {
+                        this.saveTbMapCfg();
+                        await this.loadTbMapGeoData();
+                        this.updateMap();
+                    },
+
+                    async loadTbMapGeoData() {
+                        this.tbMapLoading = true;
+                        try {
+                            const params = new URLSearchParams({
+                                kabupaten: this.selectedKabupaten || '',
+                                kecamatan: this.tbMapCfg.kecamatan || '',
+                            });
+                            const res = await fetch(`{{ route('tb.map.data') }}?${params.toString()}`);
+                            const data = await res.json();
+                            this.mapData = data.points || [];
+                            // Re-center map on new kecamatan
+                            if (tbCharts.map && data.center) {
+                                tbCharts.map.setView([data.center.lat, data.center.lng], data.center.zoom || 13);
+                            }
+                        } catch (e) {
+                            console.error('TB map data error:', e);
+                        } finally {
+                            this.tbMapLoading = false;
+                        }
+                    },
+
+                    // ── Map Init & Render ───────────────────────────────────────────
+
                     initMap() {
                         const init = () => {
                             const mapElem = document.getElementById('tbMap');
@@ -1718,7 +1940,6 @@
                                 tbCharts.map = null;
                             }
 
-                            // Pusatkan default ke Kab. Tangerang / Pagedangan
                             tbCharts.map = L.map('tbMap').setView([-6.2889, 106.6092], 12);
                             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
@@ -1726,15 +1947,13 @@
                             }).addTo(tbCharts.map);
 
                             tbCharts.markersLayer = L.layerGroup().addTo(tbCharts.map);
+                            tbCharts.fasyanksLayer = L.layerGroup().addTo(tbCharts.map);
                             this.updateMap();
 
                             [100, 300, 600, 1000].forEach(delay => {
-                                setTimeout(() => {
-                                    if (tbCharts.map) tbCharts.map.invalidateSize();
-                                }, delay);
+                                setTimeout(() => { if (tbCharts.map) tbCharts.map.invalidateSize(); }, delay);
                             });
                         };
-
                         init();
                     },
 
@@ -1742,74 +1961,147 @@
                         if (!tbCharts.map || !tbCharts.markersLayer || typeof L === 'undefined') return;
 
                         tbCharts.markersLayer.clearLayers();
+                        if (tbCharts.fasyanksLayer) tbCharts.fasyanksLayer.clearLayers();
+
+                        const viewMode = this.tbMapCfg.viewMode || this.mapViewMode;
 
                         if (!this.mapData || this.mapData.length === 0) return;
 
                         const bounds = [];
 
                         this.mapData.forEach(item => {
-                            if (item.lat && item.lng) {
-                                bounds.push([item.lat, item.lng]);
+                            if (!item.lat || !item.lng) return;
+                            bounds.push([item.lat, item.lng]);
 
-                                // Tentukan warna berdasarkan jumlah kasus
-                                let color = '#6366f1'; // Indigo (rendah)
-                                let radius = 10;
-                                if (item.total >= 10) {
-                                    color = '#f43f5e'; // Rose / Hotspot
-                                    radius = 18;
-                                } else if (item.total >= 4) {
-                                    color = '#f59e0b'; // Amber / Sedang
-                                    radius = 14;
-                                }
+                            // ── Color by density ──
+                            let color = '#818cf8'; // indigo-400 (1-3)
+                            let radius = 10;
+                            if (item.total >= 10) {
+                                color = '#f43f5e'; radius = 20; // rose
+                            } else if (item.total >= 4) {
+                                color = '#f59e0b'; radius = 15; // amber
+                            }
 
-                                // Mode 2: Geofencing Radius 500m Kluster Penularan TBC
-                                if (this.mapViewMode === 'geofence') {
-                                    const bufferRadius = item.total >= 10 ? 800 : 500;
-                                    const bufferCircle = L.circle([item.lat, item.lng], {
-                                        radius: bufferRadius,
-                                        color: item.total >= 10 ? '#e11d48' : '#f59e0b',
-                                        fillColor: item.total >= 10 ? '#f43f5e' : '#fbbf24',
-                                        fillOpacity: item.total >= 10 ? 0.25 : 0.15,
-                                        weight: 1.5,
-                                        dashArray: '4, 6'
-                                    });
-                                    tbCharts.markersLayer.addLayer(bufferCircle);
-                                }
-
-                                const circle = L.circleMarker([item.lat, item.lng], {
-                                    color: color,
+                            // ── Mode: Density heatmap halo ──
+                            if (viewMode === 'density') {
+                                const haloR = Math.max(400, item.total * 80);
+                                tbCharts.markersLayer.addLayer(L.circle([item.lat, item.lng], {
+                                    radius: haloR,
+                                    color: 'transparent',
                                     fillColor: color,
-                                    fillOpacity: 0.8,
-                                    radius: radius,
-                                    weight: 2
+                                    fillOpacity: Math.min(0.5, 0.1 + item.total * 0.03),
+                                }));
+                            }
+
+                            // ── Mode: Geofence rings ──
+                            if (viewMode === 'geofence') {
+                                const bufR = item.total >= 10 ? 800 : 500;
+                                tbCharts.markersLayer.addLayer(L.circle([item.lat, item.lng], {
+                                    radius: bufR,
+                                    color: item.total >= 10 ? '#e11d48' : '#f59e0b',
+                                    fillColor: item.total >= 10 ? '#f43f5e' : '#fbbf24',
+                                    fillOpacity: item.total >= 10 ? 0.22 : 0.12,
+                                    weight: 1.5, dashArray: '4 6',
+                                }));
+                            }
+
+                            // ── RO badge overlay ──
+                            if (this.tbMapCfg.showRO && item.total_ro > 0) {
+                                tbCharts.markersLayer.addLayer(L.circle([item.lat, item.lng], {
+                                    radius: 350, color: '#9333ea', fillColor: '#c084fc',
+                                    fillOpacity: 0.25, weight: 2, dashArray: '3 4',
+                                }));
+                            }
+
+                            // ── HIV badge overlay ──
+                            if (this.tbMapCfg.showHIV && item.total_hiv > 0) {
+                                tbCharts.markersLayer.addLayer(L.circle([item.lat, item.lng], {
+                                    radius: 250, color: '#7c3aed', fillColor: '#a78bfa',
+                                    fillOpacity: 0.3, weight: 1.5,
+                                }));
+                            }
+
+                            // ── Main marker ──
+                            const circle = L.circleMarker([item.lat, item.lng], {
+                                color, fillColor: color, fillOpacity: 0.85,
+                                radius, weight: 2,
+                            });
+
+                            // ── Fasyankes cluster sub-markers ──
+                            if (this.tbMapCfg.showFasyankes && item.fasyankes && item.fasyankes.length > 0) {
+                                const fasRows = item.fasyankes.slice(0, 5).map(f =>
+                                    `<div style="display:flex;justify-content:space-between;padding:2px 0;border-top:1px solid #f1f5f9;">
+                                        <span style="color:#475569;font-size:10px;">${f.name}</span>
+                                        <span style="font-weight:700;color:#6366f1;font-size:10px;">${f.total} kasus</span>
+                                    </div>`
+                                ).join('');
+
+                                const fasLabel = item.fasyankes.map(f => f.name).join(', ');
+                                circle.bindTooltip(fasLabel, { direction: 'top', className: 'leaflet-tooltip-fas' });
+
+                                // Small offset markers for each fasyankes
+                                item.fasyankes.slice(0, 3).forEach((f, i) => {
+                                    const angle = (i * 120) * (Math.PI / 180);
+                                    const dlat = 0.002 * Math.cos(angle);
+                                    const dlng = 0.002 * Math.sin(angle);
+                                    const fm = L.circleMarker([item.lat + dlat, item.lng + dlng], {
+                                        color: '#0284c7', fillColor: '#38bdf8',
+                                        fillOpacity: 0.7, radius: 6, weight: 1.5,
+                                    });
+                                    fm.bindPopup(`<div style="font-size:11px;font-weight:600;">${f.name}</div><div style="font-size:11px;color:#475569;">${f.total} kasus TBC</div>`);
+                                    if (tbCharts.fasyanksLayer) tbCharts.fasyanksLayer.addLayer(fm);
                                 });
 
-                                const popupContent = `
-                                    <div style="font-family: inherit; font-size: 12px; min-width: 170px;">
-                                        <div style="font-weight: 700; font-size: 13px; color: #1e293b; margin-bottom: 4px;">${item.kelurahan}</div>
-                                        <div style="color: #64748b; margin-bottom: 6px;">${item.kabupaten || 'Wilayah Fasyankes'}</div>
-                                        <div style="display: flex; justify-content: space-between; border-top: 1px solid #f1f5f9; padding-top: 4px; font-weight: 600;">
-                                            <span>Total Kasus TBC:</span>
-                                            <span style="color: ${color};">${item.total}</span>
-                                        </div>
-                                        <div style="display: flex; justify-content: space-between; font-size: 11px; color: #475569; margin-top: 2px;">
-                                            <span>Kasus Aktif:</span>
-                                            <span style="font-weight: bold; color: #e11d48;">${item.total_active || 0}</span>
-                                        </div>
-                                        ${this.mapViewMode === 'geofence' ? `
-                                        <div style="margin-top: 6px; padding: 4px 6px; background-color: #fff1f2; border-radius: 6px; font-size: 10px; color: #be123c; font-weight: 600;">
-                                            [Geofence] Zona Penularan Kontak Erat (500m)
-                                        </div>` : ''}
-                                    </div>
-                                `;
+                                const roInfo = item.total_ro > 0
+                                    ? `<div style="margin-top:4px;padding:3px 5px;background:#fdf4ff;border-radius:5px;font-size:10px;color:#7e22ce;font-weight:600;">⚠ ${item.total_ro} Kasus RO (Resistan Obat)</div>` : '';
+                                const hivInfo = item.total_hiv > 0
+                                    ? `<div style="padding:3px 5px;background:#f5f3ff;border-radius:5px;font-size:10px;color:#4c1d95;font-weight:600;">HIV+ Ko-infeksi: ${item.total_hiv}</div>` : '';
 
-                                circle.bindPopup(popupContent);
-                                tbCharts.markersLayer.addLayer(circle);
+                                circle.bindPopup(`
+                                    <div style="font-family:inherit;font-size:12px;min-width:200px;">
+                                        <div style="font-weight:700;font-size:13px;color:#1e293b;margin-bottom:2px;">${item.kelurahan}</div>
+                                        <div style="color:#64748b;font-size:11px;margin-bottom:1px;">${item.kecamatan ? 'Kec. ' + item.kecamatan + ' · ' : ''}${item.kabupaten || ''}</div>
+                                        <div style="display:flex;justify-content:space-between;border-top:1px solid #f1f5f9;padding-top:5px;font-weight:700;font-size:13px;">
+                                            <span>Total Kasus TBC</span>
+                                            <span style="color:${color};">${item.total}</span>
+                                        </div>
+                                        <div style="display:flex;justify-content:space-between;font-size:11px;color:#475569;">
+                                            <span>Terkonfirmasi</span><span style="font-weight:600;color:#e11d48;">${item.total_terkonfirmasi || 0}</span>
+                                        </div>
+                                        <div style="display:flex;justify-content:space-between;font-size:11px;color:#475569;">
+                                            <span>Terduga</span><span style="font-weight:600;color:#f59e0b;">${item.total_terduga || 0}</span>
+                                        </div>
+                                        <div style="display:flex;justify-content:space-between;font-size:11px;color:#475569;">
+                                            <span>Aktif OAT</span><span style="font-weight:600;color:#0284c7;">${item.total_active || 0}</span>
+                                        </div>
+                                        ${roInfo}${hivInfo}
+                                        <div style="margin-top:5px;font-size:10px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.04em;">Fasyankes (${item.fasyankes.length})</div>
+                                        ${fasRows}
+                                    </div>
+                                `);
+                            } else {
+                                circle.bindPopup(`
+                                    <div style="font-family:inherit;font-size:12px;min-width:170px;">
+                                        <div style="font-weight:700;font-size:13px;color:#1e293b;margin-bottom:4px;">${item.kelurahan}</div>
+                                        <div style="color:#64748b;margin-bottom:6px;">${item.kecamatan ? 'Kec. ' + item.kecamatan + ' · ' : ''}${item.kabupaten || ''}</div>
+                                        <div style="display:flex;justify-content:space-between;border-top:1px solid #f1f5f9;padding-top:4px;font-weight:600;">
+                                            <span>Total Kasus TBC:</span>
+                                            <span style="color:${color};">${item.total}</span>
+                                        </div>
+                                        <div style="display:flex;justify-content:space-between;font-size:11px;color:#475569;margin-top:2px;">
+                                            <span>Kasus Aktif OAT:</span>
+                                            <span style="font-weight:bold;color:#e11d48;">${item.total_active || 0}</span>
+                                        </div>
+                                        ${viewMode === 'geofence' ? '<div style="margin-top:6px;padding:4px 6px;background:#fff1f2;border-radius:6px;font-size:10px;color:#be123c;font-weight:600;">[Geofence] Zona Kontak Erat 500m</div>' : ''}
+                                    </div>
+                                `);
                             }
+
+                            tbCharts.markersLayer.addLayer(circle);
                         });
 
                         if (bounds.length > 0) {
-                            tbCharts.map.fitBounds(bounds, { padding: [35, 35], maxZoom: 14 });
+                            tbCharts.map.fitBounds(bounds, { padding: [40, 40], maxZoom: 14 });
                         }
                     },
 

@@ -17,6 +17,8 @@ Route::prefix('anc')->name('anc.')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/api/stats', [DashboardController::class, 'statsJson'])->name('stats.json');
     Route::get('/api/kelurahan', [DashboardController::class, 'kelurahanList'])->name('kelurahan.list');
+    Route::get('/api/kecamatan', [DashboardController::class, 'kecamatanList'])->name('kecamatan.list');
+    Route::get('/api/map-data', [DashboardController::class, 'mapData'])->name('map.data');
     Route::get('/export/excel', [DashboardController::class, 'exportExcel'])->name('export.excel');
     Route::get('/report/executive', [DashboardController::class, 'executiveReport'])->name('report.executive');
 

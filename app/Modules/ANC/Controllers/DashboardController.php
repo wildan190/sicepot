@@ -45,6 +45,26 @@ class DashboardController extends Controller
     }
 
     /**
+     * API: Kecamatan list filtered by kabupaten.
+     */
+    public function kecamatanList(Request $request)
+    {
+        return response()->json(
+            $this->service->getKecamatanList($request->input('kabupaten'))
+        );
+    }
+
+    /**
+     * API: Per-kecamatan GIS map data with RISTI detection layers.
+     */
+    public function mapData(Request $request)
+    {
+        return response()->json(
+            $this->service->getMapData($request)
+        );
+    }
+
+    /**
      * Export ANC Cohort Patient Data to Formatted Excel.
      */
     public function exportExcel(Request $request, \App\Modules\ANC\Services\ExportService $exportService)

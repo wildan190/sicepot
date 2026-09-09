@@ -417,50 +417,189 @@
                         </div>
                     </div>
 
-                    <!-- GIS Leaflet Map Section -->
-                    <div class="lg:col-span-2 bg-white p-5 rounded-2xl shadow-xs border border-slate-200/80 flex flex-col justify-between">
-                        <div>
-                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 pb-3 border-b border-slate-100">
+                    {{-- ============================================================ --}}
+                    {{-- PETA SEBARAN IBU HAMIL & RISTI — Per-Kecamatan Widget     --}}
+                    {{-- ============================================================ --}}
+                    <div class="lg:col-span-2 bg-white rounded-2xl shadow-xs border border-slate-200/80 overflow-hidden flex flex-col">
+
+                        {{-- ── Widget Header ── --}}
+                        <div class="px-6 pt-6 pb-5 border-b border-slate-100">
+                            <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
                                 <div class="flex items-center gap-3">
-                                    <span class="p-2.5 rounded-xl bg-pink-50 text-pink-600 border border-pink-100">
+                                    <span class="p-2.5 rounded-xl bg-pink-50 text-pink-600 border border-pink-100 shrink-0">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
                                         </svg>
                                     </span>
                                     <div>
                                         <h3 class="font-bold text-base text-slate-800">Peta Sebaran Ibu Hamil & Deteksi Wilayah RISTI</h3>
-                                        <p class="text-xs text-slate-500">Konsentrasi ibu hamil dan deteksi dini kasus risiko tinggi per kelurahan</p>
+                                        <p class="text-xs text-slate-500">Konsentrasi ibu hamil & deteksi dini risiko tinggi per kelurahan — fokus 1 kecamatan</p>
                                     </div>
                                 </div>
-                                <div class="flex items-center flex-wrap gap-2 text-xs">
-                                    <div class="inline-flex rounded-xl p-0.5 bg-slate-100 border border-slate-200">
-                                        <button @click="mapViewMode = 'markers'; updateMap()" type="button"
-                                            :class="mapViewMode === 'markers' ? 'bg-white text-slate-800 font-bold shadow-xs' : 'text-slate-600 hover:text-slate-900'"
-                                            class="px-2.5 py-1 rounded-lg transition-colors cursor-pointer text-[11px]">
-                                            Titik Sebaran
-                                        </button>
-                                        <button @click="mapViewMode = 'heatmap'; updateMap()" type="button"
-                                            :class="mapViewMode === 'heatmap' ? 'bg-rose-600 text-white font-bold shadow-xs' : 'text-slate-600 hover:text-slate-900'"
-                                            class="px-2.5 py-1 rounded-lg transition-colors cursor-pointer text-[11px] inline-flex items-center gap-1">
-                                            <span>Heatmap Risiko KEK</span>
-                                        </button>
+
+                                {{-- Config toggle --}}
+                                <button @click="ancMapCfgOpen = !ancMapCfgOpen" type="button"
+                                    :class="ancMapCfgOpen ? 'bg-pink-600 text-white border-pink-600' : 'bg-white text-slate-600 border-slate-300 hover:bg-slate-50'"
+                                    class="inline-flex items-center gap-1.5 px-3 py-1.5 border text-xs font-semibold rounded-xl transition-colors cursor-pointer shrink-0 self-start">
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/>
+                                    </svg>
+                                    <span x-text="ancMapCfgOpen ? 'Tutup Konfigurasi' : 'Konfigurasi Peta'"></span>
+                                </button>
+                            </div>
+
+                            {{-- ── Collapsible Config Panel ── --}}
+                            <div x-show="ancMapCfgOpen" x-transition:enter="transition ease-out duration-200"
+                                 x-transition:enter-start="opacity-0 -translate-y-1" x-transition:enter-end="opacity-100 translate-y-0"
+                                 class="mt-5 p-5 bg-slate-50 rounded-xl border border-slate-200 space-y-5">
+
+                                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                                    {{-- Kecamatan selector --}}
+                                    <div>
+                                        <label class="block text-[11px] font-bold text-slate-600 uppercase tracking-wider mb-1.5">Fokus Kecamatan</label>
+                                        <select x-model="ancMapCfg.kecamatan"
+                                            @change="onAncMapKecamatanChange()"
+                                            class="w-full px-3 py-2 text-xs bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-pink-500">
+                                            <option value="">Semua Kecamatan</option>
+                                            <template x-for="kec in ancMapKecamatanList" :key="kec">
+                                                <option :value="kec" x-text="kec"></option>
+                                            </template>
+                                        </select>
                                     </div>
-                                    <div class="flex items-center gap-3 text-xs ml-2">
-                                        <div class="flex items-center gap-1.5">
-                                            <span class="w-3 h-3 rounded-full bg-rose-500"></span>
-                                            <span class="text-slate-600 font-medium">Ada RISTI</span>
+
+                                    {{-- Layer mode --}}
+                                    <div>
+                                        <label class="block text-[11px] font-bold text-slate-600 uppercase tracking-wider mb-1.5">Mode Tampilan Layer</label>
+                                        <div class="inline-flex w-full rounded-xl p-0.5 bg-slate-200 border border-slate-300">
+                                            <button @click="ancMapCfg.viewMode = 'markers'; saveAncMapCfg(); updateMap()" type="button"
+                                                :class="ancMapCfg.viewMode === 'markers' ? 'bg-white text-pink-700 font-bold shadow-xs' : 'text-slate-600 hover:text-slate-800'"
+                                                class="flex-1 px-2 py-1.5 rounded-lg transition-colors cursor-pointer text-[11px]">Titik</button>
+                                            <button @click="ancMapCfg.viewMode = 'heatmap'; saveAncMapCfg(); updateMap()" type="button"
+                                                :class="ancMapCfg.viewMode === 'heatmap' ? 'bg-white text-pink-700 font-bold shadow-xs' : 'text-slate-600 hover:text-slate-800'"
+                                                class="flex-1 px-2 py-1.5 rounded-lg transition-colors cursor-pointer text-[11px]">Heatmap</button>
+                                            <button @click="ancMapCfg.viewMode = 'risti'; saveAncMapCfg(); updateMap()" type="button"
+                                                :class="ancMapCfg.viewMode === 'risti' ? 'bg-rose-600 text-white font-bold shadow-xs' : 'text-slate-600 hover:text-slate-800'"
+                                                class="flex-1 px-2 py-1.5 rounded-lg transition-colors cursor-pointer text-[11px]">RISTI</button>
                                         </div>
-                                        <div class="flex items-center gap-1.5">
-                                            <span class="w-3 h-3 rounded-full bg-pink-500"></span>
-                                            <span class="text-slate-600 font-medium">Bumil Normal</span>
+                                    </div>
+
+                                    {{-- Map height --}}
+                                    <div>
+                                        <label class="block text-[11px] font-bold text-slate-600 uppercase tracking-wider mb-1.5">Tinggi Peta</label>
+                                        <div class="inline-flex w-full rounded-xl p-0.5 bg-slate-200 border border-slate-300">
+                                            <button @click="ancMapCfg.height = 320; saveAncMapCfg(); resizeAncMap()" type="button"
+                                                :class="ancMapCfg.height === 320 ? 'bg-white text-pink-700 font-bold shadow-xs' : 'text-slate-600'"
+                                                class="flex-1 px-2 py-1.5 rounded-lg transition-colors cursor-pointer text-[11px]">Kecil</button>
+                                            <button @click="ancMapCfg.height = 460; saveAncMapCfg(); resizeAncMap()" type="button"
+                                                :class="ancMapCfg.height === 460 ? 'bg-white text-pink-700 font-bold shadow-xs' : 'text-slate-600'"
+                                                class="flex-1 px-2 py-1.5 rounded-lg transition-colors cursor-pointer text-[11px]">Sedang</button>
+                                            <button @click="ancMapCfg.height = 600; saveAncMapCfg(); resizeAncMap()" type="button"
+                                                :class="ancMapCfg.height === 600 ? 'bg-white text-pink-700 font-bold shadow-xs' : 'text-slate-600'"
+                                                class="flex-1 px-2 py-1.5 rounded-lg transition-colors cursor-pointer text-[11px]">Besar</button>
                                         </div>
+                                    </div>
+                                </div>
+
+                                {{-- Overlay layer toggles --}}
+                                <div>
+                                    <label class="block text-[11px] font-bold text-slate-600 uppercase tracking-wider mb-2">Overlay Layer Deteksi RISTI</label>
+                                    <div class="flex flex-wrap gap-2">
+                                        <label class="inline-flex items-center gap-1.5 px-2.5 py-1.5 bg-white border border-slate-300 rounded-lg cursor-pointer text-xs select-none hover:bg-slate-50">
+                                            <input type="checkbox" x-model="ancMapCfg.showKEK" @change="saveAncMapCfg(); updateMap()" class="rounded accent-amber-600">
+                                            <span class="font-medium text-slate-700">Zona KEK (LiLA &lt;23.5cm)</span>
+                                        </label>
+                                        <label class="inline-flex items-center gap-1.5 px-2.5 py-1.5 bg-white border border-slate-300 rounded-lg cursor-pointer text-xs select-none hover:bg-slate-50">
+                                            <input type="checkbox" x-model="ancMapCfg.showAnemia" @change="saveAncMapCfg(); updateMap()" class="rounded accent-rose-600">
+                                            <span class="font-medium text-slate-700">Zona Anemia (Hb &lt;11)</span>
+                                        </label>
+                                        <label class="inline-flex items-center gap-1.5 px-2.5 py-1.5 bg-white border border-slate-300 rounded-lg cursor-pointer text-xs select-none hover:bg-slate-50">
+                                            <input type="checkbox" x-model="ancMapCfg.showHiper" @change="saveAncMapCfg(); updateMap()" class="rounded accent-orange-600">
+                                            <span class="font-medium text-slate-700">Zona Hipertensi</span>
+                                        </label>
+                                        <label class="inline-flex items-center gap-1.5 px-2.5 py-1.5 bg-white border border-slate-300 rounded-lg cursor-pointer text-xs select-none hover:bg-slate-50">
+                                            <input type="checkbox" x-model="ancMapCfg.showImminent" @change="saveAncMapCfg(); updateMap()" class="rounded accent-emerald-600">
+                                            <span class="font-medium text-slate-700">HPL ≤ 7 Hari</span>
+                                        </label>
+                                        <label class="inline-flex items-center gap-1.5 px-2.5 py-1.5 bg-white border border-slate-300 rounded-lg cursor-pointer text-xs select-none hover:bg-slate-50">
+                                            <input type="checkbox" x-model="ancMapCfg.showFasyankes" @change="saveAncMapCfg(); updateMap()" class="rounded accent-sky-600">
+                                            <span class="font-medium text-slate-700">Kluster Fasyankes</span>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                {{-- Save / Reset --}}
+                                <div class="flex items-center justify-between pt-1">
+                                    <span x-show="ancMapCfgSaved" x-transition
+                                        class="text-[11px] text-emerald-600 font-semibold flex items-center gap-1">
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
+                                        </svg>
+                                        Konfigurasi tersimpan
+                                    </span>
+                                    <span x-show="!ancMapCfgSaved"></span>
+                                    <div class="flex gap-2">
+                                        <button @click="resetAncMapCfg()" type="button"
+                                            class="px-3 py-1.5 text-xs text-slate-500 hover:text-slate-700 border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors cursor-pointer">
+                                            Reset Default
+                                        </button>
+                                        <button @click="saveAncMapCfg(true)" type="button"
+                                            class="px-3.5 py-1.5 text-xs bg-pink-600 hover:bg-pink-700 text-white font-semibold rounded-lg transition-colors cursor-pointer flex items-center gap-1.5">
+                                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"/>
+                                            </svg>
+                                            Simpan Konfigurasi
+                                        </button>
                                     </div>
                                 </div>
                             </div>
-                            <div id="ancMap" style="height: 380px; width: 100%; min-height: 350px; isolation: isolate;" class="map-container w-full rounded-xl border border-slate-200 z-0 overflow-hidden shadow-inner relative"></div>
+
+                            {{-- ── Active badge chips ── --}}
+                            <div class="mt-4 space-y-3">
+                                {{-- Baris 1: badge status aktif --}}
+                                <div class="flex items-center flex-wrap gap-2">
+                                    <span x-show="ancMapCfg.kecamatan"
+                                        class="inline-flex items-center gap-1 px-2 py-0.5 bg-pink-100 text-pink-700 text-[11px] font-semibold rounded-lg">
+                                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0zM15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                                        Kec. <span x-text="ancMapCfg.kecamatan"></span>
+                                        <button @click="ancMapCfg.kecamatan=''; onAncMapKecamatanChange()" type="button" class="ml-1 text-pink-400 hover:text-pink-800 cursor-pointer">✕</button>
+                                    </span>
+                                    <span class="inline-flex items-center gap-1 px-2 py-0.5 bg-slate-100 text-slate-600 text-[11px] font-semibold rounded-lg capitalize"
+                                        x-text="{ markers:'Titik Sebaran', heatmap:'Heatmap Risiko', risti:'Deteksi RISTI' }[ancMapCfg.viewMode] || ancMapCfg.viewMode"></span>
+                                    <span x-show="ancMapCfg.showKEK"       class="px-2 py-0.5 bg-amber-100 text-amber-700 text-[11px] font-semibold rounded-lg">KEK</span>
+                                    <span x-show="ancMapCfg.showAnemia"    class="px-2 py-0.5 bg-rose-100 text-rose-700 text-[11px] font-semibold rounded-lg">Anemia</span>
+                                    <span x-show="ancMapCfg.showHiper"     class="px-2 py-0.5 bg-orange-100 text-orange-700 text-[11px] font-semibold rounded-lg">Hipertensi</span>
+                                    <span x-show="ancMapCfg.showImminent"  class="px-2 py-0.5 bg-emerald-100 text-emerald-700 text-[11px] font-semibold rounded-lg">HPL ≤7hr</span>
+                                    <span x-show="ancMapCfg.showFasyankes" class="px-2 py-0.5 bg-sky-100 text-sky-700 text-[11px] font-semibold rounded-lg">Fasyankes</span>
+                                    <span x-show="ancMapLoading" class="inline-flex items-center gap-1 text-[11px] text-slate-500">
+                                        <svg class="animate-spin w-3 h-3" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"/></svg>
+                                        Memuat data peta...
+                                    </span>
+                                </div>
+
+                                {{-- Baris 2: legenda warna --}}
+                                <div class="flex items-center gap-4 pt-2 border-t border-slate-100 text-xs">
+                                    <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Legenda</span>
+                                    <div class="flex items-center gap-1.5">
+                                        <span class="w-3 h-3 rounded-full bg-rose-500 shrink-0"></span>
+                                        <span class="text-slate-500">KRST / Kritis</span>
+                                    </div>
+                                    <div class="flex items-center gap-1.5">
+                                        <span class="w-3 h-3 rounded-full bg-amber-500 shrink-0"></span>
+                                        <span class="text-slate-500">KRT / Tinggi</span>
+                                    </div>
+                                    <div class="flex items-center gap-1.5">
+                                        <span class="w-3 h-3 rounded-full bg-pink-400 shrink-0"></span>
+                                        <span class="text-slate-500">Normal</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- ── Map Container ── --}}
+                        <div id="ancMap"
+                            :style="'height:' + ancMapCfg.height + 'px; width:100%; isolation:isolate;'"
+                            class="map-container w-full z-0 overflow-hidden relative flex-1">
                         </div>
                     </div>
                 </div>
@@ -1791,7 +1930,8 @@
             age: null,
             poedji: null,
             map: null,
-            markersLayer: null
+            markersLayer: null,
+            fasyanksLayer: null,
         };
 
         function ancDashboard() {
@@ -1872,8 +2012,24 @@
                     komplikasi_persalinan: ''
                 },
 
-                // GIS Heatmap View Mode
-                mapViewMode: 'markers', // 'markers' or 'heatmap'
+                // GIS Map Widget Config (per-kecamatan, saveable)
+                ancMapCfgOpen: false,
+                ancMapCfgSaved: false,
+                ancMapLoading: false,
+                ancMapKecamatanList: [],
+                ancMapCfg: {
+                    kecamatan: '',
+                    viewMode: 'markers',
+                    height: 460,
+                    showKEK: false,
+                    showAnemia: false,
+                    showHiper: false,
+                    showImminent: false,
+                    showFasyankes: true,
+                },
+
+                // Legacy (kept for compat)
+                mapViewMode: 'markers',
 
                 // Target Patient & Innovation Modal States
                 targetPatient: null,
@@ -2038,17 +2194,26 @@
                 },
 
                 initDashboard() {
+                    // Restore saved map config from localStorage
+                    try {
+                        const saved = localStorage.getItem('anc_map_cfg');
+                        if (saved) {
+                            const parsed = JSON.parse(saved);
+                            this.ancMapCfg = Object.assign({}, this.ancMapCfg, parsed);
+                            this.mapViewMode = this.ancMapCfg.viewMode;
+                        }
+                    } catch (e) {}
+
                     this.loadKelurahanList();
+                    this.loadAncMapKecamatanList();
                     this.$nextTick(() => {
                         this.renderCharts();
                         this.initMap();
-                        // Otomatis cek dan beri notifikasi peringatan sirine jika ada ibu hamil H-1 persalinan
                         setTimeout(() => {
                             this.checkAndTriggerH1Alert();
                         }, 800);
                     });
 
-                    // Dengarkan event WebSocket kelahiran untuk auto refresh tabel dan KPI
                     window.addEventListener('birth-alert-received', (e) => {
                         console.log('Realtime event received in ANC Dashboard:', e.detail);
                         this.applyFilters(this.patientsData.current_page || 1);
@@ -2283,6 +2448,67 @@
                     }
                 },
 
+                // ── ANC Map Config Helpers ──────────────────────────────────────
+
+                async loadAncMapKecamatanList() {
+                    try {
+                        const res = await fetch(`{{ route('anc.kecamatan.list') }}?kabupaten=${encodeURIComponent(this.selectedKabupaten || '')}`);
+                        this.ancMapKecamatanList = await res.json();
+                    } catch (e) {}
+                },
+
+                saveAncMapCfg(showFeedback = false) {
+                    try {
+                        localStorage.setItem('anc_map_cfg', JSON.stringify(this.ancMapCfg));
+                        if (showFeedback) {
+                            this.ancMapCfgSaved = true;
+                            setTimeout(() => { this.ancMapCfgSaved = false; }, 2500);
+                        }
+                    } catch (e) {}
+                },
+
+                resetAncMapCfg() {
+                    this.ancMapCfg = { kecamatan: '', viewMode: 'markers', height: 460, showKEK: false, showAnemia: false, showHiper: false, showImminent: false, showFasyankes: true };
+                    try { localStorage.removeItem('anc_map_cfg'); } catch (e) {}
+                    this.ancMapCfgSaved = true;
+                    setTimeout(() => { this.ancMapCfgSaved = false; }, 1800);
+                    this.onAncMapKecamatanChange();
+                },
+
+                resizeAncMap() {
+                    this.$nextTick(() => {
+                        if (ancCharts.map) ancCharts.map.invalidateSize();
+                    });
+                },
+
+                async onAncMapKecamatanChange() {
+                    this.saveAncMapCfg();
+                    await this.loadAncMapGeoData();
+                    this.updateMap();
+                },
+
+                async loadAncMapGeoData() {
+                    this.ancMapLoading = true;
+                    try {
+                        const params = new URLSearchParams({
+                            kabupaten: this.selectedKabupaten || '',
+                            kecamatan: this.ancMapCfg.kecamatan || '',
+                        });
+                        const res = await fetch(`{{ route('anc.map.data') }}?${params.toString()}`);
+                        const data = await res.json();
+                        this.mapData = data.points || [];
+                        if (ancCharts.map && data.center) {
+                            ancCharts.map.setView([data.center.lat, data.center.lng], data.center.zoom || 13);
+                        }
+                    } catch (e) {
+                        console.error('ANC map data error:', e);
+                    } finally {
+                        this.ancMapLoading = false;
+                    }
+                },
+
+                // ── Map Init & Render ───────────────────────────────────────────
+
                 initMap() {
                     const init = () => {
                         const mapElem = document.getElementById('ancMap');
@@ -2298,7 +2524,6 @@
                             ancCharts.map = null;
                         }
 
-                        // Default center: Kab. Tangerang / Pagedangan
                         ancCharts.map = L.map('ancMap').setView([-6.2889, 106.6092], 12);
                         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
@@ -2306,15 +2531,13 @@
                         }).addTo(ancCharts.map);
 
                         ancCharts.markersLayer = L.layerGroup().addTo(ancCharts.map);
+                        ancCharts.fasyanksLayer = L.layerGroup().addTo(ancCharts.map);
                         this.updateMap();
 
                         [100, 300, 600, 1000].forEach(delay => {
-                            setTimeout(() => {
-                                if (ancCharts.map) ancCharts.map.invalidateSize();
-                            }, delay);
+                            setTimeout(() => { if (ancCharts.map) ancCharts.map.invalidateSize(); }, delay);
                         });
                     };
-
                     init();
                 },
 
@@ -2322,66 +2545,134 @@
                     if (!ancCharts.map || !ancCharts.markersLayer || typeof L === 'undefined') return;
 
                     ancCharts.markersLayer.clearLayers();
+                    if (ancCharts.fasyanksLayer) ancCharts.fasyanksLayer.clearLayers();
+
+                    const viewMode = this.ancMapCfg.viewMode || this.mapViewMode;
 
                     if (!this.mapData || this.mapData.length === 0) return;
 
                     const bounds = [];
 
                     this.mapData.forEach(item => {
-                        if (item.lat && item.lng) {
-                            bounds.push([item.lat, item.lng]);
+                        if (!item.lat || !item.lng) return;
+                        bounds.push([item.lat, item.lng]);
 
-                            const hasRisti = (item.total_risti && item.total_risti > 0);
-                            
-                            if (this.mapViewMode === 'heatmap') {
-                                // Heatmap Halo Buffer (Simulasi gradien panas risiko wilayah)
-                                const heatIntensity = hasRisti ? 0.45 : 0.2;
-                                const heatColor = hasRisti ? '#f43f5e' : '#f59e0b';
-                                const heatRadius = Math.max(35, item.total * 6);
-
-                                const heatCircle = L.circle([item.lat, item.lng], {
-                                    radius: heatRadius * 15,
-                                    color: 'transparent',
-                                    fillColor: heatColor,
-                                    fillOpacity: heatIntensity
-                                });
-                                ancCharts.markersLayer.addLayer(heatCircle);
-                            }
-
-                            const color = hasRisti ? '#f43f5e' : '#ec4899';
-                            const radius = Math.min(22, Math.max(10, item.total * 3));
-
-                            const circle = L.circleMarker([item.lat, item.lng], {
-                                color: color,
-                                fillColor: color,
-                                fillOpacity: hasRisti ? 0.85 : 0.65,
-                                radius: radius,
-                                weight: 2
-                            });
-
-                            const popupContent = `
-                                <div style="font-family: inherit; font-size: 12px; min-width: 170px;">
-                                    <div style="font-weight: 700; font-size: 13px; color: #1e293b; margin-bottom: 4px;">${item.kelurahan}</div>
-                                    <div style="color: #64748b; margin-bottom: 6px;">${item.kabupaten || 'Wilayah Puskesmas'}</div>
-                                    <div style="display: flex; justify-content: space-between; border-top: 1px solid #f1f5f9; padding-top: 4px;">
-                                        <span style="color: #475569;">Total Ibu Hamil:</span>
-                                        <span style="font-weight: 700; color: #ec4899;">${item.total}</span>
-                                    </div>
-                                    <div style="display: flex; justify-content: space-between; padding-top: 2px;">
-                                        <span style="color: #475569;">Kasus RISTI / KEK:</span>
-                                        <span style="font-weight: 700; color: #f43f5e;">${item.total_risti || 0}</span>
-                                    </div>
-                                    ${this.mapViewMode === 'heatmap' ? `<div style="margin-top: 4px; padding: 2px 4px; background: #fff1f2; color: #be123c; border-radius: 4px; font-size: 10px; font-weight: bold; text-align: center;">Zona Prioritas Intervensi</div>` : ''}
-                                </div>
-                            `;
-
-                            circle.bindPopup(popupContent);
-                            ancCharts.markersLayer.addLayer(circle);
+                        // ── Color by risk level ──
+                        const riskLevel = item.risk_level || (item.total_risti > 0 ? 'high' : 'normal');
+                        let color, radius;
+                        if (riskLevel === 'critical') {
+                            color = '#f43f5e'; radius = 20;   // rose — KRST
+                        } else if (riskLevel === 'high') {
+                            color = '#f59e0b'; radius = 15;   // amber — KRT
+                        } else {
+                            color = '#f472b6'; radius = 11;   // pink — KRR / normal
                         }
+
+                        // ── Mode: Heatmap halo ──
+                        if (viewMode === 'heatmap') {
+                            const haloR = Math.max(350, item.total * 70);
+                            ancCharts.markersLayer.addLayer(L.circle([item.lat, item.lng], {
+                                radius: haloR,
+                                color: 'transparent',
+                                fillColor: color,
+                                fillOpacity: Math.min(0.5, 0.1 + (item.total_risti || 0) * 0.05),
+                            }));
+                        }
+
+                        // ── Mode: RISTI detection rings ──
+                        if (viewMode === 'risti' && riskLevel !== 'normal') {
+                            ancCharts.markersLayer.addLayer(L.circle([item.lat, item.lng], {
+                                radius: riskLevel === 'critical' ? 700 : 500,
+                                color: color, fillColor: color,
+                                fillOpacity: riskLevel === 'critical' ? 0.22 : 0.12,
+                                weight: 2, dashArray: '5 5',
+                            }));
+                        }
+
+                        // ── Overlay: KEK zone ──
+                        if (this.ancMapCfg.showKEK && item.total_kek > 0) {
+                            ancCharts.markersLayer.addLayer(L.circle([item.lat, item.lng], {
+                                radius: 400, color: '#d97706', fillColor: '#fbbf24',
+                                fillOpacity: 0.2, weight: 1.5, dashArray: '3 5',
+                            }));
+                        }
+
+                        // ── Overlay: Anemia zone ──
+                        if (this.ancMapCfg.showAnemia && item.total_anemia > 0) {
+                            ancCharts.markersLayer.addLayer(L.circle([item.lat, item.lng], {
+                                radius: 320, color: '#e11d48', fillColor: '#fb7185',
+                                fillOpacity: 0.18, weight: 1.5, dashArray: '3 4',
+                            }));
+                        }
+
+                        // ── Overlay: Hipertensi zone ──
+                        if (this.ancMapCfg.showHiper && item.total_hiper > 0) {
+                            ancCharts.markersLayer.addLayer(L.circle([item.lat, item.lng], {
+                                radius: 280, color: '#ea580c', fillColor: '#fb923c',
+                                fillOpacity: 0.2, weight: 1.5,
+                            }));
+                        }
+
+                        // ── Overlay: Imminent delivery pulse ──
+                        if (this.ancMapCfg.showImminent && item.total_imminent > 0) {
+                            ancCharts.markersLayer.addLayer(L.circle([item.lat, item.lng], {
+                                radius: 200, color: '#059669', fillColor: '#34d399',
+                                fillOpacity: 0.35, weight: 2,
+                            }));
+                        }
+
+                        // ── Main marker ──
+                        const circle = L.circleMarker([item.lat, item.lng], {
+                            color, fillColor: color,
+                            fillOpacity: riskLevel !== 'normal' ? 0.88 : 0.65,
+                            radius, weight: 2,
+                        });
+
+                        // ── Fasyankes sub-markers ──
+                        if (this.ancMapCfg.showFasyankes && item.fasyankes && item.fasyankes.length > 0) {
+                            item.fasyankes.slice(0, 3).forEach((f, i) => {
+                                const angle = (i * 120) * (Math.PI / 180);
+                                const fm = L.circleMarker(
+                                    [item.lat + 0.002 * Math.cos(angle), item.lng + 0.002 * Math.sin(angle)],
+                                    { color: '#0284c7', fillColor: '#38bdf8', fillOpacity: 0.75, radius: 6, weight: 1.5 }
+                                );
+                                fm.bindPopup(`<div style="font-size:11px;font-weight:600;">${f.name}</div>
+                                    <div style="font-size:11px;color:#475569;">${f.total} ibu hamil · ${f.total_risti || 0} RISTI</div>`);
+                                if (ancCharts.fasyanksLayer) ancCharts.fasyanksLayer.addLayer(fm);
+                            });
+                        }
+
+                        // ── Popup ──
+                        const ristiPct  = item.risti_ratio != null ? item.risti_ratio + '%' : '-';
+                        const kekBadge  = item.total_kek    > 0 ? `<div style="display:flex;justify-content:space-between;font-size:11px;"><span style="color:#92400e;">KEK (LiLA&lt;23.5)</span><span style="font-weight:700;color:#d97706;">${item.total_kek}</span></div>` : '';
+                        const anmBadge  = item.total_anemia > 0 ? `<div style="display:flex;justify-content:space-between;font-size:11px;"><span style="color:#9f1239;">Anemia (Hb&lt;11)</span><span style="font-weight:700;color:#e11d48;">${item.total_anemia}</span></div>` : '';
+                        const hipBadge  = item.total_hiper  > 0 ? `<div style="display:flex;justify-content:space-between;font-size:11px;"><span style="color:#9a3412;">Hipertensi</span><span style="font-weight:700;color:#ea580c;">${item.total_hiper}</span></div>` : '';
+                        const immBadge  = item.total_imminent > 0
+                            ? `<div style="margin-top:4px;padding:3px 5px;background:#ecfdf5;border-radius:5px;font-size:10px;color:#065f46;font-weight:700;">🟢 HPL ≤7 Hari: ${item.total_imminent} ibu hamil</div>` : '';
+                        const krstBadge = item.total_krst > 0
+                            ? `<div style="margin-top:3px;padding:3px 5px;background:#fff1f2;border-radius:5px;font-size:10px;color:#9f1239;font-weight:700;">⚠ KRST (RS PONEK): ${item.total_krst}</div>` : '';
+
+                        circle.bindPopup(`
+                            <div style="font-family:inherit;font-size:12px;min-width:200px;">
+                                <div style="font-weight:700;font-size:13px;color:#1e293b;margin-bottom:2px;">${item.kelurahan}</div>
+                                <div style="color:#64748b;font-size:11px;margin-bottom:5px;">${item.kecamatan ? 'Kec. ' + item.kecamatan + ' · ' : ''}${item.kabupaten || ''}</div>
+                                <div style="display:flex;justify-content:space-between;border-top:1px solid #f1f5f9;padding-top:5px;font-weight:700;">
+                                    <span>Total Ibu Hamil</span>
+                                    <span style="color:${color};">${item.total}</span>
+                                </div>
+                                <div style="display:flex;justify-content:space-between;font-size:11px;">
+                                    <span style="color:#be123c;">RISTI (KRT+KRST)</span>
+                                    <span style="font-weight:700;color:#f43f5e;">${item.total_risti || 0} <span style="font-weight:400;color:#94a3b8;">(${ristiPct})</span></span>
+                                </div>
+                                ${kekBadge}${anmBadge}${hipBadge}${krstBadge}${immBadge}
+                            </div>
+                        `);
+
+                        ancCharts.markersLayer.addLayer(circle);
                     });
 
                     if (bounds.length > 0) {
-                        ancCharts.map.fitBounds(bounds, { padding: [35, 35], maxZoom: 14 });
+                        ancCharts.map.fitBounds(bounds, { padding: [40, 40], maxZoom: 14 });
                     }
                 },
 
