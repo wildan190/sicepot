@@ -87,6 +87,112 @@ class GeminiAiService
     }
 
     /**
+     * Parse free-text prompt describing a TBC patient into structured JSON fields.
+     */
+    public function parseTbPatientFromPrompt(string $userPrompt): array
+    {
+        $system = "Anda adalah asisten input data Sistem Informasi Penanggulangan TBC di Puskesmas Indonesia. "
+            . "Tugas Anda adalah membaca deskripsi bebas dari petugas kesehatan dan mengekstrak informasi pasien TBC "
+            . "menjadi objek JSON terstruktur. Jangan gunakan emoji dalam respons. "
+            . "Kembalikan HANYA satu objek JSON valid, tanpa markdown, tanpa komentar, tanpa backtick. "
+            . "Jika sebuah field tidak disebutkan, isi dengan null. "
+            . "Gunakan format tanggal YYYY-MM-DD jika ada tanggal. "
+            . "Nilai report_type harus salah satu dari: tb_03, tb_06. "
+            . "Nilai jenis_kelamin harus L atau P. "
+            . "Untuk bulan gunakan nama bulan Indonesia (Januari, Februari, ..., Desember).";
+
+        $prompt = "Ekstrak data pasien TBC dari teks berikut dan kembalikan sebagai JSON dengan field-field ini:\n"
+            . "report_type, fasyankes_name, no_reg_sitb, no_reg_terduga, no_reg_pasien, nik, nama_lengkap, umur, jenis_kelamin, "
+            . "pekerjaan, provinsi, kabupaten, kecamatan, kelurahan, alamat_lengkap, bulan, tanggal_daftar, "
+            . "tanggal_mulai_pengobatan, status_pengobatan, tipe_diagnosis, lokasi_anatomi, riwayat_pengobatan, "
+            . "status_hiv, riwayat_dm, hasil_tcm, hasil_mikroskopis, hasil_diagnosis, hasil_akhir_pengobatan\n\n"
+            . "Teks dari petugas:\n\"" . $userPrompt . "\"";
+
+        $result = $this->generate($prompt, $system);
+
+        if (!$result['success']) {
+            return $result;
+        }
+
+        // Strip any accidental markdown fences then decode
+        $raw = trim($result['content']);
+        $raw = preg_replace('/^```(?:json)?\s*/i', '', $raw);
+        $raw = preg_replace('/\s*```$/', '', $raw);
+
+        $parsed = json_decode($raw, true);
+
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            return [
+                'success' => false,
+                'message' => 'Gemini mengembalikan format yang tidak dapat dibaca sebagai JSON. Coba ulangi dengan deskripsi yang lebih lengkap.',
+                'raw'     => $raw,
+            ];
+        }
+
+        return [
+            'success' => true,
+            'data'    => $parsed,
+        ];
+    }
+
+    /**
+     * Parse free-text prompt describing an ANC (ibu hamil) patient into structured JSON fields.
+     */
+    public function parseAncPatientFromPrompt(string $userPrompt): array
+    {
+        $system = "Anda adalah asisten input data Sistem Informasi KIA (Kesehatan Ibu dan Anak) di Puskesmas Indonesia. "
+            . "Tugas Anda adalah membaca deskripsi bebas dari bidan atau petugas KIA dan mengekstrak informasi "
+            . "rekam ANC ibu hamil menjadi objek JSON terstruktur. Jangan gunakan emoji dalam respons. "
+            . "Kembalikan HANYA satu objek JSON valid, tanpa markdown, tanpa komentar, tanpa backtick. "
+            . "Jika sebuah field tidak disebutkan, isi dengan null. "
+            . "Gunakan format tanggal YYYY-MM-DD jika ada tanggal. "
+            . "Untuk bulan gunakan nama bulan Indonesia (Januari, Februari, ..., Desember). "
+            . "Field gravida/para/abortus berupa angka integer. "
+            . "Field lila, hb, berat_badan, tinggi_badan berupa angka desimal. "
+            . "Field tekanan_darah_sistolik dan tekanan_darah_diastolik berupa angka. "
+            . "Untuk status_risti gunakan: Normal atau Risiko Tinggi. "
+            . "Untuk golongan_darah gunakan: A, B, AB, atau O (tambahkan +/- jika disebutkan).";
+
+        $prompt = "Ekstrak data rekam ANC ibu hamil dari teks berikut dan kembalikan sebagai JSON dengan field-field ini:\n"
+            . "fasyankes_name, nik, no_telepon, no_rekam_medis, nama_lengkap, nama_suami, tanggal_lahir, umur, "
+            . "pekerjaan, pendidikan, provinsi, kabupaten, kecamatan, kelurahan, alamat_lengkap, "
+            . "golongan_darah, gravida, para, abortus, usia_kehamilan, hpht, hpl, "
+            . "bulan, tanggal_kunjungan, kunjungan_ke, jenis_kunjungan, "
+            . "berat_badan, tinggi_badan, lila, tekanan_darah_sistolik, tekanan_darah_diastolik, "
+            . "tinggi_fundus_uteri, presentasi_janin, denyut_jantung_janin, "
+            . "status_imunisasi_tt, hb, status_anemia, gds, protein_urine, "
+            . "hbsag, hiv_status, sifilis_status, "
+            . "faktor_risiko, status_risti, calon_pendonor, "
+            . "dirujuk_ke, alasan_rujukan, catatan\n\n"
+            . "Teks dari petugas:\n\"" . $userPrompt . "\"";
+
+        $result = $this->generate($prompt, $system);
+
+        if (!$result['success']) {
+            return $result;
+        }
+
+        $raw = trim($result['content']);
+        $raw = preg_replace('/^```(?:json)?\s*/i', '', $raw);
+        $raw = preg_replace('/\s*```$/', '', $raw);
+
+        $parsed = json_decode($raw, true);
+
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            return [
+                'success' => false,
+                'message' => 'Gemini mengembalikan format yang tidak dapat dibaca sebagai JSON. Coba ulangi dengan deskripsi yang lebih lengkap.',
+                'raw'     => $raw,
+            ];
+        }
+
+        return [
+            'success' => true,
+            'data'    => $parsed,
+        ];
+    }
+
+    /**
      * AI Triage & Anomaly Detection for ANC Patient
      */
     public function triageAncPatient(array|object $patient): array

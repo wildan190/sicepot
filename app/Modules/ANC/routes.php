@@ -23,6 +23,7 @@ Route::prefix('anc')->name('anc.')->group(function () {
     Route::get('/report/executive', [DashboardController::class, 'executiveReport'])->name('report.executive');
 
     // AI Triage, Timeline & Duplicates
+    Route::post('/ai-parse', [DashboardController::class, 'aiParsePatient'])->name('ai.parse');
     Route::get('/patients/{patient}/ai-triage', [DashboardController::class, 'aiTriage'])->name('patients.ai-triage');
     Route::get('/patients/{patient}/timeline', [DashboardController::class, 'patientTimeline'])->name('patients.timeline');
     Route::get('/patients/{patient}/duplicates', [DashboardController::class, 'checkDuplicates'])->name('patients.duplicates');

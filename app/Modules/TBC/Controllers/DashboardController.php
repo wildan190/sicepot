@@ -87,6 +87,51 @@ class DashboardController extends Controller
     }
 
     /**
+     * AI: Parse free-text prompt into structured TBC patient fields.
+     * Coerces types so the output always matches StorePatientRequest validation.
+     */
+    public function aiParsePatient(\Illuminate\Http\Request $request, \App\Services\GeminiAiService $ai)
+    {
+        $request->validate(['prompt' => 'required|string|min:10|max:2000']);
+
+        $result = $ai->parseTbPatientFromPrompt($request->input('prompt'));
+
+        if (!$result['success']) {
+            return response()->json($result);
+        }
+
+        $data = $result['data'] ?? [];
+
+        // ── Normalise integer fields ──────────────────────────────────────────
+        if (isset($data['umur']) && $data['umur'] !== null && $data['umur'] !== '') {
+            $data['umur'] = (int) $data['umur'];
+        }
+
+        // ── Normalise report_type ─────────────────────────────────────────────
+        if (isset($data['report_type'])) {
+            $rt = strtolower(trim((string) $data['report_type']));
+            if (str_contains($rt, '06') || str_contains($rt, 'terduga')) {
+                $data['report_type'] = 'tb_06';
+            } else {
+                $data['report_type'] = 'tb_03';
+            }
+        }
+
+        // ── Strip to only allowed fields ──────────────────────────────────────
+        $allowed = [
+            'report_type','fasyankes_name','no_reg_sitb','no_reg_terduga','no_reg_pasien',
+            'nik','nama_lengkap','umur','jenis_kelamin','pekerjaan',
+            'provinsi','kabupaten','kecamatan','kelurahan','alamat_lengkap',
+            'bulan','tanggal_daftar','tanggal_mulai_pengobatan','status_pengobatan',
+            'tipe_diagnosis','lokasi_anatomi','riwayat_pengobatan','status_hiv','riwayat_dm',
+            'hasil_tcm','hasil_mikroskopis','hasil_diagnosis','hasil_akhir_pengobatan',
+        ];
+        $data = array_intersect_key($data, array_flip($allowed));
+
+        return response()->json(['success' => true, 'data' => $data]);
+    }
+
+    /**
      * API: AI Triage with Google Gemini for a TBC patient.
      */
     public function aiTriage(Request $request, \App\Modules\TBC\Models\TbPatient $patient, \App\Services\GeminiAiService $aiService)

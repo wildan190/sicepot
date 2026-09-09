@@ -399,20 +399,34 @@ class ImportService
 
         // Sanitize numeric fields
         foreach (['umur', 'gravida', 'para', 'abortus'] as $intField) {
-            if (isset($data[$intField]) && is_numeric($data[$intField])) {
-                $data[$intField] = (int) $data[$intField];
-            } elseif (!isset($data[$intField])) {
+            $raw = isset($data[$intField]) ? (string) $data[$intField] : '';
+            if ($raw === '' || $raw === null) {
                 $data[$intField] = null;
+            } elseif (is_numeric($raw)) {
+                $data[$intField] = (int) $raw;
+            } else {
+                // Extract leading integer from strings like "24 Tahun 10 Bulan 28 Hari", "G2", "P1"
+                if (preg_match('/^[^\d]*(\d+)/u', trim($raw), $m)) {
+                    $data[$intField] = (int) $m[1];
+                } else {
+                    $data[$intField] = null;
+                }
             }
         }
 
         foreach (['berat_badan', 'tinggi_badan', 'lila', 'berat_lahir_bayi',
                   'tekanan_darah_sistolik', 'tekanan_darah_diastolik', 'tinggi_fundus_uteri'] as $floatField) {
-            if (isset($data[$floatField])) {
-                $cleanFloat = str_replace(',', '.', (string)$data[$floatField]);
-                $data[$floatField] = is_numeric($cleanFloat) ? (float) $cleanFloat : null;
-            } else {
+            $raw = isset($data[$floatField]) ? (string) $data[$floatField] : '';
+            if ($raw === '' || $raw === null) {
                 $data[$floatField] = null;
+            } else {
+                $cleanFloat = str_replace(',', '.', $raw);
+                // Strip any trailing non-numeric text (e.g. "79 kg", "151 cm")
+                if (preg_match('/^[\s]*(\d+[\.,]?\d*)/u', $cleanFloat, $m)) {
+                    $data[$floatField] = (float) str_replace(',', '.', $m[1]);
+                } else {
+                    $data[$floatField] = null;
+                }
             }
         }
 
@@ -425,11 +439,11 @@ class ImportService
             }
         }
 
-        // Calculate umur from tanggal_lahir if umur is missing
-        if (empty($data['umur']) && !empty($data['tanggal_lahir'])) {
+        // Calculate umur from tanggal_lahir if umur is missing or zero
+        if (($data['umur'] === null || $data['umur'] === 0) && !empty($data['tanggal_lahir'])) {
             try {
-                $birthDate = \Carbon\Carbon::parse($data['tanggal_lahir']);
-                $data['umur'] = $birthDate->age;
+                $birthDate    = \Carbon\Carbon::parse($data['tanggal_lahir']);
+                $data['umur'] = (int) $birthDate->age;
             } catch (\Exception $e) {}
         }
 

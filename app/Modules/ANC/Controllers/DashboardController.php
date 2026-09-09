@@ -87,6 +87,69 @@ class DashboardController extends Controller
     }
 
     /**
+     * AI: Parse free-text prompt into structured ANC patient fields.
+     * Coerces types so the output always matches StorePatientRequest validation.
+     */
+    public function aiParsePatient(\Illuminate\Http\Request $request, \App\Services\GeminiAiService $ai)
+    {
+        $request->validate(['prompt' => 'required|string|min:10|max:2000']);
+
+        $result = $ai->parseAncPatientFromPrompt($request->input('prompt'));
+
+        if (!$result['success']) {
+            return response()->json($result);
+        }
+
+        $data = $result['data'] ?? [];
+
+        // ── Normalise kunjungan_ke: integer → "K{n}" string ──────────────────
+        if (isset($data['kunjungan_ke'])) {
+            $k = $data['kunjungan_ke'];
+            if (is_int($k) || (is_string($k) && ctype_digit(trim($k)))) {
+                $data['kunjungan_ke'] = 'K' . ltrim((string) $k, '0');
+            }
+        }
+
+        // ── Normalise integer-only fields ─────────────────────────────────────
+        foreach (['gravida', 'para', 'abortus', 'umur', 'skor_poedji_rochjati'] as $intField) {
+            if (isset($data[$intField]) && $data[$intField] !== null && $data[$intField] !== '') {
+                $data[$intField] = (int) $data[$intField];
+            }
+        }
+
+        // ── Normalise numeric/decimal fields ─────────────────────────────────
+        foreach (['lila', 'berat_badan', 'tinggi_badan', 'berat_lahir_bayi',
+                  'tekanan_darah_sistolik', 'tekanan_darah_diastolik',
+                  'tinggi_fundus_uteri', 'denyut_jantung_janin', 'gds'] as $numField) {
+            if (isset($data[$numField]) && $data[$numField] !== null && $data[$numField] !== '') {
+                $data[$numField] = is_numeric($data[$numField]) ? (float) $data[$numField] : null;
+            }
+        }
+
+        // ── Normalise hb: keep as string (e.g. "10.5") ───────────────────────
+        if (isset($data['hb']) && $data['hb'] !== null) {
+            $data['hb'] = (string) $data['hb'];
+        }
+
+        // ── Strip fields not in StorePatientRequest to avoid mass-assign issues
+        $allowed = [
+            'nama_lengkap','nama_suami','no_telepon','tanggal_lahir','nik','no_rekam_medis',
+            'umur','gravida','para','abortus','usia_kehamilan','hpht','hpl',
+            'kunjungan_ke','tanggal_kunjungan','kabupaten','kecamatan','kelurahan','alamat_lengkap',
+            'hb','status_anemia','lila','status_risti','skor_poedji_rochjati',
+            'kategori_poedji_rochjati','rekomendasi_faskes','calon_pendonor','golongan_darah',
+            'faktor_risiko','dirujuk_ke','alasan_rujukan','fasyankes_name','catatan',
+            'bulan','jenis_kunjungan','berat_badan','tinggi_badan',
+            'tekanan_darah_sistolik','tekanan_darah_diastolik','tinggi_fundus_uteri',
+            'presentasi_janin','denyut_jantung_janin','status_imunisasi_tt',
+            'gds','protein_urine','hbsag','hiv_status','sifilis_status',
+        ];
+        $data = array_intersect_key($data, array_flip($allowed));
+
+        return response()->json(['success' => true, 'data' => $data]);
+    }
+
+    /**
      * API: AI Triage with Google Gemini for an ANC patient.
      */
     public function aiTriage(Request $request, \App\Modules\ANC\Models\AncPatient $patient, \App\Services\GeminiAiService $aiService)

@@ -952,117 +952,128 @@
                 </div>
             </div>
 
-            <!-- ================= MODAL: TAMBAH PASIEN CEPAT ================= -->
+            <!-- ================= MODAL: TAMBAH PASIEN VIA AI PROMPT ================= -->
             <div x-show="showAddModal" x-cloak class="fixed inset-0 z-[9999] overflow-y-auto" style="display: none;">
                 <div class="min-h-screen px-4 text-center flex items-center justify-center">
                     <div @click="showAddModal = false"
                         class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs transition-opacity"></div>
 
-                    <div
-                        class="inline-block w-full max-w-2xl p-6 my-8 text-left align-middle transition-all transform bg-white shadow-2xl rounded-3xl z-10 border border-slate-100">
-                        <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+                    <div class="inline-block w-full max-w-2xl my-8 text-left align-middle transition-all transform bg-white shadow-2xl rounded-3xl z-10 border border-slate-100 overflow-hidden">
+
+                        {{-- Header --}}
+                        <div class="px-6 pt-6 pb-4 border-b border-slate-100 flex items-start justify-between gap-3">
                             <div>
-                                <h3 class="text-base font-bold text-slate-800">Tambah Data Pasien / Terduga Baru</h3>
-                                <p class="text-xs text-slate-500">Input data pasien langsung ke sistem</p>
+                                <h3 class="text-base font-bold text-slate-800">Tambah Data Pasien TBC</h3>
+                                <p class="text-xs text-slate-500 mt-0.5">Deskripsikan data pasien secara bebas, AI akan mengisi form secara otomatis</p>
                             </div>
                             <button @click="showAddModal = false"
-                                class="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100 cursor-pointer">
+                                class="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100 cursor-pointer shrink-0">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M6 18L18 6M6 6l12 12"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
                                 </svg>
                             </button>
                         </div>
 
-                        <form @submit.prevent="saveNewPatient()" class="mt-4 space-y-3.5 text-xs">
-                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                                <div class="sm:col-span-2">
-                                    <label class="block font-semibold text-slate-700 mb-1">Nama Lengkap *</label>
-                                    <input type="text" x-model="newPatient.nama_lengkap" required
-                                        placeholder="Nama lengkap pasien"
-                                        class="w-full px-3 py-2 text-xs border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500">
-                                </div>
-                                <div>
-                                    <label class="block font-semibold text-slate-700 mb-1">Kategori Register</label>
-                                    <select x-model="newPatient.report_type"
-                                        class="w-full px-3 py-2 text-xs border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500">
-                                        <option value="tb_03">TB-03 (Pasien Positif)</option>
-                                        <option value="tb_06">TB-06 (Terduga)</option>
-                                    </select>
-                                </div>
+                        <div class="px-6 py-5 space-y-4">
+
+                            {{-- Step indicator --}}
+                            <div class="flex items-center gap-2 text-[11px]">
+                                <span :class="aiAddStep === 'prompt' ? 'bg-indigo-600 text-white' : 'bg-indigo-100 text-indigo-600'"
+                                    class="w-5 h-5 rounded-full flex items-center justify-center font-bold shrink-0">1</span>
+                                <span :class="aiAddStep === 'prompt' ? 'font-semibold text-slate-700' : 'text-slate-400'">Tulis Deskripsi</span>
+                                <span class="text-slate-300 mx-1">—</span>
+                                <span :class="aiAddStep === 'preview' ? 'bg-indigo-600 text-white' : 'bg-indigo-100 text-indigo-600'"
+                                    class="w-5 h-5 rounded-full flex items-center justify-center font-bold shrink-0">2</span>
+                                <span :class="aiAddStep === 'preview' ? 'font-semibold text-slate-700' : 'text-slate-400'">Periksa & Simpan</span>
                             </div>
 
-                            <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                                <div>
-                                    <label class="block font-semibold text-slate-700 mb-1">NIK</label>
-                                    <input type="text" x-model="newPatient.nik" placeholder="16 digit NIK"
-                                        class="w-full px-3 py-2 text-xs border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500">
+                            {{-- Step 1: Prompt input --}}
+                            <div x-show="aiAddStep === 'prompt'" class="space-y-3">
+                                <div class="p-3.5 bg-indigo-50 border border-indigo-100 rounded-xl text-xs text-indigo-700 leading-relaxed">
+                                    Tulis deskripsi pasien seperti berbicara kepada rekan kerja. Contoh:<br>
+                                    <span class="mt-1.5 block text-indigo-500 italic">"Pasien bernama Budi Santoso, laki-laki 35 tahun, NIK 3603xx, warga Kelurahan Pagedangan Kab. Tangerang. Terdaftar TB-03 dengan hasil TCM positif rifampisin sensitif, mulai pengobatan Januari 2025, riwayat HIV negatif."</span>
                                 </div>
                                 <div>
-                                    <label class="block font-semibold text-slate-700 mb-1">Umur (Tahun)</label>
-                                    <input type="number" x-model="newPatient.umur" placeholder="Umur"
-                                        class="w-full px-3 py-2 text-xs border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500">
+                                    <textarea x-model="aiAddPrompt" rows="5"
+                                        placeholder="Tulis deskripsi data pasien di sini..."
+                                        class="w-full px-3.5 py-3 text-xs border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 resize-none leading-relaxed"></textarea>
+                                    <p class="text-[11px] text-slate-400 mt-1" x-text="aiAddPrompt.length + ' karakter'"></p>
                                 </div>
-                                <div>
-                                    <label class="block font-semibold text-slate-700 mb-1">Jenis Kelamin</label>
-                                    <select x-model="newPatient.jenis_kelamin"
-                                        class="w-full px-3 py-2 text-xs border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500">
-                                        <option value="L">Laki-laki (L)</option>
-                                        <option value="P">Perempuan (P)</option>
-                                    </select>
-                                </div>
+                                <div x-show="aiAddError" class="p-3 bg-rose-50 border border-rose-200 rounded-xl text-xs text-rose-700" x-text="aiAddError"></div>
                             </div>
 
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                <div>
-                                    <label class="block font-semibold text-slate-700 mb-1">Kabupaten / Kota</label>
-                                    <input type="text" x-model="newPatient.kabupaten"
-                                        placeholder="misal: Kab. Tangerang"
-                                        class="w-full px-3 py-2 text-xs border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500">
+                            {{-- Step 2: Preview parsed fields --}}
+                            <div x-show="aiAddStep === 'preview'" class="space-y-3">
+                                <div class="p-3 bg-emerald-50 border border-emerald-200 rounded-xl text-xs text-emerald-700 font-medium">
+                                    AI berhasil mengekstrak data. Periksa hasil di bawah dan koreksi jika perlu sebelum menyimpan.
                                 </div>
-                                <div>
-                                    <label class="block font-semibold text-slate-700 mb-1">Kelurahan / Desa</label>
-                                    <input type="text" x-model="newPatient.kelurahan" placeholder="misal: Pagedangan"
-                                        class="w-full px-3 py-2 text-xs border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500">
+                                <div class="max-h-72 overflow-y-auto border border-slate-200 rounded-xl divide-y divide-slate-100">
+                                    <template x-for="[key, val] in Object.entries(newPatient).filter(([k,v]) => v !== null && v !== '' && v !== undefined)" :key="key">
+                                        <div class="flex items-start gap-2 px-3.5 py-2.5 hover:bg-slate-50">
+                                            <span class="text-[11px] font-semibold text-slate-500 w-44 shrink-0 pt-0.5" x-text="key.replace(/_/g,' ')"></span>
+                                            <input type="text" :value="val"
+                                                @change="newPatient[key] = $event.target.value"
+                                                class="flex-1 text-xs text-slate-800 bg-transparent border-0 border-b border-slate-200 focus:border-indigo-400 focus:ring-0 px-0 py-0.5">
+                                        </div>
+                                    </template>
                                 </div>
+                                <p class="text-[11px] text-slate-400">Klik nilai untuk mengedit langsung sebelum disimpan.</p>
+                                <div x-show="aiAddError" class="p-3 bg-rose-50 border border-rose-200 rounded-xl text-xs text-rose-700" x-text="aiAddError"></div>
                             </div>
+                        </div>
 
-                            <div>
-                                <label class="block font-semibold text-slate-700 mb-1">Alamat Lengkap</label>
-                                <textarea rows="2" x-model="newPatient.alamat_lengkap"
-                                    placeholder="Alamat domisili atau jalan/RT/RW"
-                                    class="w-full px-3 py-2 text-xs border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500"></textarea>
-                            </div>
+                        {{-- Footer actions --}}
+                        <div class="px-6 pb-6 pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
+                            <button x-show="aiAddStep === 'preview'"
+                                @click="aiAddStep = 'prompt'; aiAddError = ''" type="button"
+                                class="text-xs font-semibold text-slate-500 hover:text-slate-700 cursor-pointer">
+                                Kembali ke Deskripsi
+                            </button>
+                            <div x-show="aiAddStep === 'prompt'"></div>
 
-                            <div>
-                                <label class="block font-semibold text-slate-700 mb-1">Hasil Diagnosis</label>
-                                <select x-model="newPatient.hasil_diagnosis"
-                                    class="w-full px-3 py-2 text-xs border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500">
-                                    <option value="Terkonfirmasi TBC">Terkonfirmasi TBC</option>
-                                    <option value="TBC SO">TBC SO</option>
-                                    <option value="Bukan TBC">Bukan TBC</option>
-                                    <option value="Terduga">Terduga</option>
-                                </select>
-                            </div>
-
-                            <div class="mt-5 pt-3 border-t border-slate-100 flex items-center justify-end gap-2">
+                            <div class="flex items-center gap-2 ml-auto">
                                 <button @click="showAddModal = false" type="button"
-                                    class="px-4 py-2 text-slate-600 hover:bg-slate-100 rounded-xl font-semibold cursor-pointer">Batal</button>
-                                <button type="submit" :disabled="isSubmittingNewPatient"
-                                    class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white rounded-xl font-semibold shadow-xs flex items-center gap-2 cursor-pointer disabled:opacity-50">
-                                    <span x-show="!isSubmittingNewPatient">Simpan Pasien</span>
-                                    <span x-show="isSubmittingNewPatient" class="flex items-center gap-2">
-                                        <svg class="animate-spin h-3.5 w-3.5" viewBox="0 0 24 24">
-                                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
-                                                stroke-width="4"></circle>
-                                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z">
-                                            </path>
-                                        </svg>
-                                        Menyimpan...
-                                    </span>
+                                    class="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl transition-colors cursor-pointer">
+                                    Batal
+                                </button>
+                                {{-- Step 1 button: Parse --}}
+                                <button x-show="aiAddStep === 'prompt'"
+                                    @click="runTbAiParse()" type="button"
+                                    :disabled="aiAddLoading || aiAddPrompt.trim().length < 10"
+                                    class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-xl shadow-xs flex items-center gap-2 cursor-pointer disabled:opacity-50 transition-colors">
+                                    <template x-if="!aiAddLoading">
+                                        <span class="flex items-center gap-1.5">
+                                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                                            Proses dengan AI
+                                        </span>
+                                    </template>
+                                    <template x-if="aiAddLoading">
+                                        <span class="flex items-center gap-2">
+                                            <svg class="animate-spin h-3.5 w-3.5" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"/></svg>
+                                            Memproses...
+                                        </span>
+                                    </template>
+                                </button>
+                                {{-- Step 2 button: Save --}}
+                                <button x-show="aiAddStep === 'preview'"
+                                    @click="saveNewPatient()" type="button"
+                                    :disabled="isSubmittingNewPatient"
+                                    class="px-5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl shadow-xs flex items-center gap-2 cursor-pointer disabled:opacity-50 transition-colors">
+                                    <template x-if="!isSubmittingNewPatient">
+                                        <span class="flex items-center gap-1.5">
+                                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                                            Simpan ke Database
+                                        </span>
+                                    </template>
+                                    <template x-if="isSubmittingNewPatient">
+                                        <span class="flex items-center gap-2">
+                                            <svg class="animate-spin h-3.5 w-3.5" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"/></svg>
+                                            Menyimpan...
+                                        </span>
+                                    </template>
                                 </button>
                             </div>
-                        </form>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1586,17 +1597,12 @@
                     showAddModal: false,
                     isSubmittingNewPatient: false,
                     editingPatient: {},
-                    newPatient: {
-                        report_type: 'tb_03',
-                        nama_lengkap: '',
-                        nik: '',
-                        umur: '',
-                        jenis_kelamin: 'L',
-                        kabupaten: 'Kab. Tangerang',
-                        kelurahan: '',
-                        alamat_lengkap: '',
-                        hasil_diagnosis: 'Terkonfirmasi TBC'
-                    },
+                    // AI Prompt Add state
+                    aiAddStep: 'prompt',   // 'prompt' | 'preview'
+                    aiAddPrompt: '',
+                    aiAddLoading: false,
+                    aiAddError: '',
+                    newPatient: {},
 
                     // GIS Map Widget Config (per-kecamatan, saveable)
                     tbMapCfgOpen: false,
@@ -1680,18 +1686,41 @@
                     },
 
                     openAddModal() {
-                        this.newPatient = {
-                            report_type: 'tb_03',
-                            nama_lengkap: '',
-                            nik: '',
-                            umur: '',
-                            jenis_kelamin: 'L',
-                            kabupaten: this.selectedKabupaten || 'Kab. Tangerang',
-                            kelurahan: this.selectedKelurahan || '',
-                            alamat_lengkap: '',
-                            hasil_diagnosis: 'Terkonfirmasi TBC'
-                        };
+                        this.aiAddStep = 'prompt';
+                        this.aiAddPrompt = '';
+                        this.aiAddError = '';
+                        this.newPatient = {};
                         this.showAddModal = true;
+                    },
+
+                    async runTbAiParse() {
+                        if (this.aiAddLoading || this.aiAddPrompt.trim().length < 10) return;
+                        this.aiAddLoading = true;
+                        this.aiAddError = '';
+                        try {
+                            const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+                            const res = await fetch(`{{ route('tb.ai.parse') }}`, {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': token, 'Accept': 'application/json' },
+                                body: JSON.stringify({ prompt: this.aiAddPrompt })
+                            });
+                            const result = await res.json();
+                            if (result.success && result.data) {
+                                // Strip null values so only populated fields show in preview
+                                const clean = {};
+                                Object.entries(result.data).forEach(([k, v]) => {
+                                    if (v !== null && v !== '') clean[k] = v;
+                                });
+                                this.newPatient = clean;
+                                this.aiAddStep = 'preview';
+                            } else {
+                                this.aiAddError = result.message || 'AI tidak dapat memproses deskripsi ini. Coba tulis lebih lengkap.';
+                            }
+                        } catch (e) {
+                            this.aiAddError = 'Terjadi kesalahan saat menghubungi AI: ' + e.message;
+                        } finally {
+                            this.aiAddLoading = false;
+                        }
                     },
 
                     async loadKelurahanList() {
@@ -2238,16 +2267,12 @@
                     async saveNewPatient() {
                         if (this.isSubmittingNewPatient) return;
                         this.isSubmittingNewPatient = true;
-
+                        this.aiAddError = '';
                         try {
                             const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
                             const res = await fetch(`{{ route('tb.patients.store') }}`, {
                                 method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                    'X-CSRF-TOKEN': token,
-                                    'Accept': 'application/json'
-                                },
+                                headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': token, 'Accept': 'application/json' },
                                 body: JSON.stringify(this.newPatient)
                             });
                             const data = await res.json();
@@ -2257,10 +2282,10 @@
                                 this.loadKelurahanList();
                                 this.notify('success', 'Pasien Ditambahkan', 'Data pasien baru berhasil disimpan ke database.');
                             } else {
-                                this.notify('error', 'Gagal Menambah', data.message || 'Gagal menambah pasien');
+                                this.aiAddError = data.message || 'Gagal menyimpan data pasien.';
                             }
                         } catch (e) {
-                            this.notify('error', 'Gagal Menambah', 'Gagal menambah pasien: ' + e.message);
+                            this.aiAddError = 'Gagal menyimpan: ' + e.message;
                         } finally {
                             this.isSubmittingNewPatient = false;
                         }

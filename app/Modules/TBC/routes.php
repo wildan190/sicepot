@@ -24,6 +24,7 @@ Route::get('/tb/export/excel', [DashboardController::class, 'exportExcel'])->nam
 Route::get('/tb/report/executive', [DashboardController::class, 'executiveReport'])->name('tb.report.executive');
 
 // AI Triage, Timeline & Duplicates
+Route::post('/tb/ai-parse', [DashboardController::class, 'aiParsePatient'])->name('tb.ai.parse');
 Route::get('/tb/patients/{patient}/ai-triage', [DashboardController::class, 'aiTriage'])->name('tb.patients.ai-triage');
 Route::get('/tb/patients/{patient}/timeline', [DashboardController::class, 'patientTimeline'])->name('tb.patients.timeline');
 Route::get('/tb/patients/{patient}/duplicates', [DashboardController::class, 'checkDuplicates'])->name('tb.patients.duplicates');
