@@ -16,7 +16,9 @@
                             </span>
                             Dashboard penemuan kasus dan pemantauan pengobatan TBC
                         </h2>
-                        <p class="text-xs md:text-sm text-slate-500 mt-1">Dari data menjadi peringatan Prioritas dan aksi bersama</p>
+                        <p class="text-xs md:text-sm text-slate-500 mt-1">emanfaatan Executive Dashboard "Satu Data
+                            Kesehatan Wilayah" Berbasis Visual Geospasial dan Indikator Risiko untuk Kebijakan Lintas
+                            Sektor</p>
                     </div>
                     <div class="flex items-center flex-wrap gap-2">
                         <!-- Ekspor Excel -->
@@ -158,7 +160,8 @@
                     <!-- Card 1: Total Semua -->
                     <div
                         class="bg-white p-4 rounded-2xl shadow-xs border border-slate-200/80 flex flex-col justify-between">
-                        <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Total Pelacakan</span>
+                        <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Total
+                            Pelacakan</span>
                         <div class="mt-2 flex items-baseline justify-between">
                             <span class="text-2xl font-bold text-slate-900" x-text="kpi.total_all">0</span>
                             <span class="p-1.5 rounded-lg bg-blue-50 text-blue-600">
@@ -175,7 +178,8 @@
                     <!-- Card 2: Terduga TBC -->
                     <div
                         class="bg-white p-4 rounded-2xl shadow-xs border border-slate-200/80 flex flex-col justify-between">
-                        <span class="text-xs font-semibold text-amber-700 uppercase tracking-wider">Total kasus yang di periksa (TCM/X-Ray)</span>
+                        <span class="text-xs font-semibold text-amber-700 uppercase tracking-wider">Total kasus yang di
+                            periksa (TCM/X-Ray)</span>
                         <div class="mt-2 flex items-baseline justify-between">
                             <span class="text-2xl font-bold text-amber-700" x-text="kpi.total_terduga">0</span>
                             <span class="p-1.5 rounded-lg bg-amber-50 text-amber-600">
@@ -192,7 +196,8 @@
                     <!-- Card 3: Terkonfirmasi TBC -->
                     <div
                         class="bg-white p-4 rounded-2xl shadow-xs border border-slate-200/80 flex flex-col justify-between">
-                        <span class="text-xs font-semibold text-rose-700 uppercase tracking-wider">Pasien dalam pengobatan</span>
+                        <span class="text-xs font-semibold text-rose-700 uppercase tracking-wider">Pasien dalam
+                            pengobatan</span>
                         <div class="mt-2 flex items-baseline justify-between">
                             <span class="text-2xl font-bold text-rose-700" x-text="kpi.total_terkonfirmasi">0</span>
                             <span class="p-1.5 rounded-lg bg-rose-50 text-rose-600">
@@ -208,7 +213,8 @@
                     <!-- Card 4: Pengobatan Aktif -->
                     <div
                         class="bg-white p-4 rounded-2xl shadow-xs border border-slate-200/80 flex flex-col justify-between">
-                        <span class="text-xs font-semibold text-indigo-700 uppercase tracking-wider">Investigasi Kontak</span>
+                        <span class="text-xs font-semibold text-indigo-700 uppercase tracking-wider">Investigasi
+                            Kontak</span>
                         <div class="mt-2 flex items-baseline justify-between">
                             <span class="text-2xl font-bold text-indigo-700"
                                 x-text="kpi.total_sedang_pengobatan">0</span>
@@ -266,7 +272,8 @@
                     <div class="lg:col-span-2 bg-white p-5 rounded-2xl shadow-xs border border-slate-200/80">
                         <div class="flex items-center justify-between mb-4">
                             <div>
-                                <h3 class="font-bold text-base text-slate-800">Distribusi Pelacakan Terbanyak per Kelurahan
+                                <h3 class="font-bold text-base text-slate-800">Distribusi Pelacakan Terbanyak per
+                                    Kelurahan
                                 </h3>
                                 <p class="text-xs text-slate-500">10 Kelurahan dengan kasus terdaftar tertinggi</p>
                             </div>
