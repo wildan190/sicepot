@@ -16,7 +16,7 @@
                             </span>
                             Dashboard penemuan kasus dan pemantauan pengobatan TBC
                         </h2>
-                        <p class="text-xs md:text-sm text-slate-500 mt-1">emanfaatan Executive Dashboard "Satu Data
+                        <p class="text-xs md:text-sm text-slate-500 mt-1">Pemanfaatan Executive Dashboard "Satu Data
                             Kesehatan Wilayah" Berbasis Visual Geospasial dan Indikator Risiko untuk Kebijakan Lintas
                             Sektor</p>
                     </div>
