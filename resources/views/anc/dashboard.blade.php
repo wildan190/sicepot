@@ -143,6 +143,47 @@
                     </div>
                 </template>
 
+                <!-- PERINGATAN H-30 PERSALINAN (SEBULAN SEBELUM HPL) -->
+                <template x-if="upcomingDeliveries && upcomingDeliveries.length > 0">
+                    <div
+                        class="bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-500 rounded-2xl p-4 sm:p-5 text-white shadow-lg border border-amber-300 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                        <div class="flex items-center gap-3.5">
+                            <div class="p-3 bg-white/20 backdrop-blur-md rounded-2xl shrink-0">
+                                <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
+                                    </path>
+                                </svg>
+                            </div>
+                            <div>
+                                <div class="flex items-center gap-2">
+                                    <span
+                                        class="px-2.5 py-0.5 rounded-full bg-white text-amber-700 text-xs font-black uppercase tracking-wider">Persiapan
+                                        H-30</span>
+                                    <span class="text-xs text-amber-100 font-medium"
+                                        x-text="upcomingDeliveries.length + ' Ibu Hamil HPL dalam 30 Hari'"></span>
+                                </div>
+                                <h3 class="text-base sm:text-lg font-extrabold mt-0.5 tracking-tight">Persiapan
+                                    Persalinan — HPL Kurang dari 30 Hari!</h3>
+                                <p class="text-xs text-amber-100 mt-0.5">Pastikan P4K sudah lengkap: calon donor darah,
+                                    tabungan persalinan, transportasi, dan pendamping siap.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2 w-full md:w-auto justify-end">
+                            <button @click="showH30ModalAlert()" type="button"
+                                class="w-full md:w-auto px-4 py-2.5 bg-white hover:bg-amber-50 text-amber-700 text-xs font-bold rounded-xl shadow-xs transition-all cursor-pointer flex items-center justify-center gap-2">
+                                <svg class="w-4 h-4 text-amber-600" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2">
+                                    </path>
+                                </svg>
+                                <span>Lihat Daftar Ibu Hamil</span>
+                            </button>
+                        </div>
+                    </div>
+                </template>
+
                 <!-- FILTER BAR -->
                 <div class="bg-white p-5 rounded-2xl shadow-xs border border-slate-200/80 transition-all">
                     <div class="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-4">
@@ -2454,6 +2495,7 @@
                 patientsData: @json($patients),
                 mapData: @json($map_data),
                 imminentDeliveries: @json($imminent_deliveries ?? []),
+                upcomingDeliveries: @json($upcoming_deliveries ?? []),
                 sirineAudio: null,
                 hasTriggeredInitialAlert: false,
 
@@ -2796,6 +2838,9 @@
                         this.patientsData = data.patients;
                         if (data.imminent_deliveries) {
                             this.imminentDeliveries = data.imminent_deliveries;
+                        }
+                        if (data.upcoming_deliveries !== undefined) {
+                            this.upcomingDeliveries = data.upcoming_deliveries;
                         }
 
                         this.updateCharts();
@@ -3506,6 +3551,87 @@
                         }
                     }).then(() => {
                         this.stopSirine();
+                    });
+                },
+
+                showH30ModalAlert() {
+                    const list = this.upcomingDeliveries || [];
+                    if (list.length === 0) {
+                        Swal.fire({
+                            title: 'Tidak Ada Data H-30',
+                            text: 'Saat ini tidak ada ibu hamil dengan HPL dalam 30 hari ke depan.',
+                            icon: 'info',
+                            confirmButtonText: 'Tutup',
+                            confirmButtonColor: '#f59e0b',
+                            customClass: {
+                                popup: 'rounded-2xl sm:rounded-3xl !w-[90vw] !max-w-sm !p-4 sm:!p-6 !m-auto',
+                                confirmButton: 'rounded-xl font-bold px-6 py-2.5 text-xs sm:text-sm !w-full sm:!w-auto'
+                            }
+                        });
+                        return;
+                    }
+
+                    const today = new Date();
+                    today.setHours(0, 0, 0, 0);
+
+                    let patientListHtml = '<div class="space-y-2 mt-3 max-h-64 sm:max-h-72 overflow-y-auto pr-1 text-left">';
+                    list.forEach((p, idx) => {
+                        const hplDate = p.hpl ? new Date(p.hpl.substring(0, 10)) : null;
+                        const sisaHari = hplDate
+                            ? Math.round((hplDate - today) / (1000 * 60 * 60 * 24))
+                            : null;
+                        const sisaLabel = sisaHari !== null
+                            ? `<span class="font-bold text-amber-700">H-${sisaHari}</span>`
+                            : '-';
+
+                        const ristiBadge = p.status_risti && p.status_risti.toLowerCase().includes('tinggi')
+                            ? '<span class="px-2 py-0.5 bg-rose-100 text-rose-700 text-[10px] font-bold rounded-full whitespace-nowrap">RISTI</span>'
+                            : '<span class="px-2 py-0.5 bg-emerald-100 text-emerald-700 text-[10px] font-semibold rounded-full whitespace-nowrap">Normal</span>';
+
+                        const urgencyBg = sisaHari !== null && sisaHari <= 7
+                            ? 'bg-orange-50 border-orange-200'
+                            : 'bg-amber-50/80 border-amber-200';
+
+                        patientListHtml += `
+                            <div class="p-2.5 sm:p-3 ${urgencyBg} border rounded-xl sm:rounded-2xl flex items-start sm:items-center justify-between gap-2 text-xs">
+                                <div class="min-w-0 flex-1">
+                                    <div class="font-bold text-slate-800 text-xs sm:text-sm break-words">${idx + 1}. ${p.nama_lengkap} (${p.umur || '-'} th)</div>
+                                    <div class="text-slate-500 text-[10px] sm:text-[11px] mt-0.5 break-words">NIK: ${p.nik || '-'} | Kel: ${p.kelurahan || '-'}, ${p.kabupaten || '-'}</div>
+                                    <div class="text-[10px] sm:text-[11px] mt-0.5">
+                                        <span class="text-slate-600">HPL: ${p.hpl ? p.hpl.substring(0, 10) : '-'}</span>
+                                        <span class="mx-1 text-slate-400">·</span>
+                                        ${sisaLabel}
+                                    </div>
+                                    ${p.no_telepon ? `<div class="text-[10px] text-slate-400 mt-0.5">📞 ${p.no_telepon}${p.nama_suami ? ' (Suami: ' + p.nama_suami + ')' : ''}</div>` : ''}
+                                </div>
+                                <div class="text-right shrink-0 mt-0.5 sm:mt-0">
+                                    ${ristiBadge}
+                                </div>
+                            </div>
+                        `;
+                    });
+                    patientListHtml += '</div>';
+
+                    Swal.fire({
+                        title: `<span class="text-amber-600 flex items-center justify-center gap-1.5 sm:gap-2 text-base sm:text-xl font-bold leading-snug">
+                            <span>📅 PERSIAPAN PERSALINAN H-30</span>
+                        </span>`,
+                        html: `
+                            <div class="text-xs sm:text-sm text-slate-600">
+                                <p class="font-bold text-slate-800">Ditemukan <span class="text-amber-600 font-extrabold text-sm sm:text-base">${list.length} Ibu Hamil</span> dengan HPL dalam <u>30 hari ke depan</u>.</p>
+                                <p class="text-[11px] sm:text-xs text-slate-500 mt-1">Segera verifikasi kelengkapan P4K: donor darah, tabungan, transportasi, dan pendamping persalinan.</p>
+                                ${patientListHtml}
+                            </div>
+                        `,
+                        icon: 'warning',
+                        iconColor: '#f59e0b',
+                        confirmButtonText: 'Mengerti, Siapkan P4K',
+                        confirmButtonColor: '#f59e0b',
+                        allowOutsideClick: true,
+                        customClass: {
+                            popup: 'rounded-2xl sm:rounded-3xl shadow-2xl border-2 border-amber-200 !w-[94vw] !max-w-lg !p-4 sm:!p-6 !m-auto',
+                            confirmButton: 'rounded-xl font-bold px-4 sm:px-6 py-2.5 sm:py-3 text-xs sm:text-sm shadow-md !w-full sm:!w-auto'
+                        }
                     });
                 },
 

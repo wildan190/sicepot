@@ -332,6 +332,18 @@ class DashboardService
             ->get(['id', 'nama_lengkap', 'nik', 'no_rekam_medis', 'umur', 'hpl', 'hpht',
                    'kabupaten', 'kelurahan', 'status_risti', 'faktor_risiko', 'fasyankes_name']);
 
+        // H-30: Ibu hamil dengan HPL dalam 2–30 hari ke depan (belum bersalin)
+        $in2Days  = now()->addDays(2)->toDateString();
+        $in30Days = now()->addDays(30)->toDateString();
+        $upcomingDeliveries = AncPatient::whereNotNull('hpl')
+            ->whereNull('tanggal_bersalin')
+            ->whereDate('hpl', '>=', $in2Days)
+            ->whereDate('hpl', '<=', $in30Days)
+            ->orderBy('hpl')
+            ->get(['id', 'nama_lengkap', 'nik', 'no_rekam_medis', 'umur', 'hpl', 'hpht',
+                   'kabupaten', 'kelurahan', 'status_risti', 'faktor_risiko', 'fasyankes_name',
+                   'no_telepon', 'nama_suami']);
+
         $totalKrr  = (clone $base)->where('kategori_poedji_rochjati', 'KRR')->orWhereNull('kategori_poedji_rochjati')->count();
         $totalKrt  = (clone $base)->where('kategori_poedji_rochjati', 'KRT')->count();
         $totalKrst = (clone $base)->where('kategori_poedji_rochjati', 'KRST')->count();
@@ -397,9 +409,10 @@ class DashboardService
                 'labels' => ['KRR (BPM/Puskesmas)', 'KRT (Puskesmas PONED)', 'KRST (RS PONEK)'],
                 'values' => [$totalKrr, $totalKrt, $totalKrst],
             ],
-            'map_data'            => $ancMapPoints,
-            'patients'            => $patients,
-            'imminent_deliveries' => $imminentDeliveries,
+            'map_data'             => $ancMapPoints,
+            'patients'             => $patients,
+            'imminent_deliveries'  => $imminentDeliveries,
+            'upcoming_deliveries'  => $upcomingDeliveries,
         ];
     }
 }
