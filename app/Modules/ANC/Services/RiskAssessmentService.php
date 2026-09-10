@@ -4,31 +4,6 @@ namespace App\Modules\ANC\Services;
 
 class RiskAssessmentService
 {
-    /**
-     * Hitung Skor Poedji Rochjati & Rekomendasi Tempat Persalinan
-     *
-     * Berdasarkan pedoman Kemenkes / Skor Poedji Rochjati:
-     * - Skor Awal (Bumil Normal): 2
-     * - Kelompok I: Potensi Bahaya (Skor +4 per faktor)
-     *   - Primi muda (umur <= 16 th)
-     *   - Primi tua (umur >= 35 th hamil pertama)
-     *   - Primi tua sekunder (jarak anak terakhir >= 10 th)
-     *   - Grande multi (anak >= 4)
-     *   - Umur >= 35 th
-     *   - Tinggi badan <= 145 cm
-     *   - Riwayat abortus
-     * - Kelompok II: Ada Bahaya (Skor +4 s/d +8)
-     *   - Anemia (Hb < 11) (+4)
-     *   - KEK / LILA < 23.5 cm (+4)
-     *   - Preeklampsia / Hipertensi (Sistolik >= 140 atau Diastolik >= 90) (+8)
-     * - Kelompok III: Ada Bahaya Sangat Besar (Skor +8)
-     *   - Bekas Sesar (SC), Perdarahan, Kelainan Letak
-     *
-     * Klasifikasi:
-     * - KRR (Kehamilan Risiko Rendah): Skor 2 -> BPM / Puskesmas
-     * - KRT (Kehamilan Risiko Tinggi): Skor 6-10 -> Puskesmas PONED / RS
-     * - KRST (Kehamilan Risiko Sangat Tinggi): Skor >= 12 -> RS PONEK / Dokter Spesialis
-     */
     public static function calculate(array $data): array
     {
         $score = 2; // Skor dasar untuk setiap kehamilan
@@ -38,9 +13,9 @@ class RiskAssessmentService
         $gravida = isset($data['gravida']) ? (int) $data['gravida'] : 1;
         $para = isset($data['para']) ? (int) $data['para'] : 0;
         $abortus = isset($data['abortus']) ? (int) $data['abortus'] : 0;
-        $hb = isset($data['hb']) ? (float) str_replace(',', '.', (string)$data['hb']) : null;
-        $lila = isset($data['lila']) ? (float) str_replace(',', '.', (string)$data['lila']) : null;
-        $tb = isset($data['tinggi_badan']) ? (float) str_replace(',', '.', (string)$data['tinggi_badan']) : null;
+        $hb = isset($data['hb']) ? (float) str_replace(',', '.', (string) $data['hb']) : null;
+        $lila = isset($data['lila']) ? (float) str_replace(',', '.', (string) $data['lila']) : null;
+        $tb = isset($data['tinggi_badan']) ? (float) str_replace(',', '.', (string) $data['tinggi_badan']) : null;
         $tdSistolik = isset($data['tekanan_darah_sistolik']) ? (float) $data['tekanan_darah_sistolik'] : null;
         $statusRisti = strtolower($data['status_risti'] ?? '');
         $faktorRisiko = strtolower($data['faktor_risiko'] ?? '');
@@ -128,11 +103,11 @@ class RiskAssessmentService
         }
 
         return [
-            'skor'              => $score,
-            'kategori'          => $kategori,
-            'kategori_label'    => $kategoriLabel,
-            'rekomendasi_faskes'=> $rekomendasi,
-            'factors'           => $factors,
+            'skor' => $score,
+            'kategori' => $kategori,
+            'kategori_label' => $kategoriLabel,
+            'rekomendasi_faskes' => $rekomendasi,
+            'factors' => $factors,
         ];
     }
 }
