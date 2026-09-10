@@ -15,7 +15,8 @@
                             </span>
                             Sinergi gerakan aksi peduli ibu hamil di wilayah
                         </h2>
-                        <p class="text-xs md:text-sm text-slate-500 mt-1">Satu data bergerak bersama selamatkan ibu hamil di wilayah</p>
+                        <p class="text-sm md:text-base text-slate-500 mt-1">Satu data bergerak bersama selamatkan ibu
+                            hamil di wilayah</p>
                     </div>
                     <div class="flex items-center flex-wrap gap-2">
                         <!-- Ekspor Excel -->
@@ -277,8 +278,10 @@
                 <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 gap-3.5">
 
                     <!-- Card 1: Total Ibu Hamil -->
-                    <div class="bg-white p-4 rounded-2xl shadow-xs border border-slate-200/80 flex flex-col justify-between">
-                        <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Total Ibu Hamil</span>
+                    <div
+                        class="bg-white p-4 rounded-2xl shadow-xs border border-slate-200/80 flex flex-col justify-between">
+                        <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Total Ibu
+                            Hamil</span>
                         <div class="mt-2 flex items-baseline justify-between">
                             <span class="text-2xl font-bold text-slate-900" x-text="kpi.total_all">0</span>
                             <span class="p-1.5 rounded-lg bg-pink-50 text-pink-600">
@@ -293,8 +296,10 @@
                     </div>
 
                     <!-- Card 2: Total Ibu Hamil Risiko -->
-                    <div class="bg-white p-4 rounded-2xl shadow-xs border border-rose-200/80 flex flex-col justify-between">
-                        <span class="text-xs font-semibold text-rose-600 uppercase tracking-wider">Total Ibu Hamil Risiko</span>
+                    <div
+                        class="bg-white p-4 rounded-2xl shadow-xs border border-rose-200/80 flex flex-col justify-between">
+                        <span class="text-xs font-semibold text-rose-600 uppercase tracking-wider">Total Ibu Hamil
+                            Risiko</span>
                         <div class="mt-2 flex items-baseline justify-between">
                             <span class="text-2xl font-bold text-rose-700" x-text="kpi.total_risiko || 0">0</span>
                             <span class="p-1.5 rounded-lg bg-rose-50 text-rose-600">
@@ -309,8 +314,10 @@
                     </div>
 
                     <!-- Card 3: Bekas Sectio Cesaria (BSC) -->
-                    <div class="bg-white p-4 rounded-2xl shadow-xs border border-blue-200/80 flex flex-col justify-between">
-                        <span class="text-xs font-semibold text-blue-700 uppercase tracking-wider">Bekas Sesar (BSC)</span>
+                    <div
+                        class="bg-white p-4 rounded-2xl shadow-xs border border-blue-200/80 flex flex-col justify-between">
+                        <span class="text-xs font-semibold text-blue-700 uppercase tracking-wider">Bekas Sesar
+                            (BSC)</span>
                         <div class="mt-2 flex items-baseline justify-between">
                             <span class="text-2xl font-bold text-blue-700" x-text="kpi.total_bsc || 0">0</span>
                             <span class="p-1.5 rounded-lg bg-blue-50 text-blue-600">
@@ -325,8 +332,10 @@
                     </div>
 
                     <!-- Card 4: Darah Tinggi (HDK) -->
-                    <div class="bg-white p-4 rounded-2xl shadow-xs border border-violet-200/80 flex flex-col justify-between">
-                        <span class="text-xs font-semibold text-violet-700 uppercase tracking-wider">Darah Tinggi (HDK)</span>
+                    <div
+                        class="bg-white p-4 rounded-2xl shadow-xs border border-violet-200/80 flex flex-col justify-between">
+                        <span class="text-xs font-semibold text-violet-700 uppercase tracking-wider">Darah Tinggi
+                            (HDK)</span>
                         <div class="mt-2 flex items-baseline justify-between">
                             <span class="text-2xl font-bold text-violet-700" x-text="kpi.total_hdk || 0">0</span>
                             <span class="p-1.5 rounded-lg bg-violet-50 text-violet-600">
@@ -341,7 +350,8 @@
                     </div>
 
                     <!-- Card 5: Anemia / KEK -->
-                    <div class="bg-white p-4 rounded-2xl shadow-xs border border-amber-200/80 flex flex-col justify-between">
+                    <div
+                        class="bg-white p-4 rounded-2xl shadow-xs border border-amber-200/80 flex flex-col justify-between">
                         <span class="text-xs font-semibold text-amber-700 uppercase tracking-wider">Anemia / KEK</span>
                         <div class="mt-2 flex items-baseline justify-between">
                             <span class="text-2xl font-bold text-amber-700" x-text="kpi.total_anemia_kek || 0">0</span>
@@ -357,7 +367,8 @@
                     </div>
 
                     <!-- Card 6: Penyakit Penyerta -->
-                    <div class="bg-white p-4 rounded-2xl shadow-xs border border-teal-200/80 flex flex-col justify-between">
+                    <div
+                        class="bg-white p-4 rounded-2xl shadow-xs border border-teal-200/80 flex flex-col justify-between">
                         <span class="text-xs font-semibold text-teal-700 uppercase tracking-wider">Lain-lain</span>
                         <div class="mt-2 flex items-baseline justify-between">
                             <span class="text-2xl font-bold text-teal-700" x-text="kpi.total_penyakit || 0">0</span>
@@ -412,8 +423,10 @@
                     <div class="lg:col-span-2 bg-white p-5 rounded-2xl shadow-xs border border-slate-200/80">
                         <div class="flex items-center justify-between mb-4">
                             <div>
-                                <h3 class="font-bold text-base text-slate-800">Distribusi Ibu Hamil Risiko Terbanyak di Desa / Kelurahan</h3>
-                                <p class="text-xs text-slate-500">100 Kelurahan / Desa dengan ibu hamil terdaftar tertinggi</p>
+                                <h3 class="font-bold text-base text-slate-800">Sebaran Ibu Hamil Risiko Terbanyak di
+                                    Desa / Kelurahan</h3>
+                                <p class="text-xs text-slate-500">100 Kelurahan / Desa dengan ibu hamil terdaftar
+                                    tertinggi</p>
                             </div>
                         </div>
                         <div class="h-72">
@@ -425,8 +438,8 @@
                     <div
                         class="bg-white p-5 rounded-2xl shadow-xs border border-slate-200/80 flex flex-col justify-between">
                         <div>
-                            <h3 class="font-bold text-base text-slate-800">Kelompok Risiko</h3>
-                            <p class="text-xs text-slate-500 mb-4">Klasifikasi risiko umur kehamilan</p>
+                            <h3 class="font-bold text-base text-slate-800">Kelompok Usia Ibu Hamil Risiko</h3>
+                            <p class="text-xs text-slate-500 mb-4">Klasifikasi umur kehamilan</p>
                             <div class="h-52 relative">
                                 <canvas id="ancAgeChart"></canvas>
                             </div>
