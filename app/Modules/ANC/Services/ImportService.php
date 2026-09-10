@@ -267,6 +267,7 @@ class ImportService
         $map = [];
 
         $fieldRules = [
+            'bulan_kunjungan'          => ['/bulan\s+kunjungan/i', '/bln\s+kunjungan/i'],
             'nama_suami'               => ['/nama\s+suami/i', '/suami/i'],
             'nama_lengkap'             => ['/nama\s+ibu/i', '/nama\s+lengkap/i', '/nama\s+pasien/i', '/^nama$/i'],
             'nik'                      => ['/nomor\s+induk\s+kependudukan/i', '/\(nik\)/i', '/^nik/i', '/nik/i', '/no\.?\s*ktp/i'],
@@ -503,24 +504,42 @@ class ImportService
             }
         }
 
-        // Auto-derive bulan and tahun if missing
-        if (empty($data['bulan'])) {
-            $refDate = null;
-            if (!empty($data['tanggal_kunjungan'])) {
-                $refDate = \Carbon\Carbon::parse($data['tanggal_kunjungan']);
-            } elseif (!empty($data['hpht'])) {
-                $refDate = \Carbon\Carbon::parse($data['hpht']);
+        // ── Normalize bulan_kunjungan (from Excel "BULAN KUNJUNGAN" column) ──────
+        $indonesianMonths = [
+            1 => 'Januari', 2 => 'Februari', 3 => 'Maret', 4 => 'April',
+            5 => 'Mei', 6 => 'Juni', 7 => 'Juli', 8 => 'Agustus',
+            9 => 'September', 10 => 'Oktober', 11 => 'November', 12 => 'Desember'
+        ];
+        $bulanLower = strtolower(trim((string) ($data['bulan_kunjungan'] ?? '')));
+        $normalized = null;
+        foreach ($indonesianMonths as $num => $name) {
+            if ($bulanLower === strtolower($name) || $bulanLower === (string) $num) {
+                $normalized = $name;
+                break;
             }
+        }
+        if ($normalized) {
+            $data['bulan_kunjungan'] = $normalized;
+        } else {
+            $data['bulan_kunjungan'] = null;
+        }
 
-            if ($refDate && $refDate->year > 2000) {
-                $indonesianMonths = [
-                    1 => 'Januari', 2 => 'Februari', 3 => 'Maret', 4 => 'April',
-                    5 => 'Mei', 6 => 'Juni', 7 => 'Juli', 8 => 'Agustus',
-                    9 => 'September', 10 => 'Oktober', 11 => 'November', 12 => 'Desember'
-                ];
-                $data['bulan'] = $indonesianMonths[(int)$refDate->format('n')] ?? null;
-                if (empty($data['tahun'])) {
-                    $data['tahun'] = (int) $refDate->format('Y');
+        // ── Auto-derive bulan (bulan laporan) — prioritas: bulan_kunjungan > tanggal_kunjungan > created_at ──
+        if (empty($data['bulan'])) {
+            if (!empty($data['bulan_kunjungan'])) {
+                // Primary: gunakan bulan kunjungan dari kolom Excel
+                $data['bulan'] = $data['bulan_kunjungan'];
+            } else {
+                // Fallback: derive dari tanggal_kunjungan
+                $refDate = null;
+                if (!empty($data['tanggal_kunjungan'])) {
+                    $refDate = \Carbon\Carbon::parse($data['tanggal_kunjungan']);
+                }
+                if ($refDate && $refDate->year > 2000) {
+                    $data['bulan'] = $indonesianMonths[(int)$refDate->format('n')] ?? null;
+                    if (empty($data['tahun'])) {
+                        $data['tahun'] = (int) $refDate->format('Y');
+                    }
                 }
             }
         }

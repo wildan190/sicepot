@@ -12,7 +12,7 @@ class AncPatient extends Model
     protected $table = 'anc_patients';
 
     protected $fillable = [
-        'fasyankes_name', 'fasyankes_code', 'bulan', 'tahun',
+        'fasyankes_name', 'fasyankes_code', 'bulan', 'bulan_kunjungan', 'tahun',
         'nik', 'no_telepon', 'no_reg_fasyankes', 'no_rekam_medis', 'no_bpjs',
         'nama_lengkap', 'nama_suami', 'tanggal_lahir',
         'umur', 'pekerjaan', 'pendidikan',
