@@ -466,7 +466,7 @@
                 <div class="bg-white p-5 rounded-2xl shadow-xs border border-slate-200/80">
                     <div class="flex items-center justify-between mb-4">
                         <div>
-                            <h3 class="font-bold text-base text-slate-800">Tren Ibu Hamil Perbulan</h3>
+                            <h3 class="font-bold text-base text-slate-800">Tren Kunjungan Ibu Hamil Perbulan</h3>
                             <p class="text-xs text-slate-500">Perkembangan jumlah kunjungan pemeriksaan ibu hamil
                                 sepanjang tahun</p>
                         </div>
@@ -3458,8 +3458,8 @@
                     const today = new Date();
                     const in14 = new Date();
                     in14.setDate(today.getDate() + 14);
-                    const todayStr  = today.toISOString().substring(0, 10);
-                    const in14Str   = in14.toISOString().substring(0, 10);
+                    const todayStr = today.toISOString().substring(0, 10);
+                    const in14Str = in14.toISOString().substring(0, 10);
                     return cleanDate >= todayStr && cleanDate <= in14Str;
                 },
 
