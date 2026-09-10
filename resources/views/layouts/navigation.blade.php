@@ -25,6 +25,12 @@
                     <x-nav-link :href="route('anc.dashboard')" :active="request()->routeIs('anc.*')">
                         {{ __('Dashboard Ibu Hamil') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('ai.dashboard')" :active="request()->routeIs('ai.*')">
+                        <span class="flex items-center gap-1.5">
+                            <span>AI Dashboard</span>
+                            <span class="px-1.5 py-0.5 bg-indigo-100 text-indigo-600 text-[10px] font-black rounded-md leading-none">✨ AI</span>
+                        </span>
+                    </x-nav-link>
                 </div>
             </div>
 
@@ -126,6 +132,12 @@
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('anc.dashboard')" :active="request()->routeIs('anc.*')">
                 {{ __('ANC') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('ai.dashboard')" :active="request()->routeIs('ai.*')">
+                <span class="flex items-center gap-2">
+                    <span>AI Dashboard</span>
+                    <span class="px-1.5 py-0.5 bg-indigo-100 text-indigo-600 text-[10px] font-black rounded-md">✨ AI</span>
+                </span>
             </x-responsive-nav-link>
         </div>
 
