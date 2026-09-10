@@ -413,8 +413,7 @@
                         <div class="flex items-center justify-between mb-4">
                             <div>
                                 <h3 class="font-bold text-base text-slate-800">Distribusi Ibu Hamil Risiko Terbanyak di Desa / Kelurahan</h3>
-                                <p class="text-xs text-slate-500">10 Kelurahan / Desa dengan ibu hamil terdaftar
-                                    tertinggi</p>
+                                <p class="text-xs text-slate-500">100 Kelurahan / Desa dengan ibu hamil terdaftar tertinggi</p>
                             </div>
                         </div>
                         <div class="h-72">

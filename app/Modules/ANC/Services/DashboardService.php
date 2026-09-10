@@ -313,7 +313,7 @@ class DashboardService
         $kelurahanDist = (clone $base)
             ->select('kelurahan', DB::raw('count(*) as total'))
             ->whereNotNull('kelurahan')->where('kelurahan', '!=', '')
-            ->groupBy('kelurahan')->orderByDesc('total')->limit(10)->get();
+            ->groupBy('kelurahan')->orderByDesc('total')->limit(100)->get();
 
         $monthOrder = [
             'Januari' => 1, 'Februari' => 2, 'Maret' => 3, 'April' => 4,
