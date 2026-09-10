@@ -110,7 +110,7 @@ class DashboardService
         }
 
         $today    = now()->toDateString();
-        $in7Days  = now()->addDays(7)->toDateString();
+        $in14Days = now()->addDays(14)->toDateString();
 
         $rows = $query
             ->select(
@@ -127,7 +127,7 @@ class DashboardService
                 // KRST (highest risk - rujuk RS PONEK)
                 DB::raw("sum(case when kategori_poedji_rochjati = 'KRST' then 1 else 0 end) as total_krst"),
                 // Imminent delivery: HPL within next 7 days and not yet delivered
-                DB::raw("sum(case when hpl is not null and hpl <= '{$in7Days}' and hpl >= '{$today}' and tanggal_bersalin is null then 1 else 0 end) as total_imminent"),
+                DB::raw("sum(case when hpl is not null and hpl <= '{$in14Days}' and hpl >= '{$today}' and tanggal_bersalin is null then 1 else 0 end) as total_imminent"),
                 // HIV co-infection
                 DB::raw("sum(case when hiv_status like '%positif%' then 1 else 0 end) as total_hiv")
             )
@@ -383,10 +383,14 @@ class DashboardService
 
         $patients = (clone $base)->orderByDesc('id')->paginate(15)->withQueryString();
 
-        $tomorrow = now()->addDay()->toDateString();
+        // H-14: Ibu hamil dengan HPL dalam 14 hari ke depan (belum bersalin)
+        $today14     = now()->toDateString();
+        $in14DaysStr = now()->addDays(14)->toDateString();
         $imminentDeliveries = AncPatient::whereNotNull('hpl')
             ->whereNull('tanggal_bersalin')
-            ->whereDate('hpl', '=', $tomorrow)
+            ->whereDate('hpl', '>=', $today14)
+            ->whereDate('hpl', '<=', $in14DaysStr)
+            ->orderBy('hpl')
             ->get(['id', 'nama_lengkap', 'nik', 'no_rekam_medis', 'umur', 'hpl', 'hpht',
                    'kabupaten', 'kelurahan', 'status_risti', 'faktor_risiko', 'fasyankes_name']);
 
