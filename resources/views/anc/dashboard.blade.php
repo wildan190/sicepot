@@ -438,7 +438,7 @@
                     <div
                         class="bg-white p-5 rounded-2xl shadow-xs border border-slate-200/80 flex flex-col justify-between">
                         <div>
-                            <h3 class="font-bold text-base text-slate-800">Kelompok Usia Ibu Hamil Risiko</h3>
+                            <h3 class="font-bold text-base text-slate-800">Kelompok Usia Ibu Hamil</h3>
                             <p class="text-xs text-slate-500 mb-4">Klasifikasi umur kehamilan</p>
                             <div class="h-52 relative">
                                 <canvas id="ancAgeChart"></canvas>

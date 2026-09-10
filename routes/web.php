@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\AiDashboardController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -14,6 +15,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // ── ANC (Ibu Hamil) Module ─────────────────────────────────────────────
     require __DIR__ . '/../app/Modules/ANC/routes.php';
+
+    // ── AI Dashboard Builder ────────────────────────────────────────────────
+    Route::prefix('ai')->name('ai.')->group(function () {
+        Route::get('/dashboard', [AiDashboardController::class, 'index'])->name('dashboard');
+        Route::post('/dashboard/generate', [AiDashboardController::class, 'generate'])->name('dashboard.generate');
+    });
 
     // ── User Profile ────────────────────────────────────────────────────────
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
