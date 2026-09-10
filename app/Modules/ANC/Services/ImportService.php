@@ -290,7 +290,7 @@ class ImportService
             'abortus'                  => ['/abortus/i', '/keguguran/i', '/ab/i'],
             'usia_kehamilan'           => ['/usia\s+kehamilan/i', '/usia\s+hamil/i', '/uk\b/i', '/trimester/i', '/minggu\s+kehamilan/i', '/usia.*kunjungan/i'],
             'hpht'                     => ['/tgl\s+hpht/i', '/hpht/i', '/hari\s+pertama\s+haid/i', '/tanggal\s+hpht/i'],
-            'hpl'                      => ['/^tp$/i', '/^hpl$/i', '/hpl\s*\/\s*tp/i', '/tp\s*\/\s*hpl/i', '/taksiran\s+persalinan/i', '/perkiraan\s+lahir/i', '/tanggal\s+perkiraan/i'],
+            'hpl'                      => ['/^tp$/i', '/^hpl$/i', '/tgl\s+hpl/i', '/hpl/i', '/hpl\s*\/\s*tp/i', '/tp\s*\/\s*hpl/i', '/taksiran\s+persalinan/i', '/perkiraan\s+lahir/i', '/tanggal\s+perkiraan/i'],
             'tanggal_kunjungan'        => ['/tanggal\s+kunjungan/i', '/tgl\s+kunjungan/i', '/tanggal\s+periksa/i'],
             'kunjungan_ke'             => ['/kunjungan\s+ke/i', '/k1|k2|k3|k4|k5|k6/i', '/kunjungan\s+anc/i'],
             'jenis_kunjungan'          => ['/jenis\s+kunjungan/i', '/tipe\s+kunjungan/i'],
@@ -355,6 +355,48 @@ class ImportService
             foreach ($headers as $colIdx => $headerText) {
                 if (!in_array($colIdx, $map) && stripos($headerText, 'nama') !== false && stripos($headerText, 'suami') === false && stripos($headerText, 'fasyankes') === false) {
                     $map['nama_lengkap'] = $colIdx;
+                    break;
+                }
+            }
+        }
+
+        // ── Explicit fallbacks (stripos-based) for columns with non-standard headers ──
+
+        // HPL / Taksiran Persalinan
+        if (!isset($map['hpl'])) {
+            foreach ($headers as $colIdx => $headerText) {
+                if (in_array($colIdx, $map)) continue;
+                if (stripos($headerText, 'hpl') !== false
+                    || stripos($headerText, 'perkiraan') !== false
+                    || stripos($headerText, 'taksiran') !== false
+                    || strtoupper(trim($headerText)) === 'TP') {
+                    $map['hpl'] = $colIdx;
+                    break;
+                }
+            }
+        }
+
+        // Usia Kehamilan (handle "Usia Saat Hamil", "Usia Hamil", dll)
+        if (!isset($map['usia_kehamilan'])) {
+            foreach ($headers as $colIdx => $headerText) {
+                if (in_array($colIdx, $map)) continue;
+                $lower = strtolower($headerText);
+                if ((strpos($lower, 'usia') !== false || strpos($lower, 'umur') !== false)
+                    && (strpos($lower, 'kehamil') !== false || strpos($lower, 'hamil') !== false)
+                    && strpos($lower, 'ibu') === false) {
+                    $map['usia_kehamilan'] = $colIdx;
+                    break;
+                }
+            }
+        }
+
+        // Kecamatan (handle header singkat seperti "Kec")
+        if (!isset($map['kecamatan'])) {
+            foreach ($headers as $colIdx => $headerText) {
+                if (in_array($colIdx, $map)) continue;
+                $upper = strtoupper(trim($headerText));
+                if ($upper === 'KEC' || $upper === 'KECAMATAN') {
+                    $map['kecamatan'] = $colIdx;
                     break;
                 }
             }

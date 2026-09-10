@@ -383,13 +383,13 @@
                         <span class="text-[11px] text-teal-400 mt-2">DM, Asma, Tiroid, dll</span>
                     </div>
 
-                    <!-- Card 7: Peringatan Persalinan H-1 (Sirine Alert) -->
+                    <!-- Card 7: Peringatan Persalinan H-30 (1 Bulan Sebelum) -->
                     <div @click="showH1ModalAlert()"
                         :class="kpi.total_h1 > 0 ? 'bg-rose-50/70 border-rose-300 ring-2 ring-rose-300 cursor-pointer hover:bg-rose-100/70' : 'bg-white border-slate-200/80'"
                         class="p-4 rounded-2xl shadow-xs border flex flex-col justify-between transition-all">
                         <div class="flex items-center justify-between">
                             <span :class="kpi.total_h1 > 0 ? 'text-rose-700 font-bold' : 'text-slate-500 font-semibold'"
-                                class="text-xs uppercase tracking-wider">H-1 Persalinan</span>
+                                class="text-xs uppercase tracking-wider">Persalinan 1 Bln</span>
                             <template x-if="kpi.total_h1 > 0">
                                 <span class="relative flex h-2 w-2">
                                     <span
@@ -412,7 +412,7 @@
                             </span>
                         </div>
                         <span class="text-[11px] text-slate-400 mt-2"
-                            x-text="kpi.total_h1 > 0 ? 'Perkiraan Lahir Besok!' : 'Tidak ada H-1'"></span>
+                            x-text="kpi.total_h1 > 0 ? 'HPL dalam 30 hari ke depan' : 'Tidak ada dalam 30 hari'"></span>
                     </div>
 
                 </div>
