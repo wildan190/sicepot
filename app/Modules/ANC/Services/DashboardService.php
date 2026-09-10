@@ -239,7 +239,17 @@ class DashboardService
 
         if (!empty($kabupaten)) { \App\Services\RegionHelper::filterKabupaten($base, $kabupaten); }
         if (!empty($kelurahan)) { \App\Services\RegionHelper::filterKelurahan($base, $kelurahan); }
-        if (!empty($bulan))     { $base->where('bulan', $bulan); }
+        if (!empty($bulan)) {
+            $base->where(function ($q) use ($bulan) {
+                // Prioritas: bulan_kunjungan dari kolom Excel, fallback ke bulan umum
+                $q->where('bulan_kunjungan', $bulan)
+                  ->orWhere(function ($q2) use ($bulan) {
+                      $q2->whereNull('bulan_kunjungan')
+                         ->orWhere('bulan_kunjungan', '')
+                         ->where('bulan', $bulan);
+                  });
+            });
+        }
         if (!empty($search)) {
             $base->where(function ($q) use ($search) {
                 $q->where('nama_lengkap', 'like', "%{$search}%")
@@ -320,29 +330,35 @@ class DashboardService
             'Mei' => 5, 'Juni' => 6, 'Juli' => 7, 'Agustus' => 8,
             'September' => 9, 'Oktober' => 10, 'November' => 11, 'Desember' => 12,
         ];
+        // Ambil distribusi bulan dari bulan_kunjungan (primer) atau bulan (fallback)
+        // Gunakan COALESCE agar record tanpa bulan_kunjungan tetap terhitung via kolom bulan
         $monthlyRaw = (clone $base)
-            ->select('bulan', DB::raw('count(*) as total'))
-            ->whereNotNull('bulan')->where('bulan', '!=', '')
-            ->groupBy('bulan')->pluck('total', 'bulan')->all();
+            ->selectRaw("CASE WHEN bulan_kunjungan IS NOT NULL AND bulan_kunjungan != '' THEN bulan_kunjungan ELSE bulan END as bulan_efektif, count(*) as total")
+            ->whereRaw("(bulan_kunjungan IS NOT NULL AND bulan_kunjungan != '') OR (bulan IS NOT NULL AND bulan != '')")
+            ->groupByRaw("bulan_efektif")
+            ->pluck('total', 'bulan_efektif')
+            ->all();
 
         if (empty($monthlyRaw)) {
-            $dateRecords = (clone $base)->select('hpht', 'created_at', 'tanggal_kunjungan')->get();
+            $dateRecords = (clone $base)->select('bulan_kunjungan', 'tanggal_kunjungan', 'created_at')->get();
             $indonesianMonthMap = [
                 1 => 'Januari', 2 => 'Februari', 3 => 'Maret', 4 => 'April',
                 5 => 'Mei', 6 => 'Juni', 7 => 'Juli', 8 => 'Agustus',
                 9 => 'September', 10 => 'Oktober', 11 => 'November', 12 => 'Desember'
             ];
             foreach ($dateRecords as $rec) {
-                $mNum = null;
-                if (!empty($rec->tanggal_kunjungan)) {
-                    $mNum = (int) \Carbon\Carbon::parse($rec->tanggal_kunjungan)->format('n');
-                } elseif (!empty($rec->hpht) && $rec->hpht->year > 2000) {
-                    $mNum = (int) $rec->hpht->format('n');
+                $mName = null;
+                if (!empty($rec->bulan_kunjungan)) {
+                    // Prioritas utama: bulan kunjungan dari kolom Excel
+                    $mName = $rec->bulan_kunjungan;
+                } elseif (!empty($rec->tanggal_kunjungan)) {
+                    $mNum  = (int) \Carbon\Carbon::parse($rec->tanggal_kunjungan)->format('n');
+                    $mName = $indonesianMonthMap[$mNum] ?? null;
                 } elseif (!empty($rec->created_at)) {
-                    $mNum = (int) $rec->created_at->format('n');
+                    $mNum  = (int) $rec->created_at->format('n');
+                    $mName = $indonesianMonthMap[$mNum] ?? null;
                 }
-                if ($mNum && isset($indonesianMonthMap[$mNum])) {
-                    $mName = $indonesianMonthMap[$mNum];
+                if ($mName) {
                     $monthlyRaw[$mName] = ($monthlyRaw[$mName] ?? 0) + 1;
                 }
             }

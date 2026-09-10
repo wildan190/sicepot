@@ -22,7 +22,16 @@ class ExportService
         $query = AncPatient::query();
         if (!empty($kabupaten)) { \App\Services\RegionHelper::filterKabupaten($query, $kabupaten); }
         if (!empty($kelurahan)) { \App\Services\RegionHelper::filterKelurahan($query, $kelurahan); }
-        if (!empty($bulan))     { $query->where('bulan', $bulan); }
+        if (!empty($bulan)) {
+            $query->where(function ($q) use ($bulan) {
+                $q->where('bulan_kunjungan', $bulan)
+                  ->orWhere(function ($q2) use ($bulan) {
+                      $q2->whereNull('bulan_kunjungan')
+                         ->orWhere('bulan_kunjungan', '')
+                         ->where('bulan', $bulan);
+                  });
+            });
+        }
         if (!empty($search)) {
             $query->where(function ($q) use ($search) {
                 $q->where('nama_lengkap', 'like', "%{$search}%")
