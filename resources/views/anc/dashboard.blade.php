@@ -358,7 +358,7 @@
 
                     <!-- Card 6: Penyakit Penyerta -->
                     <div class="bg-white p-4 rounded-2xl shadow-xs border border-teal-200/80 flex flex-col justify-between">
-                        <span class="text-xs font-semibold text-teal-700 uppercase tracking-wider">Penyakit Penyerta</span>
+                        <span class="text-xs font-semibold text-teal-700 uppercase tracking-wider">Lain-lain</span>
                         <div class="mt-2 flex items-baseline justify-between">
                             <span class="text-2xl font-bold text-teal-700" x-text="kpi.total_penyakit || 0">0</span>
                             <span class="p-1.5 rounded-lg bg-teal-50 text-teal-600">
