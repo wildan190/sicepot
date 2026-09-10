@@ -268,6 +268,48 @@ class DashboardService
                 ->orWhere('status_risti', '');
         })->count();
 
+        // ── KPI Faktor Risiko (dari kolom faktor_risiko) ──────────────────────
+        // Total ibu hamil dengan faktor risiko apapun
+        $totalRisiko = (clone $base)
+            ->whereNotNull('faktor_risiko')
+            ->where('faktor_risiko', '!=', '')
+            ->count();
+
+        // Bekas Sectio Cesaria (BSC)
+        $totalBsc = (clone $base)
+            ->where('faktor_risiko', 'like', '%BSC%')
+            ->count();
+
+        // Darah Tinggi / Hipertensi (HDK)
+        $totalHdk = (clone $base)
+            ->where('faktor_risiko', 'like', '%HDK%')
+            ->count();
+
+        // Anemia dan/atau KEK
+        $totalAnemiaKek = (clone $base)
+            ->where(function ($q) {
+                $q->where('faktor_risiko', 'like', '%ANEMIA%')
+                  ->orWhere('faktor_risiko', 'like', '%KEK%');
+            })
+            ->count();
+
+        // Penyakit Penyerta (ASMA, DM, THYROID, HBSAG, SIFILIS, KISTA, MIOMA, MYOMA, dll)
+        $totalPenyakit = (clone $base)
+            ->where(function ($q) {
+                $q->where('faktor_risiko', 'like', '%ASMA%')
+                  ->orWhere('faktor_risiko', 'like', '%DM%')
+                  ->orWhere('faktor_risiko', 'like', '%THYROID%')
+                  ->orWhere('faktor_risiko', 'like', '%HBSAG%')
+                  ->orWhere('faktor_risiko', 'like', '%SIFILIS%')
+                  ->orWhere('faktor_risiko', 'like', '%KISTA%')
+                  ->orWhere('faktor_risiko', 'like', '%MIOMA%')
+                  ->orWhere('faktor_risiko', 'like', '%MYOMA%')
+                  ->orWhere('faktor_risiko', 'like', '%INFERTIL%')
+                  ->orWhere('faktor_risiko', 'like', '%GEMELI%')
+                  ->orWhere('faktor_risiko', 'like', '%OBESITAS%');
+            })
+            ->count();
+
         $kelurahanDist = (clone $base)
             ->select('kelurahan', DB::raw('count(*) as total'))
             ->whereNotNull('kelurahan')->where('kelurahan', '!=', '')
@@ -372,22 +414,28 @@ class DashboardService
 
         return [
             'kpi' => [
-                'total_all'      => $totalAll,
-                'total_k1'       => $totalK1,
-                'total_k4'       => $totalK4,
-                'total_risti'    => $totalRisti,
-                'total_anemia'   => $totalAnemia,
-                'total_rujukan'  => $totalRujukan,
-                'total_bersalin' => $totalBersalin,
-                'total_fe'       => $totalFe,
-                'total_normal'   => $totalNormal,
-                'umur_muda'      => $umurMuda,
-                'umur_produktif' => $umurProduktif,
-                'umur_risti'     => $umurRisti,
-                'total_h1'       => $imminentDeliveries->count(),
-                'total_krr'      => $totalKrr,
-                'total_krt'      => $totalKrt,
-                'total_krst'     => $totalKrst,
+                'total_all'       => $totalAll,
+                'total_k1'        => $totalK1,
+                'total_k4'        => $totalK4,
+                'total_risti'     => $totalRisti,
+                'total_anemia'    => $totalAnemia,
+                'total_rujukan'   => $totalRujukan,
+                'total_bersalin'  => $totalBersalin,
+                'total_fe'        => $totalFe,
+                'total_normal'    => $totalNormal,
+                'umur_muda'       => $umurMuda,
+                'umur_produktif'  => $umurProduktif,
+                'umur_risti'      => $umurRisti,
+                'total_h1'        => $imminentDeliveries->count(),
+                'total_krr'       => $totalKrr,
+                'total_krt'       => $totalKrt,
+                'total_krst'      => $totalKrst,
+                // KPI Faktor Risiko
+                'total_risiko'    => $totalRisiko,
+                'total_bsc'       => $totalBsc,
+                'total_hdk'       => $totalHdk,
+                'total_anemia_kek'=> $totalAnemiaKek,
+                'total_penyakit'  => $totalPenyakit,
             ],
             'kelurahan_chart' => [
                 'labels' => $kelurahanDist->pluck('kelurahan')->all(),
