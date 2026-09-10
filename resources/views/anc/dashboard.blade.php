@@ -13,10 +13,9 @@
                                     </path>
                                 </svg>
                             </span>
-                            Dashboard Pelayanan Ibu Hamil (ANC)
+                            Sinergi gerakan aksi peduli ibu hamil di wilayah
                         </h2>
-                        <p class="text-xs md:text-sm text-slate-500 mt-1">Sistem Informasi Pemantauan Kesehatan Ibu
-                            Hamil, Kunjungan K1-K6 & Deteksi Risiko Tinggi (RISTI)</p>
+                        <p class="text-xs md:text-sm text-slate-500 mt-1">Satu data bergerak bersama selamatkan ibu hamil di wilayah</p>
                     </div>
                     <div class="flex items-center flex-wrap gap-2">
                         <!-- Ekspor Excel -->
@@ -256,7 +255,7 @@
                     <!-- Card 2: Cakupan K1 -->
                     <div
                         class="bg-white p-4 rounded-2xl shadow-xs border border-slate-200/80 flex flex-col justify-between">
-                        <span class="text-xs font-semibold text-blue-700 uppercase tracking-wider">Kunjungan K1</span>
+                        <span class="text-xs font-semibold text-blue-700 uppercase tracking-wider">Total Resiko bekas sesar</span>
                         <div class="mt-2 flex items-baseline justify-between">
                             <span class="text-2xl font-bold text-blue-700" x-text="kpi.total_k1">0</span>
                             <span class="p-1.5 rounded-lg bg-blue-50 text-blue-600">
@@ -273,8 +272,7 @@
                     <!-- Card 3: Cakupan K4 -->
                     <div
                         class="bg-white p-4 rounded-2xl shadow-xs border border-slate-200/80 flex flex-col justify-between">
-                        <span class="text-xs font-semibold text-emerald-700 uppercase tracking-wider">Cakupan K4 /
-                            K6</span>
+                        <span class="text-xs font-semibold text-emerald-700 uppercase tracking-wider">Ibu hamil dengan darah tinggi</span>
                         <div class="mt-2 flex items-baseline justify-between">
                             <span class="text-2xl font-bold text-emerald-700" x-text="kpi.total_k4">0</span>
                             <span class="p-1.5 rounded-lg bg-emerald-50 text-emerald-600">
@@ -290,8 +288,7 @@
                     <!-- Card 4: Risiko Tinggi (RISTI) -->
                     <div
                         class="bg-white p-4 rounded-2xl shadow-xs border border-slate-200/80 flex flex-col justify-between">
-                        <span class="text-xs font-semibold text-rose-700 uppercase tracking-wider">Risiko Tinggi
-                            (RISTI)</span>
+                        <span class="text-xs font-semibold text-rose-700 uppercase tracking-wider">KEK</span>
                         <div class="mt-2 flex items-baseline justify-between">
                             <span class="text-2xl font-bold text-rose-700" x-text="kpi.total_risti">0</span>
                             <span class="p-1.5 rounded-lg bg-rose-50 text-rose-600">
@@ -378,8 +375,7 @@
                     <div class="lg:col-span-2 bg-white p-5 rounded-2xl shadow-xs border border-slate-200/80">
                         <div class="flex items-center justify-between mb-4">
                             <div>
-                                <h3 class="font-bold text-base text-slate-800">Distribusi Ibu Hamil Terbanyak per
-                                    Kelurahan</h3>
+                                <h3 class="font-bold text-base text-slate-800">Distribusi Ibu Hamil Risiko Terbanyak di Desa / Kelurahan</h3>
                                 <p class="text-xs text-slate-500">10 Kelurahan / Desa dengan ibu hamil terdaftar
                                     tertinggi</p>
                             </div>
@@ -393,7 +389,7 @@
                     <div
                         class="bg-white p-5 rounded-2xl shadow-xs border border-slate-200/80 flex flex-col justify-between">
                         <div>
-                            <h3 class="font-bold text-base text-slate-800">Kelompok Usia Ibu Hamil</h3>
+                            <h3 class="font-bold text-base text-slate-800">Kelompok Risiko</h3>
                             <p class="text-xs text-slate-500 mb-4">Klasifikasi risiko umur kehamilan</p>
                             <div class="h-52 relative">
                                 <canvas id="ancAgeChart"></canvas>
@@ -421,7 +417,7 @@
                 <div class="bg-white p-5 rounded-2xl shadow-xs border border-slate-200/80">
                     <div class="flex items-center justify-between mb-4">
                         <div>
-                            <h3 class="font-bold text-base text-slate-800">Tren Registrasi ANC per Bulan</h3>
+                            <h3 class="font-bold text-base text-slate-800">Tren Ibu Hamil Perbulan</h3>
                             <p class="text-xs text-slate-500">Perkembangan jumlah kunjungan pemeriksaan ibu hamil
                                 sepanjang tahun</p>
                         </div>

@@ -14,17 +14,20 @@
                                     </path>
                                 </svg>
                             </span>
-                            Dashboard Penanggulangan TBC
+                            Dashboard penemuan kasus dan pemantauan pengobatan TBC
                         </h2>
-                        <p class="text-xs md:text-sm text-slate-500 mt-1">Sistem Informasi Pengendalian & Monitoring
-                            Pasien & Terduga TBC Berbasis Wilayah</p>
+                        <p class="text-xs md:text-sm text-slate-500 mt-1">Dari data menjadi peringatan Prioritas dan aksi bersama</p>
                     </div>
                     <div class="flex items-center flex-wrap gap-2">
                         <!-- Ekspor Excel -->
                         <a :href="'{{ route('tb.export.excel') }}?kabupaten=' + encodeURIComponent(selectedKabupaten || '') + '&kelurahan=' + encodeURIComponent(selectedKelurahan || '') + '&report_type=' + encodeURIComponent(selectedType || '') + '&search=' + encodeURIComponent(searchQuery || '')"
-                            class="inline-flex items-center gap-1.5 px-3 py-2 bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 text-xs font-semibold rounded-xl shadow-xs transition-all duration-150 cursor-pointer" title="Ekspor Data ke Format Excel">
-                            <svg class="w-3.5 h-3.5 text-emerald-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                            class="inline-flex items-center gap-1.5 px-3 py-2 bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 text-xs font-semibold rounded-xl shadow-xs transition-all duration-150 cursor-pointer"
+                            title="Ekspor Data ke Format Excel">
+                            <svg class="w-3.5 h-3.5 text-emerald-600 shrink-0" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                                </path>
                             </svg>
                             <span>Ekspor</span>
                         </a>
@@ -33,8 +36,11 @@
                         <a :href="'{{ route('tb.report.executive') }}?kabupaten=' + encodeURIComponent(selectedKabupaten || '') + '&kelurahan=' + encodeURIComponent(selectedKelurahan || '') + '&report_type=' + encodeURIComponent(selectedType || '')"
                             target="_blank" title="Cetak Ringkasan Eksekutif SPM Dinkes"
                             class="inline-flex items-center gap-1.5 px-3 py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 text-xs font-semibold rounded-xl shadow-xs transition-all duration-150 cursor-pointer">
-                            <svg class="w-3.5 h-3.5 text-indigo-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                            <svg class="w-3.5 h-3.5 text-indigo-600 shrink-0" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                                </path>
                             </svg>
                             <span>Laporan SPM</span>
                         </a>
@@ -43,7 +49,9 @@
                         <button @click="showImportModal = true" type="button" title="Import Data Excel atau CSV"
                             class="inline-flex items-center gap-1.5 px-3 py-2 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white text-xs font-semibold rounded-xl shadow-xs hover:shadow transition-all duration-150 cursor-pointer">
                             <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12">
+                                </path>
                             </svg>
                             <span>Import</span>
                         </button>
@@ -52,7 +60,8 @@
                         <button @click="openAddModal()" type="button" title="Tambah Data Pasien Baru"
                             class="inline-flex items-center gap-1.5 px-3.5 py-2 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white text-xs font-bold rounded-xl shadow-sm hover:shadow transition-all duration-150 cursor-pointer">
                             <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                    d="M12 4v16m8-8H4"></path>
                             </svg>
                             <span>Tambah Data</span>
                         </button>
@@ -149,7 +158,7 @@
                     <!-- Card 1: Total Semua -->
                     <div
                         class="bg-white p-4 rounded-2xl shadow-xs border border-slate-200/80 flex flex-col justify-between">
-                        <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Total Kasus</span>
+                        <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Total Pelacakan</span>
                         <div class="mt-2 flex items-baseline justify-between">
                             <span class="text-2xl font-bold text-slate-900" x-text="kpi.total_all">0</span>
                             <span class="p-1.5 rounded-lg bg-blue-50 text-blue-600">
@@ -166,7 +175,7 @@
                     <!-- Card 2: Terduga TBC -->
                     <div
                         class="bg-white p-4 rounded-2xl shadow-xs border border-slate-200/80 flex flex-col justify-between">
-                        <span class="text-xs font-semibold text-amber-700 uppercase tracking-wider">Terduga TBC</span>
+                        <span class="text-xs font-semibold text-amber-700 uppercase tracking-wider">Total kasus yang di periksa (TCM/X-Ray)</span>
                         <div class="mt-2 flex items-baseline justify-between">
                             <span class="text-2xl font-bold text-amber-700" x-text="kpi.total_terduga">0</span>
                             <span class="p-1.5 rounded-lg bg-amber-50 text-amber-600">
@@ -183,7 +192,7 @@
                     <!-- Card 3: Terkonfirmasi TBC -->
                     <div
                         class="bg-white p-4 rounded-2xl shadow-xs border border-slate-200/80 flex flex-col justify-between">
-                        <span class="text-xs font-semibold text-rose-700 uppercase tracking-wider">Terkonfirmasi</span>
+                        <span class="text-xs font-semibold text-rose-700 uppercase tracking-wider">Pasien dalam pengobatan</span>
                         <div class="mt-2 flex items-baseline justify-between">
                             <span class="text-2xl font-bold text-rose-700" x-text="kpi.total_terkonfirmasi">0</span>
                             <span class="p-1.5 rounded-lg bg-rose-50 text-rose-600">
@@ -199,7 +208,7 @@
                     <!-- Card 4: Pengobatan Aktif -->
                     <div
                         class="bg-white p-4 rounded-2xl shadow-xs border border-slate-200/80 flex flex-col justify-between">
-                        <span class="text-xs font-semibold text-indigo-700 uppercase tracking-wider">Aktif OAT</span>
+                        <span class="text-xs font-semibold text-indigo-700 uppercase tracking-wider">Investigasi Kontak</span>
                         <div class="mt-2 flex items-baseline justify-between">
                             <span class="text-2xl font-bold text-indigo-700"
                                 x-text="kpi.total_sedang_pengobatan">0</span>
@@ -257,7 +266,7 @@
                     <div class="lg:col-span-2 bg-white p-5 rounded-2xl shadow-xs border border-slate-200/80">
                         <div class="flex items-center justify-between mb-4">
                             <div>
-                                <h3 class="font-bold text-base text-slate-800">Distribusi Kasus Terbanyak per Kelurahan
+                                <h3 class="font-bold text-base text-slate-800">Distribusi Pelacakan Terbanyak per Kelurahan
                                 </h3>
                                 <p class="text-xs text-slate-500">10 Kelurahan dengan kasus terdaftar tertinggi</p>
                             </div>
@@ -316,15 +325,20 @@
                     <div class="px-6 pt-6 pb-5 border-b border-slate-100">
                         <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
                             <div class="flex items-center gap-3">
-                                <span class="p-2.5 rounded-xl bg-indigo-50 text-indigo-600 border border-indigo-100 shrink-0">
+                                <span
+                                    class="p-2.5 rounded-xl bg-indigo-50 text-indigo-600 border border-indigo-100 shrink-0">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                                     </svg>
                                 </span>
                                 <div>
-                                    <h3 class="font-bold text-base text-slate-800">Peta Sebaran Kasus TBC Berbasis Geospasial (GIS)</h3>
-                                    <p class="text-xs text-slate-500">Visualisasi densitas kasus per kelurahan & kluster fasyankes — fokus 1 kecamatan</p>
+                                    <h3 class="font-bold text-base text-slate-800">Peta Sebaran Kasus TBC Berbasis
+                                        Geospasial (GIS)</h3>
+                                    <p class="text-xs text-slate-500">Visualisasi densitas kasus per kelurahan & kluster
+                                        fasyankes — fokus 1 kecamatan</p>
                                 </div>
                             </div>
 
@@ -333,7 +347,8 @@
                                 :class="tbMapCfgOpen ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white text-slate-600 border-slate-300 hover:bg-slate-50'"
                                 class="inline-flex items-center gap-1.5 px-3 py-1.5 border text-xs font-semibold rounded-xl transition-colors cursor-pointer shrink-0 self-start">
                                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
                                 </svg>
                                 <span x-text="tbMapCfgOpen ? 'Tutup Konfigurasi' : 'Konfigurasi Peta'"></span>
                             </button>
@@ -341,17 +356,18 @@
 
                         {{-- ── Collapsible Config Panel ── --}}
                         <div x-show="tbMapCfgOpen" x-transition:enter="transition ease-out duration-200"
-                             x-transition:enter-start="opacity-0 -translate-y-1" x-transition:enter-end="opacity-100 translate-y-0"
-                             class="mt-5 p-5 bg-slate-50 rounded-xl border border-slate-200 space-y-5">
+                            x-transition:enter-start="opacity-0 -translate-y-1"
+                            x-transition:enter-end="opacity-100 translate-y-0"
+                            class="mt-5 p-5 bg-slate-50 rounded-xl border border-slate-200 space-y-5">
 
                             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                                 {{-- Kecamatan selector --}}
                                 <div>
-                                    <label class="block text-[11px] font-bold text-slate-600 uppercase tracking-wider mb-1.5">
+                                    <label
+                                        class="block text-[11px] font-bold text-slate-600 uppercase tracking-wider mb-1.5">
                                         Fokus Kecamatan
                                     </label>
-                                    <select x-model="tbMapCfg.kecamatan"
-                                        @change="onTbMapKecamatanChange()"
+                                    <select x-model="tbMapCfg.kecamatan" @change="onTbMapKecamatanChange()"
                                         class="w-full px-3 py-2 text-xs bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500">
                                         <option value="">Semua Kecamatan</option>
                                         <template x-for="kec in tbMapKecamatanList" :key="kec">
@@ -362,17 +378,22 @@
 
                                 {{-- Layer mode --}}
                                 <div>
-                                    <label class="block text-[11px] font-bold text-slate-600 uppercase tracking-wider mb-1.5">
+                                    <label
+                                        class="block text-[11px] font-bold text-slate-600 uppercase tracking-wider mb-1.5">
                                         Mode Tampilan Layer
                                     </label>
-                                    <div class="inline-flex w-full rounded-xl p-0.5 bg-slate-200 border border-slate-300">
-                                        <button @click="tbMapCfg.viewMode = 'markers'; saveTbMapCfg(); updateMap()" type="button"
+                                    <div
+                                        class="inline-flex w-full rounded-xl p-0.5 bg-slate-200 border border-slate-300">
+                                        <button @click="tbMapCfg.viewMode = 'markers'; saveTbMapCfg(); updateMap()"
+                                            type="button"
                                             :class="tbMapCfg.viewMode === 'markers' ? 'bg-white text-indigo-700 font-bold shadow-xs' : 'text-slate-600 hover:text-slate-800'"
                                             class="flex-1 px-2 py-1.5 rounded-lg transition-colors cursor-pointer text-[11px]">Titik</button>
-                                        <button @click="tbMapCfg.viewMode = 'density'; saveTbMapCfg(); updateMap()" type="button"
+                                        <button @click="tbMapCfg.viewMode = 'density'; saveTbMapCfg(); updateMap()"
+                                            type="button"
                                             :class="tbMapCfg.viewMode === 'density' ? 'bg-white text-indigo-700 font-bold shadow-xs' : 'text-slate-600 hover:text-slate-800'"
                                             class="flex-1 px-2 py-1.5 rounded-lg transition-colors cursor-pointer text-[11px]">Densitas</button>
-                                        <button @click="tbMapCfg.viewMode = 'geofence'; saveTbMapCfg(); updateMap()" type="button"
+                                        <button @click="tbMapCfg.viewMode = 'geofence'; saveTbMapCfg(); updateMap()"
+                                            type="button"
                                             :class="tbMapCfg.viewMode === 'geofence' ? 'bg-rose-600 text-white font-bold shadow-xs' : 'text-slate-600 hover:text-slate-800'"
                                             class="flex-1 px-2 py-1.5 rounded-lg transition-colors cursor-pointer text-[11px]">Geofence</button>
                                     </div>
@@ -380,17 +401,22 @@
 
                                 {{-- Map height --}}
                                 <div>
-                                    <label class="block text-[11px] font-bold text-slate-600 uppercase tracking-wider mb-1.5">
+                                    <label
+                                        class="block text-[11px] font-bold text-slate-600 uppercase tracking-wider mb-1.5">
                                         Tinggi Peta
                                     </label>
-                                    <div class="inline-flex w-full rounded-xl p-0.5 bg-slate-200 border border-slate-300">
-                                        <button @click="tbMapCfg.height = 320; saveTbMapCfg(); resizeTbMap()" type="button"
+                                    <div
+                                        class="inline-flex w-full rounded-xl p-0.5 bg-slate-200 border border-slate-300">
+                                        <button @click="tbMapCfg.height = 320; saveTbMapCfg(); resizeTbMap()"
+                                            type="button"
                                             :class="tbMapCfg.height === 320 ? 'bg-white text-indigo-700 font-bold shadow-xs' : 'text-slate-600'"
                                             class="flex-1 px-2 py-1.5 rounded-lg transition-colors cursor-pointer text-[11px]">Kecil</button>
-                                        <button @click="tbMapCfg.height = 460; saveTbMapCfg(); resizeTbMap()" type="button"
+                                        <button @click="tbMapCfg.height = 460; saveTbMapCfg(); resizeTbMap()"
+                                            type="button"
                                             :class="tbMapCfg.height === 460 ? 'bg-white text-indigo-700 font-bold shadow-xs' : 'text-slate-600'"
                                             class="flex-1 px-2 py-1.5 rounded-lg transition-colors cursor-pointer text-[11px]">Sedang</button>
-                                        <button @click="tbMapCfg.height = 600; saveTbMapCfg(); resizeTbMap()" type="button"
+                                        <button @click="tbMapCfg.height = 600; saveTbMapCfg(); resizeTbMap()"
+                                            type="button"
                                             :class="tbMapCfg.height === 600 ? 'bg-white text-indigo-700 font-bold shadow-xs' : 'text-slate-600'"
                                             class="flex-1 px-2 py-1.5 rounded-lg transition-colors cursor-pointer text-[11px]">Besar</button>
                                     </div>
@@ -399,18 +425,26 @@
 
                             {{-- Layer toggles --}}
                             <div>
-                                <label class="block text-[11px] font-bold text-slate-600 uppercase tracking-wider mb-2">Overlay Layer</label>
+                                <label
+                                    class="block text-[11px] font-bold text-slate-600 uppercase tracking-wider mb-2">Overlay
+                                    Layer</label>
                                 <div class="flex flex-wrap gap-2">
-                                    <label class="inline-flex items-center gap-1.5 px-2.5 py-1.5 bg-white border border-slate-300 rounded-lg cursor-pointer text-xs select-none hover:bg-slate-50">
-                                        <input type="checkbox" x-model="tbMapCfg.showFasyankes" @change="saveTbMapCfg(); updateMap()" class="rounded accent-indigo-600">
+                                    <label
+                                        class="inline-flex items-center gap-1.5 px-2.5 py-1.5 bg-white border border-slate-300 rounded-lg cursor-pointer text-xs select-none hover:bg-slate-50">
+                                        <input type="checkbox" x-model="tbMapCfg.showFasyankes"
+                                            @change="saveTbMapCfg(); updateMap()" class="rounded accent-indigo-600">
                                         <span class="font-medium text-slate-700">Kluster Fasyankes</span>
                                     </label>
-                                    <label class="inline-flex items-center gap-1.5 px-2.5 py-1.5 bg-white border border-slate-300 rounded-lg cursor-pointer text-xs select-none hover:bg-slate-50">
-                                        <input type="checkbox" x-model="tbMapCfg.showRO" @change="saveTbMapCfg(); updateMap()" class="rounded accent-rose-600">
+                                    <label
+                                        class="inline-flex items-center gap-1.5 px-2.5 py-1.5 bg-white border border-slate-300 rounded-lg cursor-pointer text-xs select-none hover:bg-slate-50">
+                                        <input type="checkbox" x-model="tbMapCfg.showRO"
+                                            @change="saveTbMapCfg(); updateMap()" class="rounded accent-rose-600">
                                         <span class="font-medium text-slate-700">Tandai Kasus RO</span>
                                     </label>
-                                    <label class="inline-flex items-center gap-1.5 px-2.5 py-1.5 bg-white border border-slate-300 rounded-lg cursor-pointer text-xs select-none hover:bg-slate-50">
-                                        <input type="checkbox" x-model="tbMapCfg.showHIV" @change="saveTbMapCfg(); updateMap()" class="rounded accent-purple-600">
+                                    <label
+                                        class="inline-flex items-center gap-1.5 px-2.5 py-1.5 bg-white border border-slate-300 rounded-lg cursor-pointer text-xs select-none hover:bg-slate-50">
+                                        <input type="checkbox" x-model="tbMapCfg.showHIV"
+                                            @change="saveTbMapCfg(); updateMap()" class="rounded accent-purple-600">
                                         <span class="font-medium text-slate-700">Tandai Ko-infeksi HIV</span>
                                     </label>
                                 </div>
@@ -421,7 +455,8 @@
                                 <span x-show="tbMapCfgSaved" x-transition
                                     class="text-[11px] text-emerald-600 font-semibold flex items-center gap-1">
                                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                            d="M5 13l4 4L19 7" />
                                     </svg>
                                     Konfigurasi tersimpan
                                 </span>
@@ -434,7 +469,8 @@
                                     <button @click="saveTbMapCfg(true)" type="button"
                                         class="px-3.5 py-1.5 text-xs bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg transition-colors cursor-pointer flex items-center gap-1.5">
                                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"/>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
                                         </svg>
                                         Simpan Konfigurasi
                                     </button>
@@ -448,24 +484,38 @@
                             <div class="flex items-center flex-wrap gap-2">
                                 <span x-show="tbMapCfg.kecamatan"
                                     class="inline-flex items-center gap-1 px-2 py-0.5 bg-indigo-100 text-indigo-700 text-[11px] font-semibold rounded-lg">
-                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0zM15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0zM15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    </svg>
                                     Kec. <span x-text="tbMapCfg.kecamatan"></span>
-                                    <button @click="tbMapCfg.kecamatan=''; onTbMapKecamatanChange()" type="button" class="ml-1 text-indigo-500 hover:text-indigo-800 cursor-pointer">✕</button>
+                                    <button @click="tbMapCfg.kecamatan=''; onTbMapKecamatanChange()" type="button"
+                                        class="ml-1 text-indigo-500 hover:text-indigo-800 cursor-pointer">✕</button>
                                 </span>
-                                <span class="inline-flex items-center gap-1 px-2 py-0.5 bg-slate-100 text-slate-600 text-[11px] font-semibold rounded-lg capitalize"
+                                <span
+                                    class="inline-flex items-center gap-1 px-2 py-0.5 bg-slate-100 text-slate-600 text-[11px] font-semibold rounded-lg capitalize"
                                     x-text="{ markers:'Titik Sebaran', density:'Densitas Heatmap', geofence:'Geofence 500m' }[tbMapCfg.viewMode] || tbMapCfg.viewMode"></span>
-                                <span x-show="tbMapCfg.showFasyankes" class="inline-flex items-center gap-1 px-2 py-0.5 bg-sky-100 text-sky-700 text-[11px] font-semibold rounded-lg">Fasyankes</span>
-                                <span x-show="tbMapCfg.showRO" class="inline-flex items-center gap-1 px-2 py-0.5 bg-rose-100 text-rose-700 text-[11px] font-semibold rounded-lg">RO</span>
-                                <span x-show="tbMapCfg.showHIV" class="inline-flex items-center gap-1 px-2 py-0.5 bg-purple-100 text-purple-700 text-[11px] font-semibold rounded-lg">HIV</span>
-                                <span x-show="tbMapLoading" class="inline-flex items-center gap-1 text-[11px] text-slate-500">
-                                    <svg class="animate-spin w-3 h-3" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"/></svg>
+                                <span x-show="tbMapCfg.showFasyankes"
+                                    class="inline-flex items-center gap-1 px-2 py-0.5 bg-sky-100 text-sky-700 text-[11px] font-semibold rounded-lg">Fasyankes</span>
+                                <span x-show="tbMapCfg.showRO"
+                                    class="inline-flex items-center gap-1 px-2 py-0.5 bg-rose-100 text-rose-700 text-[11px] font-semibold rounded-lg">RO</span>
+                                <span x-show="tbMapCfg.showHIV"
+                                    class="inline-flex items-center gap-1 px-2 py-0.5 bg-purple-100 text-purple-700 text-[11px] font-semibold rounded-lg">HIV</span>
+                                <span x-show="tbMapLoading"
+                                    class="inline-flex items-center gap-1 text-[11px] text-slate-500">
+                                    <svg class="animate-spin w-3 h-3" viewBox="0 0 24 24">
+                                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                            stroke-width="4" />
+                                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
+                                    </svg>
                                     Memuat data peta...
                                 </span>
                             </div>
 
                             {{-- Baris 2: legenda warna --}}
                             <div class="flex items-center gap-4 pt-2 border-t border-slate-100 text-xs">
-                                <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Legenda</span>
+                                <span
+                                    class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Legenda</span>
                                 <div class="flex items-center gap-1.5">
                                     <span class="w-3 h-3 rounded-full bg-rose-500 shrink-0"></span>
                                     <span class="text-slate-500">≥ 10 Kasus</span>
@@ -483,8 +533,7 @@
                     </div>
 
                     {{-- ── Map Container ── --}}
-                    <div id="tbMap"
-                        :style="'height:' + tbMapCfg.height + 'px; width:100%; isolation:isolate;'"
+                    <div id="tbMap" :style="'height:' + tbMapCfg.height + 'px; width:100%; isolation:isolate;'"
                         class="map-container w-full z-0 overflow-hidden relative">
                     </div>
                 </div>
@@ -575,9 +624,15 @@
                                                 <button @click="openViewModal(p)" type="button"
                                                     class="p-1.5 text-sky-600 hover:text-sky-800 hover:bg-sky-50 rounded-lg transition-colors cursor-pointer"
                                                     title="Lihat Rekam Data Lengkap Pasien">
-                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                                        viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z">
+                                                        </path>
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            stroke-width="2"
+                                                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
+                                                        </path>
                                                     </svg>
                                                 </button>
 
@@ -585,8 +640,12 @@
                                                 <button @click="openWhatsAppModal(p)" type="button"
                                                     class="p-1.5 text-emerald-600 hover:text-emerald-800 hover:bg-emerald-50 rounded-lg transition-colors cursor-pointer"
                                                     title="Kirim Pesan WhatsApp (wa.me)">
-                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                                        viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            stroke-width="2"
+                                                            d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z">
+                                                        </path>
                                                     </svg>
                                                 </button>
 
@@ -594,8 +653,12 @@
                                                 <button @click="openDuplicateModal(p)" type="button"
                                                     class="p-1.5 text-amber-600 hover:text-amber-800 hover:bg-amber-50 rounded-lg transition-colors cursor-pointer"
                                                     title="Skrining Data Ganda / Lintas Faskes">
-                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                                        viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            stroke-width="2"
+                                                            d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z">
+                                                        </path>
                                                     </svg>
                                                 </button>
 
@@ -603,8 +666,11 @@
                                                 <button @click="openTimelineModal(p)" type="button"
                                                     class="p-1.5 text-indigo-600 hover:text-indigo-800 hover:bg-indigo-50 rounded-lg transition-colors cursor-pointer"
                                                     title="Riwayat Perjalanan Pengobatan TBC">
-                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                                        viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            stroke-width="2"
+                                                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                                     </svg>
                                                 </button>
 
@@ -612,7 +678,8 @@
                                                 <button @click="openAiTriage(p)" type="button"
                                                     class="p-1.5 text-purple-600 hover:text-purple-800 hover:bg-purple-50 rounded-lg transition-colors cursor-pointer"
                                                     title="AI Triage & Evaluasi Pengobatan (Google Gemini)">
-                                                    <span class="text-xs font-black px-1 py-0.5 bg-purple-100 text-purple-700 rounded">AI</span>
+                                                    <span
+                                                        class="text-xs font-black px-1 py-0.5 bg-purple-100 text-purple-700 rounded">AI</span>
                                                 </button>
 
                                                 <!-- Edit Pasien -->
@@ -958,18 +1025,21 @@
                     <div @click="showAddModal = false"
                         class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs transition-opacity"></div>
 
-                    <div class="inline-block w-full max-w-2xl my-8 text-left align-middle transition-all transform bg-white shadow-2xl rounded-3xl z-10 border border-slate-100 overflow-hidden">
+                    <div
+                        class="inline-block w-full max-w-2xl my-8 text-left align-middle transition-all transform bg-white shadow-2xl rounded-3xl z-10 border border-slate-100 overflow-hidden">
 
                         {{-- Header --}}
                         <div class="px-6 pt-6 pb-4 border-b border-slate-100 flex items-start justify-between gap-3">
                             <div>
                                 <h3 class="text-base font-bold text-slate-800">Tambah Data Pasien TBC</h3>
-                                <p class="text-xs text-slate-500 mt-0.5">Deskripsikan data pasien secara bebas, AI akan mengisi form secara otomatis</p>
+                                <p class="text-xs text-slate-500 mt-0.5">Deskripsikan data pasien secara bebas, AI akan
+                                    mengisi form secara otomatis</p>
                             </div>
                             <button @click="showAddModal = false"
                                 class="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100 cursor-pointer shrink-0">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M6 18L18 6M6 6l12 12" />
                                 </svg>
                             </button>
                         </div>
@@ -978,54 +1048,76 @@
 
                             {{-- Step indicator --}}
                             <div class="flex items-center gap-2 text-[11px]">
-                                <span :class="aiAddStep === 'prompt' ? 'bg-indigo-600 text-white' : 'bg-indigo-100 text-indigo-600'"
+                                <span
+                                    :class="aiAddStep === 'prompt' ? 'bg-indigo-600 text-white' : 'bg-indigo-100 text-indigo-600'"
                                     class="w-5 h-5 rounded-full flex items-center justify-center font-bold shrink-0">1</span>
-                                <span :class="aiAddStep === 'prompt' ? 'font-semibold text-slate-700' : 'text-slate-400'">Tulis Deskripsi</span>
+                                <span
+                                    :class="aiAddStep === 'prompt' ? 'font-semibold text-slate-700' : 'text-slate-400'">Tulis
+                                    Deskripsi</span>
                                 <span class="text-slate-300 mx-1">—</span>
-                                <span :class="aiAddStep === 'preview' ? 'bg-indigo-600 text-white' : 'bg-indigo-100 text-indigo-600'"
+                                <span
+                                    :class="aiAddStep === 'preview' ? 'bg-indigo-600 text-white' : 'bg-indigo-100 text-indigo-600'"
                                     class="w-5 h-5 rounded-full flex items-center justify-center font-bold shrink-0">2</span>
-                                <span :class="aiAddStep === 'preview' ? 'font-semibold text-slate-700' : 'text-slate-400'">Periksa & Simpan</span>
+                                <span
+                                    :class="aiAddStep === 'preview' ? 'font-semibold text-slate-700' : 'text-slate-400'">Periksa
+                                    & Simpan</span>
                             </div>
 
                             {{-- Step 1: Prompt input --}}
                             <div x-show="aiAddStep === 'prompt'" class="space-y-3">
-                                <div class="p-3.5 bg-indigo-50 border border-indigo-100 rounded-xl text-xs text-indigo-700 leading-relaxed">
+                                <div
+                                    class="p-3.5 bg-indigo-50 border border-indigo-100 rounded-xl text-xs text-indigo-700 leading-relaxed">
                                     Tulis deskripsi pasien seperti berbicara kepada rekan kerja. Contoh:<br>
-                                    <span class="mt-1.5 block text-indigo-500 italic">"Pasien bernama Budi Santoso, laki-laki 35 tahun, NIK 3603xx, warga Kelurahan Pagedangan Kab. Tangerang. Terdaftar TB-03 dengan hasil TCM positif rifampisin sensitif, mulai pengobatan Januari 2025, riwayat HIV negatif."</span>
+                                    <span class="mt-1.5 block text-indigo-500 italic">"Pasien bernama Budi Santoso,
+                                        laki-laki 35 tahun, NIK 3603xx, warga Kelurahan Pagedangan Kab. Tangerang.
+                                        Terdaftar TB-03 dengan hasil TCM positif rifampisin sensitif, mulai pengobatan
+                                        Januari 2025, riwayat HIV negatif."</span>
                                 </div>
                                 <div>
                                     <textarea x-model="aiAddPrompt" rows="5"
                                         placeholder="Tulis deskripsi data pasien di sini..."
                                         class="w-full px-3.5 py-3 text-xs border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 resize-none leading-relaxed"></textarea>
-                                    <p class="text-[11px] text-slate-400 mt-1" x-text="aiAddPrompt.length + ' karakter'"></p>
+                                    <p class="text-[11px] text-slate-400 mt-1"
+                                        x-text="aiAddPrompt.length + ' karakter'"></p>
                                 </div>
-                                <div x-show="aiAddError" class="p-3 bg-rose-50 border border-rose-200 rounded-xl text-xs text-rose-700" x-text="aiAddError"></div>
+                                <div x-show="aiAddError"
+                                    class="p-3 bg-rose-50 border border-rose-200 rounded-xl text-xs text-rose-700"
+                                    x-text="aiAddError"></div>
                             </div>
 
                             {{-- Step 2: Preview parsed fields --}}
                             <div x-show="aiAddStep === 'preview'" class="space-y-3">
-                                <div class="p-3 bg-emerald-50 border border-emerald-200 rounded-xl text-xs text-emerald-700 font-medium">
-                                    AI berhasil mengekstrak data. Periksa hasil di bawah dan koreksi jika perlu sebelum menyimpan.
+                                <div
+                                    class="p-3 bg-emerald-50 border border-emerald-200 rounded-xl text-xs text-emerald-700 font-medium">
+                                    AI berhasil mengekstrak data. Periksa hasil di bawah dan koreksi jika perlu sebelum
+                                    menyimpan.
                                 </div>
-                                <div class="max-h-72 overflow-y-auto border border-slate-200 rounded-xl divide-y divide-slate-100">
-                                    <template x-for="[key, val] in Object.entries(newPatient).filter(([k,v]) => v !== null && v !== '' && v !== undefined)" :key="key">
+                                <div
+                                    class="max-h-72 overflow-y-auto border border-slate-200 rounded-xl divide-y divide-slate-100">
+                                    <template
+                                        x-for="[key, val] in Object.entries(newPatient).filter(([k,v]) => v !== null && v !== '' && v !== undefined)"
+                                        :key="key">
                                         <div class="flex items-start gap-2 px-3.5 py-2.5 hover:bg-slate-50">
-                                            <span class="text-[11px] font-semibold text-slate-500 w-44 shrink-0 pt-0.5" x-text="key.replace(/_/g,' ')"></span>
+                                            <span class="text-[11px] font-semibold text-slate-500 w-44 shrink-0 pt-0.5"
+                                                x-text="key.replace(/_/g,' ')"></span>
                                             <input type="text" :value="val"
                                                 @change="newPatient[key] = $event.target.value"
                                                 class="flex-1 text-xs text-slate-800 bg-transparent border-0 border-b border-slate-200 focus:border-indigo-400 focus:ring-0 px-0 py-0.5">
                                         </div>
                                     </template>
                                 </div>
-                                <p class="text-[11px] text-slate-400">Klik nilai untuk mengedit langsung sebelum disimpan.</p>
-                                <div x-show="aiAddError" class="p-3 bg-rose-50 border border-rose-200 rounded-xl text-xs text-rose-700" x-text="aiAddError"></div>
+                                <p class="text-[11px] text-slate-400">Klik nilai untuk mengedit langsung sebelum
+                                    disimpan.</p>
+                                <div x-show="aiAddError"
+                                    class="p-3 bg-rose-50 border border-rose-200 rounded-xl text-xs text-rose-700"
+                                    x-text="aiAddError"></div>
                             </div>
                         </div>
 
                         {{-- Footer actions --}}
                         <div class="px-6 pb-6 pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
-                            <button x-show="aiAddStep === 'preview'"
-                                @click="aiAddStep = 'prompt'; aiAddError = ''" type="button"
+                            <button x-show="aiAddStep === 'preview'" @click="aiAddStep = 'prompt'; aiAddError = ''"
+                                type="button"
                                 class="text-xs font-semibold text-slate-500 hover:text-slate-700 cursor-pointer">
                                 Kembali ke Deskripsi
                             </button>
@@ -1037,37 +1129,53 @@
                                     Batal
                                 </button>
                                 {{-- Step 1 button: Parse --}}
-                                <button x-show="aiAddStep === 'prompt'"
-                                    @click="runTbAiParse()" type="button"
+                                <button x-show="aiAddStep === 'prompt'" @click="runTbAiParse()" type="button"
                                     :disabled="aiAddLoading || aiAddPrompt.trim().length < 10"
                                     class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-xl shadow-xs flex items-center gap-2 cursor-pointer disabled:opacity-50 transition-colors">
                                     <template x-if="!aiAddLoading">
                                         <span class="flex items-center gap-1.5">
-                                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M13 10V3L4 14h7v7l9-11h-7z" />
+                                            </svg>
                                             Proses dengan AI
                                         </span>
                                     </template>
                                     <template x-if="aiAddLoading">
                                         <span class="flex items-center gap-2">
-                                            <svg class="animate-spin h-3.5 w-3.5" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"/></svg>
+                                            <svg class="animate-spin h-3.5 w-3.5" viewBox="0 0 24 24">
+                                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                                    stroke-width="4" />
+                                                <path class="opacity-75" fill="currentColor"
+                                                    d="M4 12a8 8 0 018-8v8H4z" />
+                                            </svg>
                                             Memproses...
                                         </span>
                                     </template>
                                 </button>
                                 {{-- Step 2 button: Save --}}
-                                <button x-show="aiAddStep === 'preview'"
-                                    @click="saveNewPatient()" type="button"
+                                <button x-show="aiAddStep === 'preview'" @click="saveNewPatient()" type="button"
                                     :disabled="isSubmittingNewPatient"
                                     class="px-5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl shadow-xs flex items-center gap-2 cursor-pointer disabled:opacity-50 transition-colors">
                                     <template x-if="!isSubmittingNewPatient">
                                         <span class="flex items-center gap-1.5">
-                                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M5 13l4 4L19 7" />
+                                            </svg>
                                             Simpan ke Database
                                         </span>
                                     </template>
                                     <template x-if="isSubmittingNewPatient">
                                         <span class="flex items-center gap-2">
-                                            <svg class="animate-spin h-3.5 w-3.5" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"/></svg>
+                                            <svg class="animate-spin h-3.5 w-3.5" viewBox="0 0 24 24">
+                                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                                    stroke-width="4" />
+                                                <path class="opacity-75" fill="currentColor"
+                                                    d="M4 12a8 8 0 018-8v8H4z" />
+                                            </svg>
                                             Menyimpan...
                                         </span>
                                     </template>
@@ -1078,1015 +1186,1211 @@
                 </div>
             </div>
 
-                <!-- ================= MODAL: WHATSAPP DIRECT REMINDER (wa.me) ================= -->
-                <div x-show="showWhatsAppModal" x-cloak class="fixed inset-0 z-[9999] overflow-y-auto" style="display: none;">
-                    <div class="min-h-screen px-4 text-center flex items-center justify-center">
-                        <div @click="showWhatsAppModal = false" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs transition-opacity"></div>
-                        <div class="inline-block w-full max-w-lg p-6 my-8 text-left align-middle transition-all transform bg-white shadow-2xl rounded-3xl z-10 border border-slate-100">
-                            <div class="flex items-center justify-between pb-3 border-b border-slate-100">
-                                <div class="flex items-center gap-2.5">
-                                    <span class="p-2 rounded-xl bg-emerald-100 text-emerald-700">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
-                                        </svg>
-                                    </span>
-                                    <div>
-                                        <h3 class="text-base font-bold text-slate-800">Kirim Pengingat WhatsApp Langsung</h3>
-                                        <p class="text-xs text-slate-500">Integrasi pesan resmi SICEPOT via WhatsApp (wa.me)</p>
-                                    </div>
-                                </div>
-                                <button @click="showWhatsAppModal = false" class="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100 cursor-pointer">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                                </button>
-                            </div>
-
-                            <div class="mt-4 space-y-4 text-xs">
-                                <div>
-                                    <label class="block font-semibold text-slate-700 mb-1">Pasien TBC Terpilih:</label>
-                                    <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl">
-                                        <div class="font-bold text-slate-800" x-text="targetPatient?.nama_lengkap || '-'"></div>
-                                        <div class="text-[11px] text-slate-500 mt-0.5" x-text="'Kelurahan: ' + (targetPatient?.kelurahan || '-') + ' | Diagnosis: ' + (targetPatient?.hasil_diagnosis || targetPatient?.hasil_tcm || '-')"></div>
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <label class="block font-semibold text-slate-700 mb-1">Nomor WhatsApp Pasien / Pengawas Minum Obat (PMO):</label>
-                                    <input type="text" x-model="waPhone" placeholder="Contoh: 08123456789 atau 628123456789"
-                                        class="w-full px-3 py-2 text-xs border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 font-mono">
-                                </div>
-
-                                <div>
-                                    <label class="block font-semibold text-slate-700 mb-1">Pilih Template Pesan TBC:</label>
-                                    <select x-model="waTemplateType" @change="prepareWaMessage()"
-                                        class="w-full px-3 py-2 text-xs border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500">
-                                        <option value="oat_daily">Pengingat Minum Obat Harian (Kepatuhan OAT)</option>
-                                        <option value="sputum_eval">Jadwal Evaluasi Dahak Akhir Bulan Ke-2/5/6</option>
-                                        <option value="dropout_warning">Peringatan Mangkir Berobat / Drop Out TBC (Kritis)</option>
-                                    </select>
-                                </div>
-
-                                <div>
-                                    <label class="block font-semibold text-slate-700 mb-1">Isi Pesan (Bisa disesuaikan):</label>
-                                    <textarea rows="5" x-model="waMessage"
-                                        class="w-full px-3 py-2 text-xs border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500"></textarea>
-                                </div>
-
-                                <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between">
-                                    <button @click="showWhatsAppModal = false" type="button"
-                                        class="px-4 py-2 text-slate-600 hover:bg-slate-100 rounded-xl font-semibold cursor-pointer">Batal</button>
-                                    <button type="button" @click="sendWhatsAppMessage()" :disabled="!waPhone"
-                                        class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white rounded-xl font-bold shadow-xs flex items-center gap-2 cursor-pointer disabled:opacity-50">
-                                        <span>Buka WhatsApp Web / App ↗</span>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- ================= MODAL: SKRINING DUPLIKASI DATA ================= -->
-                <div x-show="showDuplicateModal" x-cloak class="fixed inset-0 z-[9999] overflow-y-auto" style="display: none;">
-                    <div class="min-h-screen px-4 text-center flex items-center justify-center">
-                        <div @click="showDuplicateModal = false" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs transition-opacity"></div>
-                        <div class="inline-block w-full max-w-xl p-6 my-8 text-left align-middle transition-all transform bg-white shadow-2xl rounded-3xl z-10 border border-slate-100">
-                            <div class="flex items-center justify-between pb-3 border-b border-slate-100">
-                                <div>
-                                    <h3 class="text-base font-bold text-slate-800">Skrining Pasien TBC Ganda / Lintas Faskes</h3>
-                                    <p class="text-xs text-slate-500" x-text="'Pemeriksaan: ' + (targetPatient?.nama_lengkap || '')"></p>
-                                </div>
-                                <button @click="showDuplicateModal = false" class="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100 cursor-pointer">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                                </button>
-                            </div>
-
-                            <div class="mt-4 space-y-3">
-                                <div x-show="isLoadingDuplicates" class="py-8 text-center text-xs text-slate-500 flex items-center justify-center gap-2">
-                                    <svg class="animate-spin h-4 w-4 text-amber-600" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path></svg>
-                                    Memindai database untuk mendeteksi NIK ganda & nama kembar lintas faskes...
-                                </div>
-
-                                <div x-show="!isLoadingDuplicates && duplicateResults.length === 0" class="p-6 text-center text-xs text-emerald-700 bg-emerald-50 rounded-2xl border border-emerald-200">
-                                    <div class="w-10 h-10 mx-auto rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center mb-2">
-                                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                                        </svg>
-                                    </div>
-                                    <div class="font-bold text-sm">Data Pasien Unik</div>
-                                    <p class="text-[11px] text-emerald-600 mt-1">Tidak ditemukan NIK ganda atau rekaman nama identik di fasyankes/kelurahan lain.</p>
-                                </div>
-
-                                <div x-show="!isLoadingDuplicates && duplicateResults.length > 0" class="space-y-2.5">
-                                    <div class="p-3 bg-amber-50 border border-amber-200 rounded-xl text-xs text-amber-800 font-semibold flex items-center gap-2">
-                                        <svg class="w-4 h-4 text-amber-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
-                                        </svg>
-                                        <span>Terdeteksi <span class="font-bold underline" x-text="duplicateResults.length"></span> potensi data ganda / lintas wilayah:</span>
-                                    </div>
-
-                                    <div class="space-y-2 max-h-64 overflow-y-auto pr-1">
-                                        <template x-for="dup in duplicateResults" :key="dup.id">
-                                            <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs flex items-center justify-between">
-                                                <div>
-                                                    <span class="px-2 py-0.5 bg-amber-100 text-amber-800 text-[10px] font-bold rounded-md" x-text="dup.type"></span>
-                                                    <div class="font-bold text-slate-800 text-sm mt-1" x-text="dup.patient.nama_lengkap"></div>
-                                                    <div class="text-slate-500 text-[11px]" x-text="dup.description"></div>
-                                                </div>
-                                                <a :href="`/tb/dashboard?search=${encodeURIComponent(dup.patient.nik || dup.patient.nama_lengkap)}`" target="_blank"
-                                                    class="px-2.5 py-1.5 bg-white hover:bg-slate-100 text-slate-700 font-semibold rounded-lg border border-slate-200 shadow-xs text-[11px]">
-                                                    Lihat Data ↗
-                                                </a>
-                                            </div>
-                                        </template>
-                                    </div>
-                                </div>
-
-                                <div class="pt-3 border-t border-slate-100 text-right">
-                                    <button @click="showDuplicateModal = false" class="px-4 py-2 bg-slate-800 hover:bg-slate-900 text-white rounded-xl text-xs font-semibold">Tutup</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- ================= MODAL: REKAM JEJAK / TREATMENT TIMELINE ================= -->
-                <div x-show="showTimelineModal" x-cloak class="fixed inset-0 z-[9999] overflow-y-auto" style="display: none;">
-                    <div class="min-h-screen px-4 text-center flex items-center justify-center">
-                        <div @click="showTimelineModal = false" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs transition-opacity"></div>
-                        <div class="inline-block w-full max-w-2xl p-6 my-8 text-left align-middle transition-all transform bg-white shadow-2xl rounded-3xl z-10 border border-slate-100">
-                            <div class="flex items-center justify-between pb-3 border-b border-slate-100">
-                                <div>
-                                    <h3 class="text-base font-bold text-slate-800">Riwayat Perjalanan Pengobatan TBC</h3>
-                                    <p class="text-xs text-slate-500" x-text="'Pasien: ' + (targetPatient?.nama_lengkap || '') + ' | NIK: ' + (targetPatient?.nik || '-')"></p>
-                                </div>
-                                <button @click="showTimelineModal = false" class="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100 cursor-pointer">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                                </button>
-                            </div>
-
-                            <div class="mt-4">
-                                <div x-show="isLoadingTimeline" class="py-8 text-center text-xs text-slate-500 flex items-center justify-center gap-2">
-                                    <svg class="animate-spin h-4 w-4 text-indigo-600" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path></svg>
-                                    Memuat kronologi pengobatan dan evaluasi laboratorium...
-                                </div>
-
-                                <div x-show="!isLoadingTimeline" class="space-y-4 max-h-96 overflow-y-auto pr-2">
-                                    <div class="relative pl-6 border-l-2 border-indigo-200 space-y-6">
-                                        <template x-for="(event, idx) in timelineData" :key="event.id">
-                                            <div class="relative">
-                                                <!-- Dot marker -->
-                                                <div :class="event.is_current ? 'bg-indigo-600 ring-4 ring-indigo-100' : 'bg-slate-400 ring-4 ring-slate-100'"
-                                                    class="absolute -left-[31px] top-1 w-4 h-4 rounded-full border-2 border-white shadow-xs"></div>
-                                                
-                                                <div :class="event.is_current ? 'border-indigo-300 bg-indigo-50/40' : 'border-slate-200 bg-white'"
-                                                    class="p-4 rounded-2xl border shadow-xs">
-                                                    <div class="flex items-center justify-between">
-                                                        <div class="font-bold text-sm text-slate-800" x-text="event.title"></div>
-                                                        <span class="text-xs font-semibold text-slate-500" x-text="event.date"></span>
-                                                    </div>
-                                                    <div class="text-xs text-indigo-700 font-medium mt-0.5" x-text="event.faskes"></div>
-
-                                                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-3 pt-3 border-t border-slate-100 text-xs">
-                                                        <div>
-                                                            <span class="text-slate-400 block text-[10px]">Tipe Laporan</span>
-                                                            <span class="font-bold text-slate-700 uppercase" x-text="event.report_type"></span>
-                                                        </div>
-                                                        <div>
-                                                            <span class="text-slate-400 block text-[10px]">Tipe / Regimen</span>
-                                                            <span class="font-semibold text-slate-700" x-text="event.regimen"></span>
-                                                        </div>
-                                                        <div>
-                                                            <span class="text-slate-400 block text-[10px]">Diagnosis TCM</span>
-                                                            <span class="font-bold text-rose-600" x-text="event.diagnosis"></span>
-                                                        </div>
-                                                        <div>
-                                                            <span class="text-slate-400 block text-[10px]">Hasil Akhir</span>
-                                                            <span class="font-medium text-slate-700" x-text="event.outcome"></span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </template>
-                                    </div>
-                                </div>
-
-                                <div class="mt-6 pt-3 border-t border-slate-100 text-right">
-                                    <button @click="showTimelineModal = false" class="px-4 py-2 bg-slate-800 hover:bg-slate-900 text-white rounded-xl text-xs font-semibold cursor-pointer">Tutup Garis Waktu</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- ================= MODAL: AI TRIAGE (GOOGLE GEMINI 2.5 FLASH) ================= -->
-                <div x-show="showAiModal" x-cloak class="fixed inset-0 z-[9999] overflow-y-auto" style="display: none;">
-                    <div class="min-h-screen px-4 text-center flex items-center justify-center">
-                        <div @click="showAiModal = false" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs transition-opacity"></div>
-                        <div class="inline-block w-full max-w-2xl p-6 my-8 text-left align-middle transition-all transform bg-white shadow-2xl rounded-3xl z-10 border border-slate-100">
-                            <div class="flex items-center justify-between pb-3 border-b border-slate-100">
-                                <div class="flex items-center gap-2.5">
-                                    <span class="p-2 rounded-xl bg-purple-100 text-purple-700 font-bold text-xs">AI</span>
-                                    <div>
-                                        <h3 class="text-base font-bold text-slate-800">AI Triage TBC & Evaluasi Pengobatan</h3>
-                                        <p class="text-xs text-slate-500">Analisis rekam medis TBC berbasis Google Gemini 2.5 Flash</p>
-                                    </div>
-                                </div>
-                                <button @click="showAiModal = false" class="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100 cursor-pointer">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                                </button>
-                            </div>
-
-                            <div class="mt-4">
-                                <div x-show="isLoadingAi" class="py-12 text-center text-xs text-purple-700 flex flex-col items-center justify-center gap-3">
-                                    <div class="w-10 h-10 rounded-2xl bg-purple-100 flex items-center justify-center animate-pulse">
-                                        <svg class="animate-spin h-5 w-5 text-purple-600" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path></svg>
-                                    </div>
-                                    <div>
-                                        <div class="font-bold text-sm">Google Gemini sedang menganalisis rekam medis TBC...</div>
-                                        <p class="text-[11px] text-slate-500 mt-1">Mengevaluasi kesesuaian regimen OAT, risiko resistensi obat (RO), kepatuhan, dan jadwal kontrol dahak.</p>
-                                    </div>
-                                </div>
-
-                                <div x-show="!isLoadingAi" class="space-y-3">
-                                    <div class="p-3 bg-purple-50/60 border border-purple-100 rounded-2xl text-xs flex items-center justify-between">
-                                        <div class="font-bold text-slate-800" x-text="'Pasien: ' + (targetPatient?.nama_lengkap || '-')"></div>
-                                        <div class="text-purple-700 font-semibold" x-text="'Diagnosis: ' + (targetPatient?.hasil_diagnosis || targetPatient?.hasil_tcm || '-') + ' | ' + (targetPatient?.kelurahan || '-')"></div>
-                                    </div>
-
-                                    <div class="p-5 bg-slate-50 border border-slate-200 rounded-2xl max-h-96 overflow-y-auto text-xs text-slate-700 leading-relaxed font-sans prose prose-sm max-w-none whitespace-pre-wrap"
-                                        x-html="formatAiContent(aiAnalysisResult)"></div>
-                                </div>
-
-                                <div class="mt-6 pt-3 border-t border-slate-100 flex items-center justify-between">
-                                    <span class="text-[11px] text-slate-400">Model: Gemini 2.5 Flash • Sumber: Data Register SITB</span>
-                                    <button @click="showAiModal = false" class="px-4 py-2 bg-slate-800 hover:bg-slate-900 text-white rounded-xl text-xs font-semibold cursor-pointer">Selesai Membaca</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- ================= MODAL: DETAIL / VIEW PASIEN TBC ================= -->
-                <div x-show="showViewModal" x-cloak class="fixed inset-0 z-[9999] overflow-y-auto" style="display: none;">
-                    <div class="min-h-screen px-4 text-center flex items-center justify-center">
-                        <div @click="showViewModal = false" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs transition-opacity"></div>
-                        <div class="inline-block w-full max-w-3xl p-6 my-8 text-left align-middle transition-all transform bg-white shadow-2xl rounded-3xl z-10 border border-slate-100 max-h-[90vh] flex flex-col">
-                            <!-- Header Modal -->
-                            <div class="flex items-center justify-between pb-4 border-b border-slate-100 shrink-0">
-                                <div class="flex items-center gap-3">
-                                    <div class="w-10 h-10 rounded-2xl bg-sky-100 text-sky-700 flex items-center justify-center font-bold">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
-                                        </svg>
-                                    </div>
-                                    <div>
-                                        <h3 class="text-base font-bold text-slate-800">Detail Rekam Pasien TBC</h3>
-                                        <p class="text-xs text-slate-500">Informasi lengkap data register SITB TB-03 / TB-06</p>
-                                    </div>
-                                </div>
-                                <button @click="showViewModal = false" class="p-1.5 text-slate-400 hover:text-slate-600 rounded-xl hover:bg-slate-100 cursor-pointer">
+            <!-- ================= MODAL: WHATSAPP DIRECT REMINDER (wa.me) ================= -->
+            <div x-show="showWhatsAppModal" x-cloak class="fixed inset-0 z-[9999] overflow-y-auto"
+                style="display: none;">
+                <div class="min-h-screen px-4 text-center flex items-center justify-center">
+                    <div @click="showWhatsAppModal = false"
+                        class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs transition-opacity"></div>
+                    <div
+                        class="inline-block w-full max-w-lg p-6 my-8 text-left align-middle transition-all transform bg-white shadow-2xl rounded-3xl z-10 border border-slate-100">
+                        <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+                            <div class="flex items-center gap-2.5">
+                                <span class="p-2 rounded-xl bg-emerald-100 text-emerald-700">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z">
+                                        </path>
                                     </svg>
+                                </span>
+                                <div>
+                                    <h3 class="text-base font-bold text-slate-800">Kirim Pengingat WhatsApp Langsung
+                                    </h3>
+                                    <p class="text-xs text-slate-500">Integrasi pesan resmi SICEPOT via WhatsApp (wa.me)
+                                    </p>
+                                </div>
+                            </div>
+                            <button @click="showWhatsAppModal = false"
+                                class="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100 cursor-pointer">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M6 18L18 6M6 6l12 12"></path>
+                                </svg>
+                            </button>
+                        </div>
+
+                        <div class="mt-4 space-y-4 text-xs">
+                            <div>
+                                <label class="block font-semibold text-slate-700 mb-1">Pasien TBC Terpilih:</label>
+                                <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl">
+                                    <div class="font-bold text-slate-800" x-text="targetPatient?.nama_lengkap || '-'">
+                                    </div>
+                                    <div class="text-[11px] text-slate-500 mt-0.5"
+                                        x-text="'Kelurahan: ' + (targetPatient?.kelurahan || '-') + ' | Diagnosis: ' + (targetPatient?.hasil_diagnosis || targetPatient?.hasil_tcm || '-')">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block font-semibold text-slate-700 mb-1">Nomor WhatsApp Pasien / Pengawas
+                                    Minum Obat (PMO):</label>
+                                <input type="text" x-model="waPhone" placeholder="Contoh: 08123456789 atau 628123456789"
+                                    class="w-full px-3 py-2 text-xs border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 font-mono">
+                            </div>
+
+                            <div>
+                                <label class="block font-semibold text-slate-700 mb-1">Pilih Template Pesan TBC:</label>
+                                <select x-model="waTemplateType" @change="prepareWaMessage()"
+                                    class="w-full px-3 py-2 text-xs border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500">
+                                    <option value="oat_daily">Pengingat Minum Obat Harian (Kepatuhan OAT)</option>
+                                    <option value="sputum_eval">Jadwal Evaluasi Dahak Akhir Bulan Ke-2/5/6</option>
+                                    <option value="dropout_warning">Peringatan Mangkir Berobat / Drop Out TBC (Kritis)
+                                    </option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="block font-semibold text-slate-700 mb-1">Isi Pesan (Bisa
+                                    disesuaikan):</label>
+                                <textarea rows="5" x-model="waMessage"
+                                    class="w-full px-3 py-2 text-xs border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500"></textarea>
+                            </div>
+
+                            <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between">
+                                <button @click="showWhatsAppModal = false" type="button"
+                                    class="px-4 py-2 text-slate-600 hover:bg-slate-100 rounded-xl font-semibold cursor-pointer">Batal</button>
+                                <button type="button" @click="sendWhatsAppMessage()" :disabled="!waPhone"
+                                    class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white rounded-xl font-bold shadow-xs flex items-center gap-2 cursor-pointer disabled:opacity-50">
+                                    <span>Buka WhatsApp Web / App ↗</span>
                                 </button>
-                            </div>
-
-                            <!-- Content Modal -->
-                            <div class="mt-4 overflow-y-auto space-y-4 pr-1 text-xs">
-                                <!-- Status Banner -->
-                                <div class="p-4 rounded-2xl bg-gradient-to-r from-sky-50 via-blue-50 to-indigo-50 border border-sky-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                                    <div>
-                                        <div class="flex items-center gap-2">
-                                            <span class="text-base font-bold text-slate-900" x-text="viewingPatient?.nama_lengkap || '-'"></span>
-                                            <span :class="viewingPatient?.report_type === 'tb_03' ? 'bg-indigo-100 text-indigo-700 border-indigo-200' : 'bg-amber-100 text-amber-700 border-amber-200'"
-                                                class="px-2 py-0.5 rounded-full text-[10px] font-bold border"
-                                                x-text="viewingPatient?.report_type === 'tb_03' ? 'Register TB-03 SO' : 'Register TB-06 Terduga'"></span>
-                                        </div>
-                                        <div class="text-slate-500 text-[11px] mt-0.5" x-text="'NIK: ' + (viewingPatient?.nik || '-') + ' • No. BPJS: ' + (viewingPatient?.no_bpjs || '-')"></div>
-                                    </div>
-                                    <div>
-                                        <span :class="{
-                                            'bg-emerald-100 text-emerald-800 border-emerald-300': viewingPatient?.hasil_akhir_pengobatan && (viewingPatient.hasil_akhir_pengobatan.includes('Sembuh') || viewingPatient.hasil_akhir_pengobatan.includes('Lengkap')),
-                                            'bg-rose-100 text-rose-800 border-rose-300': viewingPatient?.hasil_akhir_pengobatan && (viewingPatient.hasil_akhir_pengobatan.includes('Putus') || viewingPatient.hasil_akhir_pengobatan.includes('Meninggal') || viewingPatient.hasil_akhir_pengobatan.includes('Gagal')),
-                                            'bg-blue-100 text-blue-800 border-blue-300': !viewingPatient?.hasil_akhir_pengobatan
-                                        }" class="px-3 py-1 rounded-xl font-bold text-xs border inline-flex items-center gap-1.5 shadow-2xs">
-                                            <span class="w-1.5 h-1.5 rounded-full" :class="viewingPatient?.hasil_akhir_pengobatan && viewingPatient.hasil_akhir_pengobatan.includes('Sembuh') ? 'bg-emerald-500' : 'bg-blue-500'"></span>
-                                            <span x-text="viewingPatient?.hasil_akhir_pengobatan || viewingPatient?.status_pengobatan || (viewingPatient?.report_type === 'tb_03' ? 'Dalam Pengobatan' : 'Observasi')"></span>
-                                        </span>
-                                    </div>
-                                </div>
-
-                                <!-- Grid Details -->
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <!-- Profil & Demografi -->
-                                    <div class="p-3.5 bg-slate-50 rounded-2xl border border-slate-200/80 space-y-2.5">
-                                        <h4 class="font-bold text-slate-800 flex items-center gap-2 border-b border-slate-200 pb-1.5 text-xs">
-                                            <svg class="w-3.5 h-3.5 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
-                                            Identitas & Demografi
-                                        </h4>
-                                        <div class="grid grid-cols-2 gap-2 text-[11px]">
-                                            <div><span class="text-slate-400 block">Jenis Kelamin</span><span class="font-semibold text-slate-700" x-text="viewingPatient?.jenis_kelamin === 'L' ? 'Laki-laki' : (viewingPatient?.jenis_kelamin === 'P' ? 'Perempuan' : '-')"></span></div>
-                                            <div><span class="text-slate-400 block">Umur</span><span class="font-semibold text-slate-700" x-text="viewingPatient?.umur ? viewingPatient.umur + ' Tahun' : '-'"></span></div>
-                                            <div><span class="text-slate-400 block">Pekerjaan</span><span class="font-semibold text-slate-700" x-text="viewingPatient?.pekerjaan || '-'"></span></div>
-                                            <div><span class="text-slate-400 block">No. Rekam Medis</span><span class="font-semibold text-slate-700" x-text="viewingPatient?.no_rekam_medis || '-'"></span></div>
-                                        </div>
-                                    </div>
-
-                                    <!-- Registrasi & Fasyankes -->
-                                    <div class="p-3.5 bg-slate-50 rounded-2xl border border-slate-200/80 space-y-2.5">
-                                        <h4 class="font-bold text-slate-800 flex items-center gap-2 border-b border-slate-200 pb-1.5 text-xs">
-                                            <svg class="w-3.5 h-3.5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
-                                            Registrasi SITB & Fasyankes
-                                        </h4>
-                                        <div class="grid grid-cols-2 gap-2 text-[11px]">
-                                            <div><span class="text-slate-400 block">No. Reg SITB</span><span class="font-semibold text-indigo-700" x-text="viewingPatient?.no_reg_sitb || '-'"></span></div>
-                                            <div><span class="text-slate-400 block">No. Reg Terduga</span><span class="font-semibold text-slate-700" x-text="viewingPatient?.no_reg_terduga || '-'"></span></div>
-                                            <div><span class="text-slate-400 block">Fasyankes</span><span class="font-semibold text-slate-700" x-text="viewingPatient?.fasyankes_name || '-'"></span></div>
-                                            <div><span class="text-slate-400 block">Bulan / Periode</span><span class="font-semibold text-slate-700" x-text="viewingPatient?.bulan || '-'"></span></div>
-                                        </div>
-                                    </div>
-
-                                    <!-- Wilayah Pasien -->
-                                    <div class="p-3.5 bg-slate-50 rounded-2xl border border-slate-200/80 space-y-2.5">
-                                        <h4 class="font-bold text-slate-800 flex items-center gap-2 border-b border-slate-200 pb-1.5 text-xs">
-                                            <svg class="w-3.5 h-3.5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-                                            Domisili & Wilayah Kerja
-                                        </h4>
-                                        <div class="grid grid-cols-2 gap-2 text-[11px]">
-                                            <div><span class="text-slate-400 block">Kabupaten / Kota</span><span class="font-semibold text-slate-700" x-text="viewingPatient?.kabupaten || '-'"></span></div>
-                                            <div><span class="text-slate-400 block">Kecamatan</span><span class="font-semibold text-slate-700" x-text="viewingPatient?.kecamatan || '-'"></span></div>
-                                            <div><span class="text-slate-400 block">Kelurahan / Desa</span><span class="font-semibold text-slate-700" x-text="viewingPatient?.kelurahan || '-'"></span></div>
-                                            <div class="col-span-2"><span class="text-slate-400 block">Alamat Lengkap</span><span class="font-medium text-slate-700" x-text="viewingPatient?.alamat_lengkap || '-'"></span></div>
-                                        </div>
-                                    </div>
-
-                                    <!-- Klinis & Laboratorium -->
-                                    <div class="p-3.5 bg-slate-50 rounded-2xl border border-slate-200/80 space-y-2.5">
-                                        <h4 class="font-bold text-slate-800 flex items-center gap-2 border-b border-slate-200 pb-1.5 text-xs">
-                                            <svg class="w-3.5 h-3.5 text-rose-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
-                                            Hasil Pemeriksaan & Diagnosis
-                                        </h4>
-                                        <div class="grid grid-cols-2 gap-2 text-[11px]">
-                                            <div><span class="text-slate-400 block">Hasil Diagnosis</span><span class="font-bold text-slate-800" x-text="viewingPatient?.hasil_diagnosis || '-'"></span></div>
-                                            <div><span class="text-slate-400 block">Tipe Diagnosis</span><span class="font-semibold text-slate-700" x-text="viewingPatient?.tipe_diagnosis || '-'"></span></div>
-                                            <div><span class="text-slate-400 block">Hasil TCM</span><span class="font-semibold text-slate-700" x-text="viewingPatient?.hasil_tcm || '-'"></span></div>
-                                            <div><span class="text-slate-400 block">Mikroskopis / BTA</span><span class="font-semibold text-slate-700" x-text="viewingPatient?.hasil_mikroskopis || '-'"></span></div>
-                                            <div><span class="text-slate-400 block">Lokasi Anatomi</span><span class="font-semibold text-slate-700" x-text="viewingPatient?.lokasi_anatomi || '-'"></span></div>
-                                            <div><span class="text-slate-400 block">Riwayat Pengobatan</span><span class="font-semibold text-slate-700" x-text="viewingPatient?.riwayat_pengobatan || '-'"></span></div>
-                                            <div><span class="text-slate-400 block">Status HIV</span><span class="font-semibold text-slate-700" x-text="viewingPatient?.status_hiv || '-'"></span></div>
-                                            <div><span class="text-slate-400 block">Riwayat DM</span><span class="font-semibold text-slate-700" x-text="viewingPatient?.riwayat_dm || '-'"></span></div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Pengobatan Info -->
-                                <div class="p-3.5 bg-blue-50/50 rounded-2xl border border-blue-100 flex flex-wrap items-center justify-between gap-3 text-[11px]">
-                                    <div>
-                                        <span class="text-slate-400 block">Tanggal Daftar</span>
-                                        <span class="font-bold text-slate-700" x-text="formatDate(viewingPatient?.tanggal_daftar)"></span>
-                                    </div>
-                                    <div>
-                                        <span class="text-slate-400 block">Mulai Pengobatan OAT</span>
-                                        <span class="font-bold text-blue-700" x-text="formatDate(viewingPatient?.tanggal_mulai_pengobatan)"></span>
-                                    </div>
-                                    <div>
-                                        <span class="text-slate-400 block">Hasil Akhir Pengobatan</span>
-                                        <span class="font-bold text-slate-800" x-text="viewingPatient?.hasil_akhir_pengobatan || 'Masih Terapi Aktif'"></span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Footer Modal -->
-                            <div class="mt-6 pt-3 border-t border-slate-100 flex items-center justify-between shrink-0">
-                                <div class="flex items-center gap-2">
-                                    <button @click="showViewModal = false; openEditModal(viewingPatient)" class="px-3.5 py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded-xl text-xs font-semibold cursor-pointer flex items-center gap-1.5 transition-colors">
-                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
-                                        Edit Data
-                                    </button>
-                                    <button @click="showViewModal = false; openAiTriage(viewingPatient)" class="px-3.5 py-2 bg-purple-50 hover:bg-purple-100 text-purple-700 rounded-xl text-xs font-semibold cursor-pointer flex items-center gap-1.5 transition-colors">
-                                        <span class="text-[10px] font-black px-1 py-0.5 bg-purple-200 text-purple-800 rounded">AI</span>
-                                        AI Triage
-                                    </button>
-                                </div>
-                                <button @click="showViewModal = false" class="px-4 py-2 bg-slate-800 hover:bg-slate-900 text-white rounded-xl text-xs font-semibold cursor-pointer transition-colors">Tutup</button>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <!-- ================= TOAST NOTIFICATION ================= -->
-                <div x-show="toast.show" x-cloak x-transition:enter="transition ease-out duration-300 transform"
-                    x-transition:enter-start="opacity-0 translate-y-2 sm:translate-y-0 sm:translate-x-4"
-                    x-transition:enter-end="opacity-100 translate-y-0 sm:translate-x-0"
-                    x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100"
-                    x-transition:leave-end="opacity-0"
-                    class="fixed bottom-5 right-5 z-50 max-w-md w-full pointer-events-auto" style="display: none;">
-                    <div :class="{
-                    'bg-slate-900 border-slate-700 text-white': toast.type === 'success',
-                    'bg-rose-900 border-rose-700 text-white': toast.type === 'error',
-                    'bg-amber-900 border-amber-700 text-white': toast.type === 'warning'
-                }" class="p-4 rounded-2xl shadow-2xl border flex items-start gap-3 backdrop-blur-md">
-                        <!-- Icon -->
-                        <div class="shrink-0 mt-0.5">
-                            <template x-if="toast.type === 'success'">
+            <!-- ================= MODAL: SKRINING DUPLIKASI DATA ================= -->
+            <div x-show="showDuplicateModal" x-cloak class="fixed inset-0 z-[9999] overflow-y-auto"
+                style="display: none;">
+                <div class="min-h-screen px-4 text-center flex items-center justify-center">
+                    <div @click="showDuplicateModal = false"
+                        class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs transition-opacity"></div>
+                    <div
+                        class="inline-block w-full max-w-xl p-6 my-8 text-left align-middle transition-all transform bg-white shadow-2xl rounded-3xl z-10 border border-slate-100">
+                        <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+                            <div>
+                                <h3 class="text-base font-bold text-slate-800">Skrining Pasien TBC Ganda / Lintas Faskes
+                                </h3>
+                                <p class="text-xs text-slate-500"
+                                    x-text="'Pemeriksaan: ' + (targetPatient?.nama_lengkap || '')"></p>
+                            </div>
+                            <button @click="showDuplicateModal = false"
+                                class="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100 cursor-pointer">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M6 18L18 6M6 6l12 12"></path>
+                                </svg>
+                            </button>
+                        </div>
+
+                        <div class="mt-4 space-y-3">
+                            <div x-show="isLoadingDuplicates"
+                                class="py-8 text-center text-xs text-slate-500 flex items-center justify-center gap-2">
+                                <svg class="animate-spin h-4 w-4 text-amber-600" viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                        stroke-width="4"></circle>
+                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+                                </svg>
+                                Memindai database untuk mendeteksi NIK ganda & nama kembar lintas faskes...
+                            </div>
+
+                            <div x-show="!isLoadingDuplicates && duplicateResults.length === 0"
+                                class="p-6 text-center text-xs text-emerald-700 bg-emerald-50 rounded-2xl border border-emerald-200">
                                 <div
-                                    class="w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                    class="w-10 h-10 mx-auto rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center mb-2">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M5 13l4 4L19 7"></path>
                                     </svg>
                                 </div>
-                            </template>
-                            <template x-if="toast.type === 'error'">
+                                <div class="font-bold text-sm">Data Pasien Unik</div>
+                                <p class="text-[11px] text-emerald-600 mt-1">Tidak ditemukan NIK ganda atau rekaman nama
+                                    identik di fasyankes/kelurahan lain.</p>
+                            </div>
+
+                            <div x-show="!isLoadingDuplicates && duplicateResults.length > 0" class="space-y-2.5">
                                 <div
-                                    class="w-8 h-8 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
-                                            d="M6 18L18 6M6 6l12 12"></path>
-                                    </svg>
-                                </div>
-                            </template>
-                            <template x-if="toast.type === 'warning'">
-                                <div
-                                    class="w-8 h-8 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    class="p-3 bg-amber-50 border border-amber-200 rounded-xl text-xs text-amber-800 font-semibold flex items-center gap-2">
+                                    <svg class="w-4 h-4 text-amber-600 shrink-0" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z">
                                         </path>
                                     </svg>
+                                    <span>Terdeteksi <span class="font-bold underline"
+                                            x-text="duplicateResults.length"></span> potensi data ganda / lintas
+                                        wilayah:</span>
                                 </div>
-                            </template>
-                        </div>
 
-                        <!-- Content -->
-                        <div class="flex-1">
-                            <h4 class="text-sm font-bold tracking-tight" x-text="toast.title"></h4>
-                            <p class="text-xs text-slate-300 mt-0.5 leading-relaxed" x-text="toast.message"></p>
-                        </div>
+                                <div class="space-y-2 max-h-64 overflow-y-auto pr-1">
+                                    <template x-for="dup in duplicateResults" :key="dup.id">
+                                        <div
+                                            class="p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs flex items-center justify-between">
+                                            <div>
+                                                <span
+                                                    class="px-2 py-0.5 bg-amber-100 text-amber-800 text-[10px] font-bold rounded-md"
+                                                    x-text="dup.type"></span>
+                                                <div class="font-bold text-slate-800 text-sm mt-1"
+                                                    x-text="dup.patient.nama_lengkap"></div>
+                                                <div class="text-slate-500 text-[11px]" x-text="dup.description"></div>
+                                            </div>
+                                            <a :href="`/tb/dashboard?search=${encodeURIComponent(dup.patient.nik || dup.patient.nama_lengkap)}`"
+                                                target="_blank"
+                                                class="px-2.5 py-1.5 bg-white hover:bg-slate-100 text-slate-700 font-semibold rounded-lg border border-slate-200 shadow-xs text-[11px]">
+                                                Lihat Data ↗
+                                            </a>
+                                        </div>
+                                    </template>
+                                </div>
+                            </div>
 
-                        <!-- Close button -->
-                        <button @click="toast.show = false"
-                            class="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-white/10 transition-colors cursor-pointer">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M6 18L18 6M6 6l12 12"></path>
-                            </svg>
-                        </button>
+                            <div class="pt-3 border-t border-slate-100 text-right">
+                                <button @click="showDuplicateModal = false"
+                                    class="px-4 py-2 bg-slate-800 hover:bg-slate-900 text-white rounded-xl text-xs font-semibold">Tutup</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
-
             </div>
+
+            <!-- ================= MODAL: REKAM JEJAK / TREATMENT TIMELINE ================= -->
+            <div x-show="showTimelineModal" x-cloak class="fixed inset-0 z-[9999] overflow-y-auto"
+                style="display: none;">
+                <div class="min-h-screen px-4 text-center flex items-center justify-center">
+                    <div @click="showTimelineModal = false"
+                        class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs transition-opacity"></div>
+                    <div
+                        class="inline-block w-full max-w-2xl p-6 my-8 text-left align-middle transition-all transform bg-white shadow-2xl rounded-3xl z-10 border border-slate-100">
+                        <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+                            <div>
+                                <h3 class="text-base font-bold text-slate-800">Riwayat Perjalanan Pengobatan TBC</h3>
+                                <p class="text-xs text-slate-500"
+                                    x-text="'Pasien: ' + (targetPatient?.nama_lengkap || '') + ' | NIK: ' + (targetPatient?.nik || '-')">
+                                </p>
+                            </div>
+                            <button @click="showTimelineModal = false"
+                                class="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100 cursor-pointer">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M6 18L18 6M6 6l12 12"></path>
+                                </svg>
+                            </button>
+                        </div>
+
+                        <div class="mt-4">
+                            <div x-show="isLoadingTimeline"
+                                class="py-8 text-center text-xs text-slate-500 flex items-center justify-center gap-2">
+                                <svg class="animate-spin h-4 w-4 text-indigo-600" viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                        stroke-width="4"></circle>
+                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+                                </svg>
+                                Memuat kronologi pengobatan dan evaluasi laboratorium...
+                            </div>
+
+                            <div x-show="!isLoadingTimeline" class="space-y-4 max-h-96 overflow-y-auto pr-2">
+                                <div class="relative pl-6 border-l-2 border-indigo-200 space-y-6">
+                                    <template x-for="(event, idx) in timelineData" :key="event.id">
+                                        <div class="relative">
+                                            <!-- Dot marker -->
+                                            <div :class="event.is_current ? 'bg-indigo-600 ring-4 ring-indigo-100' : 'bg-slate-400 ring-4 ring-slate-100'"
+                                                class="absolute -left-[31px] top-1 w-4 h-4 rounded-full border-2 border-white shadow-xs">
+                                            </div>
+
+                                            <div :class="event.is_current ? 'border-indigo-300 bg-indigo-50/40' : 'border-slate-200 bg-white'"
+                                                class="p-4 rounded-2xl border shadow-xs">
+                                                <div class="flex items-center justify-between">
+                                                    <div class="font-bold text-sm text-slate-800" x-text="event.title">
+                                                    </div>
+                                                    <span class="text-xs font-semibold text-slate-500"
+                                                        x-text="event.date"></span>
+                                                </div>
+                                                <div class="text-xs text-indigo-700 font-medium mt-0.5"
+                                                    x-text="event.faskes"></div>
+
+                                                <div
+                                                    class="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-3 pt-3 border-t border-slate-100 text-xs">
+                                                    <div>
+                                                        <span class="text-slate-400 block text-[10px]">Tipe
+                                                            Laporan</span>
+                                                        <span class="font-bold text-slate-700 uppercase"
+                                                            x-text="event.report_type"></span>
+                                                    </div>
+                                                    <div>
+                                                        <span class="text-slate-400 block text-[10px]">Tipe /
+                                                            Regimen</span>
+                                                        <span class="font-semibold text-slate-700"
+                                                            x-text="event.regimen"></span>
+                                                    </div>
+                                                    <div>
+                                                        <span class="text-slate-400 block text-[10px]">Diagnosis
+                                                            TCM</span>
+                                                        <span class="font-bold text-rose-600"
+                                                            x-text="event.diagnosis"></span>
+                                                    </div>
+                                                    <div>
+                                                        <span class="text-slate-400 block text-[10px]">Hasil
+                                                            Akhir</span>
+                                                        <span class="font-medium text-slate-700"
+                                                            x-text="event.outcome"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </template>
+                                </div>
+                            </div>
+
+                            <div class="mt-6 pt-3 border-t border-slate-100 text-right">
+                                <button @click="showTimelineModal = false"
+                                    class="px-4 py-2 bg-slate-800 hover:bg-slate-900 text-white rounded-xl text-xs font-semibold cursor-pointer">Tutup
+                                    Garis Waktu</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ================= MODAL: AI TRIAGE (GOOGLE GEMINI 2.5 FLASH) ================= -->
+            <div x-show="showAiModal" x-cloak class="fixed inset-0 z-[9999] overflow-y-auto" style="display: none;">
+                <div class="min-h-screen px-4 text-center flex items-center justify-center">
+                    <div @click="showAiModal = false"
+                        class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs transition-opacity"></div>
+                    <div
+                        class="inline-block w-full max-w-2xl p-6 my-8 text-left align-middle transition-all transform bg-white shadow-2xl rounded-3xl z-10 border border-slate-100">
+                        <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+                            <div class="flex items-center gap-2.5">
+                                <span class="p-2 rounded-xl bg-purple-100 text-purple-700 font-bold text-xs">AI</span>
+                                <div>
+                                    <h3 class="text-base font-bold text-slate-800">AI Triage TBC & Evaluasi Pengobatan
+                                    </h3>
+                                    <p class="text-xs text-slate-500">Analisis rekam medis TBC berbasis Google Gemini
+                                        2.5 Flash</p>
+                                </div>
+                            </div>
+                            <button @click="showAiModal = false"
+                                class="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100 cursor-pointer">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M6 18L18 6M6 6l12 12"></path>
+                                </svg>
+                            </button>
+                        </div>
+
+                        <div class="mt-4">
+                            <div x-show="isLoadingAi"
+                                class="py-12 text-center text-xs text-purple-700 flex flex-col items-center justify-center gap-3">
+                                <div
+                                    class="w-10 h-10 rounded-2xl bg-purple-100 flex items-center justify-center animate-pulse">
+                                    <svg class="animate-spin h-5 w-5 text-purple-600" viewBox="0 0 24 24">
+                                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                            stroke-width="4"></circle>
+                                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <div class="font-bold text-sm">Google Gemini sedang menganalisis rekam medis TBC...
+                                    </div>
+                                    <p class="text-[11px] text-slate-500 mt-1">Mengevaluasi kesesuaian regimen OAT,
+                                        risiko resistensi obat (RO), kepatuhan, dan jadwal kontrol dahak.</p>
+                                </div>
+                            </div>
+
+                            <div x-show="!isLoadingAi" class="space-y-3">
+                                <div
+                                    class="p-3 bg-purple-50/60 border border-purple-100 rounded-2xl text-xs flex items-center justify-between">
+                                    <div class="font-bold text-slate-800"
+                                        x-text="'Pasien: ' + (targetPatient?.nama_lengkap || '-')"></div>
+                                    <div class="text-purple-700 font-semibold"
+                                        x-text="'Diagnosis: ' + (targetPatient?.hasil_diagnosis || targetPatient?.hasil_tcm || '-') + ' | ' + (targetPatient?.kelurahan || '-')">
+                                    </div>
+                                </div>
+
+                                <div class="p-5 bg-slate-50 border border-slate-200 rounded-2xl max-h-96 overflow-y-auto text-xs text-slate-700 leading-relaxed font-sans prose prose-sm max-w-none whitespace-pre-wrap"
+                                    x-html="formatAiContent(aiAnalysisResult)"></div>
+                            </div>
+
+                            <div class="mt-6 pt-3 border-t border-slate-100 flex items-center justify-between">
+                                <span class="text-[11px] text-slate-400">Model: Gemini 2.5 Flash • Sumber: Data Register
+                                    SITB</span>
+                                <button @click="showAiModal = false"
+                                    class="px-4 py-2 bg-slate-800 hover:bg-slate-900 text-white rounded-xl text-xs font-semibold cursor-pointer">Selesai
+                                    Membaca</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ================= MODAL: DETAIL / VIEW PASIEN TBC ================= -->
+            <div x-show="showViewModal" x-cloak class="fixed inset-0 z-[9999] overflow-y-auto" style="display: none;">
+                <div class="min-h-screen px-4 text-center flex items-center justify-center">
+                    <div @click="showViewModal = false"
+                        class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs transition-opacity"></div>
+                    <div
+                        class="inline-block w-full max-w-3xl p-6 my-8 text-left align-middle transition-all transform bg-white shadow-2xl rounded-3xl z-10 border border-slate-100 max-h-[90vh] flex flex-col">
+                        <!-- Header Modal -->
+                        <div class="flex items-center justify-between pb-4 border-b border-slate-100 shrink-0">
+                            <div class="flex items-center gap-3">
+                                <div
+                                    class="w-10 h-10 rounded-2xl bg-sky-100 text-sky-700 flex items-center justify-center font-bold">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
+                                        </path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 class="text-base font-bold text-slate-800">Detail Rekam Pasien TBC</h3>
+                                    <p class="text-xs text-slate-500">Informasi lengkap data register SITB TB-03 / TB-06
+                                    </p>
+                                </div>
+                            </div>
+                            <button @click="showViewModal = false"
+                                class="p-1.5 text-slate-400 hover:text-slate-600 rounded-xl hover:bg-slate-100 cursor-pointer">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M6 18L18 6M6 6l12 12"></path>
+                                </svg>
+                            </button>
+                        </div>
+
+                        <!-- Content Modal -->
+                        <div class="mt-4 overflow-y-auto space-y-4 pr-1 text-xs">
+                            <!-- Status Banner -->
+                            <div
+                                class="p-4 rounded-2xl bg-gradient-to-r from-sky-50 via-blue-50 to-indigo-50 border border-sky-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                                <div>
+                                    <div class="flex items-center gap-2">
+                                        <span class="text-base font-bold text-slate-900"
+                                            x-text="viewingPatient?.nama_lengkap || '-'"></span>
+                                        <span
+                                            :class="viewingPatient?.report_type === 'tb_03' ? 'bg-indigo-100 text-indigo-700 border-indigo-200' : 'bg-amber-100 text-amber-700 border-amber-200'"
+                                            class="px-2 py-0.5 rounded-full text-[10px] font-bold border"
+                                            x-text="viewingPatient?.report_type === 'tb_03' ? 'Register TB-03 SO' : 'Register TB-06 Terduga'"></span>
+                                    </div>
+                                    <div class="text-slate-500 text-[11px] mt-0.5"
+                                        x-text="'NIK: ' + (viewingPatient?.nik || '-') + ' • No. BPJS: ' + (viewingPatient?.no_bpjs || '-')">
+                                    </div>
+                                </div>
+                                <div>
+                                    <span :class="{
+                                            'bg-emerald-100 text-emerald-800 border-emerald-300': viewingPatient?.hasil_akhir_pengobatan && (viewingPatient.hasil_akhir_pengobatan.includes('Sembuh') || viewingPatient.hasil_akhir_pengobatan.includes('Lengkap')),
+                                            'bg-rose-100 text-rose-800 border-rose-300': viewingPatient?.hasil_akhir_pengobatan && (viewingPatient.hasil_akhir_pengobatan.includes('Putus') || viewingPatient.hasil_akhir_pengobatan.includes('Meninggal') || viewingPatient.hasil_akhir_pengobatan.includes('Gagal')),
+                                            'bg-blue-100 text-blue-800 border-blue-300': !viewingPatient?.hasil_akhir_pengobatan
+                                        }"
+                                        class="px-3 py-1 rounded-xl font-bold text-xs border inline-flex items-center gap-1.5 shadow-2xs">
+                                        <span class="w-1.5 h-1.5 rounded-full"
+                                            :class="viewingPatient?.hasil_akhir_pengobatan && viewingPatient.hasil_akhir_pengobatan.includes('Sembuh') ? 'bg-emerald-500' : 'bg-blue-500'"></span>
+                                        <span
+                                            x-text="viewingPatient?.hasil_akhir_pengobatan || viewingPatient?.status_pengobatan || (viewingPatient?.report_type === 'tb_03' ? 'Dalam Pengobatan' : 'Observasi')"></span>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <!-- Grid Details -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <!-- Profil & Demografi -->
+                                <div class="p-3.5 bg-slate-50 rounded-2xl border border-slate-200/80 space-y-2.5">
+                                    <h4
+                                        class="font-bold text-slate-800 flex items-center gap-2 border-b border-slate-200 pb-1.5 text-xs">
+                                        <svg class="w-3.5 h-3.5 text-sky-600" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z">
+                                            </path>
+                                        </svg>
+                                        Identitas & Demografi
+                                    </h4>
+                                    <div class="grid grid-cols-2 gap-2 text-[11px]">
+                                        <div><span class="text-slate-400 block">Jenis Kelamin</span><span
+                                                class="font-semibold text-slate-700"
+                                                x-text="viewingPatient?.jenis_kelamin === 'L' ? 'Laki-laki' : (viewingPatient?.jenis_kelamin === 'P' ? 'Perempuan' : '-')"></span>
+                                        </div>
+                                        <div><span class="text-slate-400 block">Umur</span><span
+                                                class="font-semibold text-slate-700"
+                                                x-text="viewingPatient?.umur ? viewingPatient.umur + ' Tahun' : '-'"></span>
+                                        </div>
+                                        <div><span class="text-slate-400 block">Pekerjaan</span><span
+                                                class="font-semibold text-slate-700"
+                                                x-text="viewingPatient?.pekerjaan || '-'"></span></div>
+                                        <div><span class="text-slate-400 block">No. Rekam Medis</span><span
+                                                class="font-semibold text-slate-700"
+                                                x-text="viewingPatient?.no_rekam_medis || '-'"></span></div>
+                                    </div>
+                                </div>
+
+                                <!-- Registrasi & Fasyankes -->
+                                <div class="p-3.5 bg-slate-50 rounded-2xl border border-slate-200/80 space-y-2.5">
+                                    <h4
+                                        class="font-bold text-slate-800 flex items-center gap-2 border-b border-slate-200 pb-1.5 text-xs">
+                                        <svg class="w-3.5 h-3.5 text-indigo-600" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4">
+                                            </path>
+                                        </svg>
+                                        Registrasi SITB & Fasyankes
+                                    </h4>
+                                    <div class="grid grid-cols-2 gap-2 text-[11px]">
+                                        <div><span class="text-slate-400 block">No. Reg SITB</span><span
+                                                class="font-semibold text-indigo-700"
+                                                x-text="viewingPatient?.no_reg_sitb || '-'"></span></div>
+                                        <div><span class="text-slate-400 block">No. Reg Terduga</span><span
+                                                class="font-semibold text-slate-700"
+                                                x-text="viewingPatient?.no_reg_terduga || '-'"></span></div>
+                                        <div><span class="text-slate-400 block">Fasyankes</span><span
+                                                class="font-semibold text-slate-700"
+                                                x-text="viewingPatient?.fasyankes_name || '-'"></span></div>
+                                        <div><span class="text-slate-400 block">Bulan / Periode</span><span
+                                                class="font-semibold text-slate-700"
+                                                x-text="viewingPatient?.bulan || '-'"></span></div>
+                                    </div>
+                                </div>
+
+                                <!-- Wilayah Pasien -->
+                                <div class="p-3.5 bg-slate-50 rounded-2xl border border-slate-200/80 space-y-2.5">
+                                    <h4
+                                        class="font-bold text-slate-800 flex items-center gap-2 border-b border-slate-200 pb-1.5 text-xs">
+                                        <svg class="w-3.5 h-3.5 text-emerald-600" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z">
+                                            </path>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                        </svg>
+                                        Domisili & Wilayah Kerja
+                                    </h4>
+                                    <div class="grid grid-cols-2 gap-2 text-[11px]">
+                                        <div><span class="text-slate-400 block">Kabupaten / Kota</span><span
+                                                class="font-semibold text-slate-700"
+                                                x-text="viewingPatient?.kabupaten || '-'"></span></div>
+                                        <div><span class="text-slate-400 block">Kecamatan</span><span
+                                                class="font-semibold text-slate-700"
+                                                x-text="viewingPatient?.kecamatan || '-'"></span></div>
+                                        <div><span class="text-slate-400 block">Kelurahan / Desa</span><span
+                                                class="font-semibold text-slate-700"
+                                                x-text="viewingPatient?.kelurahan || '-'"></span></div>
+                                        <div class="col-span-2"><span class="text-slate-400 block">Alamat
+                                                Lengkap</span><span class="font-medium text-slate-700"
+                                                x-text="viewingPatient?.alamat_lengkap || '-'"></span></div>
+                                    </div>
+                                </div>
+
+                                <!-- Klinis & Laboratorium -->
+                                <div class="p-3.5 bg-slate-50 rounded-2xl border border-slate-200/80 space-y-2.5">
+                                    <h4
+                                        class="font-bold text-slate-800 flex items-center gap-2 border-b border-slate-200 pb-1.5 text-xs">
+                                        <svg class="w-3.5 h-3.5 text-rose-600" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z">
+                                            </path>
+                                        </svg>
+                                        Hasil Pemeriksaan & Diagnosis
+                                    </h4>
+                                    <div class="grid grid-cols-2 gap-2 text-[11px]">
+                                        <div><span class="text-slate-400 block">Hasil Diagnosis</span><span
+                                                class="font-bold text-slate-800"
+                                                x-text="viewingPatient?.hasil_diagnosis || '-'"></span></div>
+                                        <div><span class="text-slate-400 block">Tipe Diagnosis</span><span
+                                                class="font-semibold text-slate-700"
+                                                x-text="viewingPatient?.tipe_diagnosis || '-'"></span></div>
+                                        <div><span class="text-slate-400 block">Hasil TCM</span><span
+                                                class="font-semibold text-slate-700"
+                                                x-text="viewingPatient?.hasil_tcm || '-'"></span></div>
+                                        <div><span class="text-slate-400 block">Mikroskopis / BTA</span><span
+                                                class="font-semibold text-slate-700"
+                                                x-text="viewingPatient?.hasil_mikroskopis || '-'"></span></div>
+                                        <div><span class="text-slate-400 block">Lokasi Anatomi</span><span
+                                                class="font-semibold text-slate-700"
+                                                x-text="viewingPatient?.lokasi_anatomi || '-'"></span></div>
+                                        <div><span class="text-slate-400 block">Riwayat Pengobatan</span><span
+                                                class="font-semibold text-slate-700"
+                                                x-text="viewingPatient?.riwayat_pengobatan || '-'"></span></div>
+                                        <div><span class="text-slate-400 block">Status HIV</span><span
+                                                class="font-semibold text-slate-700"
+                                                x-text="viewingPatient?.status_hiv || '-'"></span></div>
+                                        <div><span class="text-slate-400 block">Riwayat DM</span><span
+                                                class="font-semibold text-slate-700"
+                                                x-text="viewingPatient?.riwayat_dm || '-'"></span></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Pengobatan Info -->
+                            <div
+                                class="p-3.5 bg-blue-50/50 rounded-2xl border border-blue-100 flex flex-wrap items-center justify-between gap-3 text-[11px]">
+                                <div>
+                                    <span class="text-slate-400 block">Tanggal Daftar</span>
+                                    <span class="font-bold text-slate-700"
+                                        x-text="formatDate(viewingPatient?.tanggal_daftar)"></span>
+                                </div>
+                                <div>
+                                    <span class="text-slate-400 block">Mulai Pengobatan OAT</span>
+                                    <span class="font-bold text-blue-700"
+                                        x-text="formatDate(viewingPatient?.tanggal_mulai_pengobatan)"></span>
+                                </div>
+                                <div>
+                                    <span class="text-slate-400 block">Hasil Akhir Pengobatan</span>
+                                    <span class="font-bold text-slate-800"
+                                        x-text="viewingPatient?.hasil_akhir_pengobatan || 'Masih Terapi Aktif'"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Footer Modal -->
+                        <div class="mt-6 pt-3 border-t border-slate-100 flex items-center justify-between shrink-0">
+                            <div class="flex items-center gap-2">
+                                <button @click="showViewModal = false; openEditModal(viewingPatient)"
+                                    class="px-3.5 py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded-xl text-xs font-semibold cursor-pointer flex items-center gap-1.5 transition-colors">
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                                        </path>
+                                    </svg>
+                                    Edit Data
+                                </button>
+                                <button @click="showViewModal = false; openAiTriage(viewingPatient)"
+                                    class="px-3.5 py-2 bg-purple-50 hover:bg-purple-100 text-purple-700 rounded-xl text-xs font-semibold cursor-pointer flex items-center gap-1.5 transition-colors">
+                                    <span
+                                        class="text-[10px] font-black px-1 py-0.5 bg-purple-200 text-purple-800 rounded">AI</span>
+                                    AI Triage
+                                </button>
+                            </div>
+                            <button @click="showViewModal = false"
+                                class="px-4 py-2 bg-slate-800 hover:bg-slate-900 text-white rounded-xl text-xs font-semibold cursor-pointer transition-colors">Tutup</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ================= TOAST NOTIFICATION ================= -->
+            <div x-show="toast.show" x-cloak x-transition:enter="transition ease-out duration-300 transform"
+                x-transition:enter-start="opacity-0 translate-y-2 sm:translate-y-0 sm:translate-x-4"
+                x-transition:enter-end="opacity-100 translate-y-0 sm:translate-x-0"
+                x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100"
+                x-transition:leave-end="opacity-0"
+                class="fixed bottom-5 right-5 z-50 max-w-md w-full pointer-events-auto" style="display: none;">
+                <div :class="{
+                    'bg-slate-900 border-slate-700 text-white': toast.type === 'success',
+                    'bg-rose-900 border-rose-700 text-white': toast.type === 'error',
+                    'bg-amber-900 border-amber-700 text-white': toast.type === 'warning'
+                }" class="p-4 rounded-2xl shadow-2xl border flex items-start gap-3 backdrop-blur-md">
+                    <!-- Icon -->
+                    <div class="shrink-0 mt-0.5">
+                        <template x-if="toast.type === 'success'">
+                            <div
+                                class="w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                        d="M5 13l4 4L19 7"></path>
+                                </svg>
+                            </div>
+                        </template>
+                        <template x-if="toast.type === 'error'">
+                            <div
+                                class="w-8 h-8 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                        d="M6 18L18 6M6 6l12 12"></path>
+                                </svg>
+                            </div>
+                        </template>
+                        <template x-if="toast.type === 'warning'">
+                            <div
+                                class="w-8 h-8 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z">
+                                    </path>
+                                </svg>
+                            </div>
+                        </template>
+                    </div>
+
+                    <!-- Content -->
+                    <div class="flex-1">
+                        <h4 class="text-sm font-bold tracking-tight" x-text="toast.title"></h4>
+                        <p class="text-xs text-slate-300 mt-0.5 leading-relaxed" x-text="toast.message"></p>
+                    </div>
+
+                    <!-- Close button -->
+                    <button @click="toast.show = false"
+                        class="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-white/10 transition-colors cursor-pointer">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
         </div>
+    </div>
 
-        <!-- JAVASCRIPT & REALTIME CONTROLLER -->
-        <script>
-            // Non-reactive storage for Chart.js and Leaflet instances to prevent Alpine Proxy recursion
-            const tbCharts = {
-                kelurahan: null,
-                monthly: null,
-                gender: null,
-                map: null,
-                markersLayer: null,
-                fasyanksLayer: null,
-            };
+    <!-- JAVASCRIPT & REALTIME CONTROLLER -->
+    <script>
+        // Non-reactive storage for Chart.js and Leaflet instances to prevent Alpine Proxy recursion
+        const tbCharts = {
+            kelurahan: null,
+            monthly: null,
+            gender: null,
+            map: null,
+            markersLayer: null,
+            fasyanksLayer: null,
+        };
 
-            function tbDashboard() {
-                return {
-                    selectedKabupaten: '{{ $selectedKabupaten }}',
-                    selectedKelurahan: '{{ $selectedKelurahan }}',
-                    selectedType: '{{ $selectedType }}',
-                    searchQuery: '',
-                    kelurahanList: [],
-                    kpi: @json($kpi),
-                    kelurahanChartData: @json($kelurahan_chart),
-                    monthlyChartData: @json($monthly_chart),
-                    genderChartData: @json($gender_chart),
-                    ageChartData: @json($age_chart),
-                    patientsData: @json($patients),
-                    mapData: @json($map_data),
+        function tbDashboard() {
+            return {
+                selectedKabupaten: '{{ $selectedKabupaten }}',
+                selectedKelurahan: '{{ $selectedKelurahan }}',
+                selectedType: '{{ $selectedType }}',
+                searchQuery: '',
+                kelurahanList: [],
+                kpi: @json($kpi),
+                kelurahanChartData: @json($kelurahan_chart),
+                monthlyChartData: @json($monthly_chart),
+                genderChartData: @json($gender_chart),
+                ageChartData: @json($age_chart),
+                patientsData: @json($patients),
+                mapData: @json($map_data),
 
-                    // Import Modal State
-                    showImportModal: false,
-                    isDragging: false,
-                    isParsing: false,
-                    isSubmittingImport: false,
-                    importPreview: null,
+                // Import Modal State
+                showImportModal: false,
+                isDragging: false,
+                isParsing: false,
+                isSubmittingImport: false,
+                importPreview: null,
 
-                    // Toast Notification State
-                    toast: {
-                        show: false,
-                        type: 'success',
-                        title: '',
-                        message: '',
-                        timeout: null
-                    },
+                // Toast Notification State
+                toast: {
+                    show: false,
+                    type: 'success',
+                    title: '',
+                    message: '',
+                    timeout: null
+                },
 
-                    notify(type, title, message) {
-                        if (this.toast.timeout) clearTimeout(this.toast.timeout);
-                        this.toast.type = type;
-                        this.toast.title = title;
-                        this.toast.message = message;
-                        this.toast.show = true;
-                        this.toast.timeout = setTimeout(() => {
-                            this.toast.show = false;
-                        }, 4000);
-                    },
+                notify(type, title, message) {
+                    if (this.toast.timeout) clearTimeout(this.toast.timeout);
+                    this.toast.type = type;
+                    this.toast.title = title;
+                    this.toast.message = message;
+                    this.toast.show = true;
+                    this.toast.timeout = setTimeout(() => {
+                        this.toast.show = false;
+                    }, 4000);
+                },
 
-                    // Edit & Add Modal State
-                    showEditModal: false,
-                    showAddModal: false,
-                    isSubmittingNewPatient: false,
-                    editingPatient: {},
-                    // AI Prompt Add state
-                    aiAddStep: 'prompt',   // 'prompt' | 'preview'
-                    aiAddPrompt: '',
-                    aiAddLoading: false,
-                    aiAddError: '',
-                    newPatient: {},
+                // Edit & Add Modal State
+                showEditModal: false,
+                showAddModal: false,
+                isSubmittingNewPatient: false,
+                editingPatient: {},
+                // AI Prompt Add state
+                aiAddStep: 'prompt',   // 'prompt' | 'preview'
+                aiAddPrompt: '',
+                aiAddLoading: false,
+                aiAddError: '',
+                newPatient: {},
 
-                    // GIS Map Widget Config (per-kecamatan, saveable)
-                    tbMapCfgOpen: false,
-                    tbMapCfgSaved: false,
-                    tbMapLoading: false,
-                    tbMapKecamatanList: [],
-                    tbMapCfg: {
-                        kecamatan: '',
-                        viewMode: 'markers',
-                        height: 460,
-                        showFasyankes: true,
-                        showRO: false,
-                        showHIV: false,
-                    },
+                // GIS Map Widget Config (per-kecamatan, saveable)
+                tbMapCfgOpen: false,
+                tbMapCfgSaved: false,
+                tbMapLoading: false,
+                tbMapKecamatanList: [],
+                tbMapCfg: {
+                    kecamatan: '',
+                    viewMode: 'markers',
+                    height: 460,
+                    showFasyankes: true,
+                    showRO: false,
+                    showHIV: false,
+                },
 
-                    // Legacy (kept for updateMap compatibility)
-                    mapViewMode: 'markers',
+                // Legacy (kept for updateMap compatibility)
+                mapViewMode: 'markers',
 
-                    // Target Patient & Innovation Modal States
-                    targetPatient: null,
-                    showWhatsAppModal: false,
-                    waPhone: '',
-                    waTemplateType: 'oat_daily',
-                    waMessage: '',
+                // Target Patient & Innovation Modal States
+                targetPatient: null,
+                showWhatsAppModal: false,
+                waPhone: '',
+                waTemplateType: 'oat_daily',
+                waMessage: '',
 
-                    showDuplicateModal: false,
-                    isLoadingDuplicates: false,
-                    duplicateResults: [],
+                showDuplicateModal: false,
+                isLoadingDuplicates: false,
+                duplicateResults: [],
 
-                    showTimelineModal: false,
-                    isLoadingTimeline: false,
-                    timelineData: [],
+                showTimelineModal: false,
+                isLoadingTimeline: false,
+                timelineData: [],
 
-                    showAiModal: false,
-                    isLoadingAi: false,
-                    aiAnalysisResult: '',
+                showAiModal: false,
+                isLoadingAi: false,
+                aiAnalysisResult: '',
 
-                    // View / Detail Modal State
-                    showViewModal: false,
-                    viewingPatient: null,
+                // View / Detail Modal State
+                showViewModal: false,
+                viewingPatient: null,
 
-                    formatDate(dateVal) {
-                        if (!dateVal) return '-';
-                        const raw = String(dateVal).split('T')[0];
-                        const parts = raw.split('-');
-                        if (parts.length === 3) {
-                            const months = ['', 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
-                            const day = parseInt(parts[2], 10);
-                            const monthIdx = parseInt(parts[1], 10);
-                            const year = parts[0];
-                            if (monthIdx >= 1 && monthIdx <= 12 && !isNaN(day)) {
-                                return `${day} ${months[monthIdx]} ${year}`;
-                            }
-                            return raw;
+                formatDate(dateVal) {
+                    if (!dateVal) return '-';
+                    const raw = String(dateVal).split('T')[0];
+                    const parts = raw.split('-');
+                    if (parts.length === 3) {
+                        const months = ['', 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+                        const day = parseInt(parts[2], 10);
+                        const monthIdx = parseInt(parts[1], 10);
+                        const year = parts[0];
+                        if (monthIdx >= 1 && monthIdx <= 12 && !isNaN(day)) {
+                            return `${day} ${months[monthIdx]} ${year}`;
                         }
                         return raw;
-                    },
+                    }
+                    return raw;
+                },
 
-                    openViewModal(patient) {
-                        this.viewingPatient = JSON.parse(JSON.stringify(patient));
-                        this.showViewModal = true;
-                    },
+                openViewModal(patient) {
+                    this.viewingPatient = JSON.parse(JSON.stringify(patient));
+                    this.showViewModal = true;
+                },
 
-                    initDashboard() {
-                        // Restore saved map config from localStorage
-                        try {
-                            const saved = localStorage.getItem('tb_map_cfg');
-                            if (saved) {
-                                const parsed = JSON.parse(saved);
-                                this.tbMapCfg = Object.assign({}, this.tbMapCfg, parsed);
-                                this.mapViewMode = this.tbMapCfg.viewMode;
-                            }
-                        } catch (e) {}
+                initDashboard() {
+                    // Restore saved map config from localStorage
+                    try {
+                        const saved = localStorage.getItem('tb_map_cfg');
+                        if (saved) {
+                            const parsed = JSON.parse(saved);
+                            this.tbMapCfg = Object.assign({}, this.tbMapCfg, parsed);
+                            this.mapViewMode = this.tbMapCfg.viewMode;
+                        }
+                    } catch (e) { }
 
-                        this.loadKelurahanList();
-                        this.loadTbMapKecamatanList();
-                        this.$nextTick(() => {
-                            this.renderCharts();
-                            this.initMap();
+                    this.loadKelurahanList();
+                    this.loadTbMapKecamatanList();
+                    this.$nextTick(() => {
+                        this.renderCharts();
+                        this.initMap();
+                    });
+                },
+
+                openAddModal() {
+                    this.aiAddStep = 'prompt';
+                    this.aiAddPrompt = '';
+                    this.aiAddError = '';
+                    this.newPatient = {};
+                    this.showAddModal = true;
+                },
+
+                async runTbAiParse() {
+                    if (this.aiAddLoading || this.aiAddPrompt.trim().length < 10) return;
+                    this.aiAddLoading = true;
+                    this.aiAddError = '';
+                    try {
+                        const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+                        const res = await fetch(`{{ route('tb.ai.parse') }}`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': token, 'Accept': 'application/json' },
+                            body: JSON.stringify({ prompt: this.aiAddPrompt })
                         });
-                    },
-
-                    openAddModal() {
-                        this.aiAddStep = 'prompt';
-                        this.aiAddPrompt = '';
-                        this.aiAddError = '';
-                        this.newPatient = {};
-                        this.showAddModal = true;
-                    },
-
-                    async runTbAiParse() {
-                        if (this.aiAddLoading || this.aiAddPrompt.trim().length < 10) return;
-                        this.aiAddLoading = true;
-                        this.aiAddError = '';
-                        try {
-                            const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-                            const res = await fetch(`{{ route('tb.ai.parse') }}`, {
-                                method: 'POST',
-                                headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': token, 'Accept': 'application/json' },
-                                body: JSON.stringify({ prompt: this.aiAddPrompt })
+                        const result = await res.json();
+                        if (result.success && result.data) {
+                            // Strip null values so only populated fields show in preview
+                            const clean = {};
+                            Object.entries(result.data).forEach(([k, v]) => {
+                                if (v !== null && v !== '') clean[k] = v;
                             });
-                            const result = await res.json();
-                            if (result.success && result.data) {
-                                // Strip null values so only populated fields show in preview
-                                const clean = {};
-                                Object.entries(result.data).forEach(([k, v]) => {
-                                    if (v !== null && v !== '') clean[k] = v;
-                                });
-                                this.newPatient = clean;
-                                this.aiAddStep = 'preview';
-                            } else {
-                                this.aiAddError = result.message || 'AI tidak dapat memproses deskripsi ini. Coba tulis lebih lengkap.';
+                            this.newPatient = clean;
+                            this.aiAddStep = 'preview';
+                        } else {
+                            this.aiAddError = result.message || 'AI tidak dapat memproses deskripsi ini. Coba tulis lebih lengkap.';
+                        }
+                    } catch (e) {
+                        this.aiAddError = 'Terjadi kesalahan saat menghubungi AI: ' + e.message;
+                    } finally {
+                        this.aiAddLoading = false;
+                    }
+                },
+
+                async loadKelurahanList() {
+                    try {
+                        const res = await fetch(`{{ route('tb.kelurahan.list') }}?kabupaten=${encodeURIComponent(this.selectedKabupaten || '')}`);
+                        this.kelurahanList = await res.json();
+                    } catch (e) {
+                        console.error('Error loading kelurahan:', e);
+                    }
+                },
+
+                onKabupatenChange() {
+                    this.selectedKelurahan = '';
+                    this.loadKelurahanList();
+                    this.applyFilters();
+                },
+
+                async applyFilters(page = 1) {
+                    const params = new URLSearchParams({
+                        kabupaten: this.selectedKabupaten || '',
+                        kelurahan: this.selectedKelurahan || '',
+                        report_type: this.selectedType || '',
+                        search: this.searchQuery || '',
+                        page: page
+                    });
+
+                    try {
+                        const res = await fetch(`{{ route('tb.stats.json') }}?${params.toString()}`);
+                        const data = await res.json();
+
+                        this.kpi = data.kpi;
+                        this.kelurahanChartData = data.kelurahan_chart;
+                        this.monthlyChartData = data.monthly_chart;
+                        this.genderChartData = data.gender_chart;
+                        this.ageChartData = data.age_chart;
+                        this.patientsData = data.patients;
+                        if (data.map_data) {
+                            this.mapData = data.map_data;
+                        }
+
+                        this.updateCharts();
+                        this.updateMap();
+                    } catch (e) {
+                        console.error('Error applying filters:', e);
+                    }
+                },
+
+                resetFilters() {
+                    this.selectedKabupaten = '';
+                    this.selectedKelurahan = '';
+                    this.selectedType = '';
+                    this.searchQuery = '';
+                    this.loadKelurahanList();
+                    this.applyFilters();
+                },
+
+                changePage(page) {
+                    this.applyFilters(page);
+                },
+
+                renderCharts() {
+                    // 1. Kelurahan Horizontal Bar Chart
+                    const ctxKel = document.getElementById('kelurahanChart')?.getContext('2d');
+                    if (ctxKel) {
+                        if (tbCharts.kelurahan) {
+                            try { tbCharts.kelurahan.destroy(); } catch (e) { }
+                        }
+                        tbCharts.kelurahan = new Chart(ctxKel, {
+                            type: 'bar',
+                            data: {
+                                labels: this.kelurahanChartData.labels,
+                                datasets: [{
+                                    label: 'Jumlah Kasus',
+                                    data: this.kelurahanChartData.values,
+                                    backgroundColor: 'rgba(99, 102, 241, 0.85)',
+                                    borderRadius: 6,
+                                }]
+                            },
+                            options: {
+                                indexAxis: 'y',
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                plugins: { legend: { display: false } },
+                                scales: {
+                                    x: { grid: { color: '#f1f5f9' } },
+                                    y: { grid: { display: false } }
+                                }
                             }
-                        } catch (e) {
-                            this.aiAddError = 'Terjadi kesalahan saat menghubungi AI: ' + e.message;
-                        } finally {
-                            this.aiAddLoading = false;
+                        });
+                    }
+
+                    // 2. Gender Doughnut Chart
+                    const ctxGen = document.getElementById('genderChart')?.getContext('2d');
+                    if (ctxGen) {
+                        if (tbCharts.gender) {
+                            try { tbCharts.gender.destroy(); } catch (e) { }
                         }
-                    },
+                        tbCharts.gender = new Chart(ctxGen, {
+                            type: 'doughnut',
+                            data: {
+                                labels: this.genderChartData.labels,
+                                datasets: [{
+                                    data: this.genderChartData.values,
+                                    backgroundColor: ['#6366f1', '#ec4899'],
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                cutout: '65%',
+                                plugins: {
+                                    legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11 } } }
+                                }
+                            }
+                        });
+                    }
 
-                    async loadKelurahanList() {
-                        try {
-                            const res = await fetch(`{{ route('tb.kelurahan.list') }}?kabupaten=${encodeURIComponent(this.selectedKabupaten || '')}`);
-                            this.kelurahanList = await res.json();
-                        } catch (e) {
-                            console.error('Error loading kelurahan:', e);
+                    // 3. Monthly Trend Line Chart
+                    const ctxMonth = document.getElementById('monthlyChart')?.getContext('2d');
+                    if (ctxMonth) {
+                        if (tbCharts.monthly) {
+                            try { tbCharts.monthly.destroy(); } catch (e) { }
                         }
-                    },
+                        tbCharts.monthly = new Chart(ctxMonth, {
+                            type: 'line',
+                            data: {
+                                labels: this.monthlyChartData.labels,
+                                datasets: [{
+                                    label: 'Kasus Baru',
+                                    data: this.monthlyChartData.values,
+                                    borderColor: '#0284c7',
+                                    backgroundColor: 'rgba(2, 132, 199, 0.1)',
+                                    fill: true,
+                                    tension: 0.35,
+                                    pointRadius: 4,
+                                    pointBackgroundColor: '#0284c7',
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                plugins: { legend: { display: false } },
+                                scales: {
+                                    y: { beginAtZero: true, grid: { color: '#f1f5f9' } },
+                                    x: { grid: { display: false } }
+                                }
+                            }
+                        });
+                    }
+                },
 
-                    onKabupatenChange() {
-                        this.selectedKelurahan = '';
-                        this.loadKelurahanList();
-                        this.applyFilters();
-                    },
+                updateCharts() {
+                    if (tbCharts.kelurahan) {
+                        tbCharts.kelurahan.data.labels = this.kelurahanChartData.labels;
+                        tbCharts.kelurahan.data.datasets[0].data = this.kelurahanChartData.values;
+                        tbCharts.kelurahan.update();
+                    }
+                    if (tbCharts.gender) {
+                        tbCharts.gender.data.labels = this.genderChartData.labels;
+                        tbCharts.gender.data.datasets[0].data = this.genderChartData.values;
+                        tbCharts.gender.update();
+                    }
+                    if (tbCharts.monthly) {
+                        tbCharts.monthly.data.labels = this.monthlyChartData.labels;
+                        tbCharts.monthly.data.datasets[0].data = this.monthlyChartData.values;
+                        tbCharts.monthly.update();
+                    }
+                },
 
-                    async applyFilters(page = 1) {
+                // ── TBC Map Config Helpers ──────────────────────────────────────
+
+                async loadTbMapKecamatanList() {
+                    try {
+                        const res = await fetch(`{{ route('tb.kecamatan.list') }}?kabupaten=${encodeURIComponent(this.selectedKabupaten || '')}`);
+                        this.tbMapKecamatanList = await res.json();
+                    } catch (e) { }
+                },
+
+                saveTbMapCfg(showFeedback = false) {
+                    try {
+                        localStorage.setItem('tb_map_cfg', JSON.stringify(this.tbMapCfg));
+                        if (showFeedback) {
+                            this.tbMapCfgSaved = true;
+                            setTimeout(() => { this.tbMapCfgSaved = false; }, 2500);
+                        }
+                    } catch (e) { }
+                },
+
+                resetTbMapCfg() {
+                    this.tbMapCfg = { kecamatan: '', viewMode: 'markers', height: 460, showFasyankes: true, showRO: false, showHIV: false };
+                    try { localStorage.removeItem('tb_map_cfg'); } catch (e) { }
+                    this.tbMapCfgSaved = true;
+                    setTimeout(() => { this.tbMapCfgSaved = false; }, 1800);
+                    this.onTbMapKecamatanChange();
+                },
+
+                resizeTbMap() {
+                    this.$nextTick(() => {
+                        if (tbCharts.map) {
+                            tbCharts.map.invalidateSize();
+                        }
+                    });
+                },
+
+                async onTbMapKecamatanChange() {
+                    this.saveTbMapCfg();
+                    await this.loadTbMapGeoData();
+                    this.updateMap();
+                },
+
+                async loadTbMapGeoData() {
+                    this.tbMapLoading = true;
+                    try {
                         const params = new URLSearchParams({
                             kabupaten: this.selectedKabupaten || '',
-                            kelurahan: this.selectedKelurahan || '',
-                            report_type: this.selectedType || '',
-                            search: this.searchQuery || '',
-                            page: page
+                            kecamatan: this.tbMapCfg.kecamatan || '',
                         });
-
-                        try {
-                            const res = await fetch(`{{ route('tb.stats.json') }}?${params.toString()}`);
-                            const data = await res.json();
-
-                            this.kpi = data.kpi;
-                            this.kelurahanChartData = data.kelurahan_chart;
-                            this.monthlyChartData = data.monthly_chart;
-                            this.genderChartData = data.gender_chart;
-                            this.ageChartData = data.age_chart;
-                            this.patientsData = data.patients;
-                            if (data.map_data) {
-                                this.mapData = data.map_data;
-                            }
-
-                            this.updateCharts();
-                            this.updateMap();
-                        } catch (e) {
-                            console.error('Error applying filters:', e);
+                        const res = await fetch(`{{ route('tb.map.data') }}?${params.toString()}`);
+                        const data = await res.json();
+                        this.mapData = data.points || [];
+                        // Re-center map on new kecamatan
+                        if (tbCharts.map && data.center) {
+                            tbCharts.map.setView([data.center.lat, data.center.lng], data.center.zoom || 13);
                         }
-                    },
+                    } catch (e) {
+                        console.error('TB map data error:', e);
+                    } finally {
+                        this.tbMapLoading = false;
+                    }
+                },
 
-                    resetFilters() {
-                        this.selectedKabupaten = '';
-                        this.selectedKelurahan = '';
-                        this.selectedType = '';
-                        this.searchQuery = '';
-                        this.loadKelurahanList();
-                        this.applyFilters();
-                    },
+                // ── Map Init & Render ───────────────────────────────────────────
 
-                    changePage(page) {
-                        this.applyFilters(page);
-                    },
+                initMap() {
+                    const init = () => {
+                        const mapElem = document.getElementById('tbMap');
+                        if (!mapElem) return;
 
-                    renderCharts() {
-                        // 1. Kelurahan Horizontal Bar Chart
-                        const ctxKel = document.getElementById('kelurahanChart')?.getContext('2d');
-                        if (ctxKel) {
-                            if (tbCharts.kelurahan) {
-                                try { tbCharts.kelurahan.destroy(); } catch (e) {}
-                            }
-                            tbCharts.kelurahan = new Chart(ctxKel, {
-                                type: 'bar',
-                                data: {
-                                    labels: this.kelurahanChartData.labels,
-                                    datasets: [{
-                                        label: 'Jumlah Kasus',
-                                        data: this.kelurahanChartData.values,
-                                        backgroundColor: 'rgba(99, 102, 241, 0.85)',
-                                        borderRadius: 6,
-                                    }]
-                                },
-                                options: {
-                                    indexAxis: 'y',
-                                    responsive: true,
-                                    maintainAspectRatio: false,
-                                    plugins: { legend: { display: false } },
-                                    scales: {
-                                        x: { grid: { color: '#f1f5f9' } },
-                                        y: { grid: { display: false } }
-                                    }
-                                }
-                            });
+                        if (typeof L === 'undefined') {
+                            setTimeout(init, 100);
+                            return;
                         }
 
-                        // 2. Gender Doughnut Chart
-                        const ctxGen = document.getElementById('genderChart')?.getContext('2d');
-                        if (ctxGen) {
-                            if (tbCharts.gender) {
-                                try { tbCharts.gender.destroy(); } catch (e) {}
-                            }
-                            tbCharts.gender = new Chart(ctxGen, {
-                                type: 'doughnut',
-                                data: {
-                                    labels: this.genderChartData.labels,
-                                    datasets: [{
-                                        data: this.genderChartData.values,
-                                        backgroundColor: ['#6366f1', '#ec4899'],
-                                    }]
-                                },
-                                options: {
-                                    responsive: true,
-                                    maintainAspectRatio: false,
-                                    cutout: '65%',
-                                    plugins: {
-                                        legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11 } } }
-                                    }
-                                }
-                            });
+                        if (tbCharts.map) {
+                            try { tbCharts.map.remove(); } catch (e) { }
+                            tbCharts.map = null;
                         }
 
-                        // 3. Monthly Trend Line Chart
-                        const ctxMonth = document.getElementById('monthlyChart')?.getContext('2d');
-                        if (ctxMonth) {
-                            if (tbCharts.monthly) {
-                                try { tbCharts.monthly.destroy(); } catch (e) {}
-                            }
-                            tbCharts.monthly = new Chart(ctxMonth, {
-                                type: 'line',
-                                data: {
-                                    labels: this.monthlyChartData.labels,
-                                    datasets: [{
-                                        label: 'Kasus Baru',
-                                        data: this.monthlyChartData.values,
-                                        borderColor: '#0284c7',
-                                        backgroundColor: 'rgba(2, 132, 199, 0.1)',
-                                        fill: true,
-                                        tension: 0.35,
-                                        pointRadius: 4,
-                                        pointBackgroundColor: '#0284c7',
-                                    }]
-                                },
-                                options: {
-                                    responsive: true,
-                                    maintainAspectRatio: false,
-                                    plugins: { legend: { display: false } },
-                                    scales: {
-                                        y: { beginAtZero: true, grid: { color: '#f1f5f9' } },
-                                        x: { grid: { display: false } }
-                                    }
-                                }
-                            });
-                        }
-                    },
+                        tbCharts.map = L.map('tbMap').setView([-6.2889, 106.6092], 12);
+                        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+                            maxZoom: 18
+                        }).addTo(tbCharts.map);
 
-                    updateCharts() {
-                        if (tbCharts.kelurahan) {
-                            tbCharts.kelurahan.data.labels = this.kelurahanChartData.labels;
-                            tbCharts.kelurahan.data.datasets[0].data = this.kelurahanChartData.values;
-                            tbCharts.kelurahan.update();
-                        }
-                        if (tbCharts.gender) {
-                            tbCharts.gender.data.labels = this.genderChartData.labels;
-                            tbCharts.gender.data.datasets[0].data = this.genderChartData.values;
-                            tbCharts.gender.update();
-                        }
-                        if (tbCharts.monthly) {
-                            tbCharts.monthly.data.labels = this.monthlyChartData.labels;
-                            tbCharts.monthly.data.datasets[0].data = this.monthlyChartData.values;
-                            tbCharts.monthly.update();
-                        }
-                    },
-
-                    // ── TBC Map Config Helpers ──────────────────────────────────────
-
-                    async loadTbMapKecamatanList() {
-                        try {
-                            const res = await fetch(`{{ route('tb.kecamatan.list') }}?kabupaten=${encodeURIComponent(this.selectedKabupaten || '')}`);
-                            this.tbMapKecamatanList = await res.json();
-                        } catch (e) {}
-                    },
-
-                    saveTbMapCfg(showFeedback = false) {
-                        try {
-                            localStorage.setItem('tb_map_cfg', JSON.stringify(this.tbMapCfg));
-                            if (showFeedback) {
-                                this.tbMapCfgSaved = true;
-                                setTimeout(() => { this.tbMapCfgSaved = false; }, 2500);
-                            }
-                        } catch (e) {}
-                    },
-
-                    resetTbMapCfg() {
-                        this.tbMapCfg = { kecamatan: '', viewMode: 'markers', height: 460, showFasyankes: true, showRO: false, showHIV: false };
-                        try { localStorage.removeItem('tb_map_cfg'); } catch (e) {}
-                        this.tbMapCfgSaved = true;
-                        setTimeout(() => { this.tbMapCfgSaved = false; }, 1800);
-                        this.onTbMapKecamatanChange();
-                    },
-
-                    resizeTbMap() {
-                        this.$nextTick(() => {
-                            if (tbCharts.map) {
-                                tbCharts.map.invalidateSize();
-                            }
-                        });
-                    },
-
-                    async onTbMapKecamatanChange() {
-                        this.saveTbMapCfg();
-                        await this.loadTbMapGeoData();
+                        tbCharts.markersLayer = L.layerGroup().addTo(tbCharts.map);
+                        tbCharts.fasyanksLayer = L.layerGroup().addTo(tbCharts.map);
                         this.updateMap();
-                    },
 
-                    async loadTbMapGeoData() {
-                        this.tbMapLoading = true;
-                        try {
-                            const params = new URLSearchParams({
-                                kabupaten: this.selectedKabupaten || '',
-                                kecamatan: this.tbMapCfg.kecamatan || '',
-                            });
-                            const res = await fetch(`{{ route('tb.map.data') }}?${params.toString()}`);
-                            const data = await res.json();
-                            this.mapData = data.points || [];
-                            // Re-center map on new kecamatan
-                            if (tbCharts.map && data.center) {
-                                tbCharts.map.setView([data.center.lat, data.center.lng], data.center.zoom || 13);
-                            }
-                        } catch (e) {
-                            console.error('TB map data error:', e);
-                        } finally {
-                            this.tbMapLoading = false;
+                        [100, 300, 600, 1000].forEach(delay => {
+                            setTimeout(() => { if (tbCharts.map) tbCharts.map.invalidateSize(); }, delay);
+                        });
+                    };
+                    init();
+                },
+
+                updateMap() {
+                    if (!tbCharts.map || !tbCharts.markersLayer || typeof L === 'undefined') return;
+
+                    tbCharts.markersLayer.clearLayers();
+                    if (tbCharts.fasyanksLayer) tbCharts.fasyanksLayer.clearLayers();
+
+                    const viewMode = this.tbMapCfg.viewMode || this.mapViewMode;
+
+                    if (!this.mapData || this.mapData.length === 0) return;
+
+                    const bounds = [];
+
+                    this.mapData.forEach(item => {
+                        if (!item.lat || !item.lng) return;
+                        bounds.push([item.lat, item.lng]);
+
+                        // ── Color by density ──
+                        let color = '#818cf8'; // indigo-400 (1-3)
+                        let radius = 10;
+                        if (item.total >= 10) {
+                            color = '#f43f5e'; radius = 20; // rose
+                        } else if (item.total >= 4) {
+                            color = '#f59e0b'; radius = 15; // amber
                         }
-                    },
 
-                    // ── Map Init & Render ───────────────────────────────────────────
+                        // ── Mode: Density heatmap halo ──
+                        if (viewMode === 'density') {
+                            const haloR = Math.max(400, item.total * 80);
+                            tbCharts.markersLayer.addLayer(L.circle([item.lat, item.lng], {
+                                radius: haloR,
+                                color: 'transparent',
+                                fillColor: color,
+                                fillOpacity: Math.min(0.5, 0.1 + item.total * 0.03),
+                            }));
+                        }
 
-                    initMap() {
-                        const init = () => {
-                            const mapElem = document.getElementById('tbMap');
-                            if (!mapElem) return;
+                        // ── Mode: Geofence rings ──
+                        if (viewMode === 'geofence') {
+                            const bufR = item.total >= 10 ? 800 : 500;
+                            tbCharts.markersLayer.addLayer(L.circle([item.lat, item.lng], {
+                                radius: bufR,
+                                color: item.total >= 10 ? '#e11d48' : '#f59e0b',
+                                fillColor: item.total >= 10 ? '#f43f5e' : '#fbbf24',
+                                fillOpacity: item.total >= 10 ? 0.22 : 0.12,
+                                weight: 1.5, dashArray: '4 6',
+                            }));
+                        }
 
-                            if (typeof L === 'undefined') {
-                                setTimeout(init, 100);
-                                return;
-                            }
+                        // ── RO badge overlay ──
+                        if (this.tbMapCfg.showRO && item.total_ro > 0) {
+                            tbCharts.markersLayer.addLayer(L.circle([item.lat, item.lng], {
+                                radius: 350, color: '#9333ea', fillColor: '#c084fc',
+                                fillOpacity: 0.25, weight: 2, dashArray: '3 4',
+                            }));
+                        }
 
-                            if (tbCharts.map) {
-                                try { tbCharts.map.remove(); } catch (e) {}
-                                tbCharts.map = null;
-                            }
+                        // ── HIV badge overlay ──
+                        if (this.tbMapCfg.showHIV && item.total_hiv > 0) {
+                            tbCharts.markersLayer.addLayer(L.circle([item.lat, item.lng], {
+                                radius: 250, color: '#7c3aed', fillColor: '#a78bfa',
+                                fillOpacity: 0.3, weight: 1.5,
+                            }));
+                        }
 
-                            tbCharts.map = L.map('tbMap').setView([-6.2889, 106.6092], 12);
-                            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-                                maxZoom: 18
-                            }).addTo(tbCharts.map);
+                        // ── Main marker ──
+                        const circle = L.circleMarker([item.lat, item.lng], {
+                            color, fillColor: color, fillOpacity: 0.85,
+                            radius, weight: 2,
+                        });
 
-                            tbCharts.markersLayer = L.layerGroup().addTo(tbCharts.map);
-                            tbCharts.fasyanksLayer = L.layerGroup().addTo(tbCharts.map);
-                            this.updateMap();
-
-                            [100, 300, 600, 1000].forEach(delay => {
-                                setTimeout(() => { if (tbCharts.map) tbCharts.map.invalidateSize(); }, delay);
-                            });
-                        };
-                        init();
-                    },
-
-                    updateMap() {
-                        if (!tbCharts.map || !tbCharts.markersLayer || typeof L === 'undefined') return;
-
-                        tbCharts.markersLayer.clearLayers();
-                        if (tbCharts.fasyanksLayer) tbCharts.fasyanksLayer.clearLayers();
-
-                        const viewMode = this.tbMapCfg.viewMode || this.mapViewMode;
-
-                        if (!this.mapData || this.mapData.length === 0) return;
-
-                        const bounds = [];
-
-                        this.mapData.forEach(item => {
-                            if (!item.lat || !item.lng) return;
-                            bounds.push([item.lat, item.lng]);
-
-                            // ── Color by density ──
-                            let color = '#818cf8'; // indigo-400 (1-3)
-                            let radius = 10;
-                            if (item.total >= 10) {
-                                color = '#f43f5e'; radius = 20; // rose
-                            } else if (item.total >= 4) {
-                                color = '#f59e0b'; radius = 15; // amber
-                            }
-
-                            // ── Mode: Density heatmap halo ──
-                            if (viewMode === 'density') {
-                                const haloR = Math.max(400, item.total * 80);
-                                tbCharts.markersLayer.addLayer(L.circle([item.lat, item.lng], {
-                                    radius: haloR,
-                                    color: 'transparent',
-                                    fillColor: color,
-                                    fillOpacity: Math.min(0.5, 0.1 + item.total * 0.03),
-                                }));
-                            }
-
-                            // ── Mode: Geofence rings ──
-                            if (viewMode === 'geofence') {
-                                const bufR = item.total >= 10 ? 800 : 500;
-                                tbCharts.markersLayer.addLayer(L.circle([item.lat, item.lng], {
-                                    radius: bufR,
-                                    color: item.total >= 10 ? '#e11d48' : '#f59e0b',
-                                    fillColor: item.total >= 10 ? '#f43f5e' : '#fbbf24',
-                                    fillOpacity: item.total >= 10 ? 0.22 : 0.12,
-                                    weight: 1.5, dashArray: '4 6',
-                                }));
-                            }
-
-                            // ── RO badge overlay ──
-                            if (this.tbMapCfg.showRO && item.total_ro > 0) {
-                                tbCharts.markersLayer.addLayer(L.circle([item.lat, item.lng], {
-                                    radius: 350, color: '#9333ea', fillColor: '#c084fc',
-                                    fillOpacity: 0.25, weight: 2, dashArray: '3 4',
-                                }));
-                            }
-
-                            // ── HIV badge overlay ──
-                            if (this.tbMapCfg.showHIV && item.total_hiv > 0) {
-                                tbCharts.markersLayer.addLayer(L.circle([item.lat, item.lng], {
-                                    radius: 250, color: '#7c3aed', fillColor: '#a78bfa',
-                                    fillOpacity: 0.3, weight: 1.5,
-                                }));
-                            }
-
-                            // ── Main marker ──
-                            const circle = L.circleMarker([item.lat, item.lng], {
-                                color, fillColor: color, fillOpacity: 0.85,
-                                radius, weight: 2,
-                            });
-
-                            // ── Fasyankes cluster sub-markers ──
-                            if (this.tbMapCfg.showFasyankes && item.fasyankes && item.fasyankes.length > 0) {
-                                const fasRows = item.fasyankes.slice(0, 5).map(f =>
-                                    `<div style="display:flex;justify-content:space-between;padding:2px 0;border-top:1px solid #f1f5f9;">
+                        // ── Fasyankes cluster sub-markers ──
+                        if (this.tbMapCfg.showFasyankes && item.fasyankes && item.fasyankes.length > 0) {
+                            const fasRows = item.fasyankes.slice(0, 5).map(f =>
+                                `<div style="display:flex;justify-content:space-between;padding:2px 0;border-top:1px solid #f1f5f9;">
                                         <span style="color:#475569;font-size:10px;">${f.name}</span>
                                         <span style="font-weight:700;color:#6366f1;font-size:10px;">${f.total} kasus</span>
                                     </div>`
-                                ).join('');
+                            ).join('');
 
-                                const fasLabel = item.fasyankes.map(f => f.name).join(', ');
-                                circle.bindTooltip(fasLabel, { direction: 'top', className: 'leaflet-tooltip-fas' });
+                            const fasLabel = item.fasyankes.map(f => f.name).join(', ');
+                            circle.bindTooltip(fasLabel, { direction: 'top', className: 'leaflet-tooltip-fas' });
 
-                                // Small offset markers for each fasyankes
-                                item.fasyankes.slice(0, 3).forEach((f, i) => {
-                                    const angle = (i * 120) * (Math.PI / 180);
-                                    const dlat = 0.002 * Math.cos(angle);
-                                    const dlng = 0.002 * Math.sin(angle);
-                                    const fm = L.circleMarker([item.lat + dlat, item.lng + dlng], {
-                                        color: '#0284c7', fillColor: '#38bdf8',
-                                        fillOpacity: 0.7, radius: 6, weight: 1.5,
-                                    });
-                                    fm.bindPopup(`<div style="font-size:11px;font-weight:600;">${f.name}</div><div style="font-size:11px;color:#475569;">${f.total} kasus TBC</div>`);
-                                    if (tbCharts.fasyanksLayer) tbCharts.fasyanksLayer.addLayer(fm);
+                            // Small offset markers for each fasyankes
+                            item.fasyankes.slice(0, 3).forEach((f, i) => {
+                                const angle = (i * 120) * (Math.PI / 180);
+                                const dlat = 0.002 * Math.cos(angle);
+                                const dlng = 0.002 * Math.sin(angle);
+                                const fm = L.circleMarker([item.lat + dlat, item.lng + dlng], {
+                                    color: '#0284c7', fillColor: '#38bdf8',
+                                    fillOpacity: 0.7, radius: 6, weight: 1.5,
                                 });
+                                fm.bindPopup(`<div style="font-size:11px;font-weight:600;">${f.name}</div><div style="font-size:11px;color:#475569;">${f.total} kasus TBC</div>`);
+                                if (tbCharts.fasyanksLayer) tbCharts.fasyanksLayer.addLayer(fm);
+                            });
 
-                                const roInfo = item.total_ro > 0
-                                    ? `<div style="margin-top:4px;padding:3px 5px;background:#fdf4ff;border-radius:5px;font-size:10px;color:#7e22ce;font-weight:600;">⚠ ${item.total_ro} Kasus RO (Resistan Obat)</div>` : '';
-                                const hivInfo = item.total_hiv > 0
-                                    ? `<div style="padding:3px 5px;background:#f5f3ff;border-radius:5px;font-size:10px;color:#4c1d95;font-weight:600;">HIV+ Ko-infeksi: ${item.total_hiv}</div>` : '';
+                            const roInfo = item.total_ro > 0
+                                ? `<div style="margin-top:4px;padding:3px 5px;background:#fdf4ff;border-radius:5px;font-size:10px;color:#7e22ce;font-weight:600;">⚠ ${item.total_ro} Kasus RO (Resistan Obat)</div>` : '';
+                            const hivInfo = item.total_hiv > 0
+                                ? `<div style="padding:3px 5px;background:#f5f3ff;border-radius:5px;font-size:10px;color:#4c1d95;font-weight:600;">HIV+ Ko-infeksi: ${item.total_hiv}</div>` : '';
 
-                                circle.bindPopup(`
+                            circle.bindPopup(`
                                     <div style="font-family:inherit;font-size:12px;min-width:200px;">
                                         <div style="font-weight:700;font-size:13px;color:#1e293b;margin-bottom:2px;">${item.kelurahan}</div>
                                         <div style="color:#64748b;font-size:11px;margin-bottom:1px;">${item.kecamatan ? 'Kec. ' + item.kecamatan + ' · ' : ''}${item.kabupaten || ''}</div>
@@ -2108,8 +2412,8 @@
                                         ${fasRows}
                                     </div>
                                 `);
-                            } else {
-                                circle.bindPopup(`
+                        } else {
+                            circle.bindPopup(`
                                     <div style="font-family:inherit;font-size:12px;min-width:170px;">
                                         <div style="font-weight:700;font-size:13px;color:#1e293b;margin-bottom:4px;">${item.kelurahan}</div>
                                         <div style="color:#64748b;margin-bottom:6px;">${item.kecamatan ? 'Kec. ' + item.kecamatan + ' · ' : ''}${item.kabupaten || ''}</div>
@@ -2124,310 +2428,310 @@
                                         ${viewMode === 'geofence' ? '<div style="margin-top:6px;padding:4px 6px;background:#fff1f2;border-radius:6px;font-size:10px;color:#be123c;font-weight:600;">[Geofence] Zona Kontak Erat 500m</div>' : ''}
                                     </div>
                                 `);
-                            }
-
-                            tbCharts.markersLayer.addLayer(circle);
-                        });
-
-                        if (bounds.length > 0) {
-                            tbCharts.map.fitBounds(bounds, { padding: [40, 40], maxZoom: 14 });
                         }
-                    },
 
-                    // File Upload & Preview Handler
-                    onFileSelected(event) {
-                        const file = event.target.files[0];
-                        if (file) {
-                            this.processFile(file);
-                        }
-                        event.target.value = '';
-                    },
+                        tbCharts.markersLayer.addLayer(circle);
+                    });
 
-                    onFileDrop(event) {
-                        this.isDragging = false;
-                        const files = event.dataTransfer.files;
-                        if (files && files.length > 0) {
-                            const file = files[0];
-                            // Validate extension
-                            const ext = file.name.split('.').pop().toLowerCase();
-                            if (!['xlsx', 'xls', 'csv', 'txt'].includes(ext)) {
-                                alert('Format berkas tidak didukung. Harap masukkan berkas .xlsx, .xls, atau .csv');
-                                return;
-                            }
-                            this.processFile(file);
-                        }
-                    },
-
-                    async processFile(file) {
-                        const formData = new FormData();
-                        formData.append('file', file);
-
-                        this.isParsing = true;
-                        try {
-                            const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-                            const res = await fetch(`{{ route('tb.import.preview') }}`, {
-                                method: 'POST',
-                                headers: {
-                                    'X-CSRF-TOKEN': token,
-                                    'Accept': 'application/json'
-                                },
-                                body: formData
-                            });
-                            const data = await res.json();
-                            if (data.success) {
-                                this.importPreview = data.data;
-                            } else {
-                                alert(data.message || 'Gagal mem-parsing berkas');
-                            }
-                        } catch (e) {
-                            alert('Terjadi kesalahan saat mengunggah berkas: ' + e.message);
-                        } finally {
-                            this.isParsing = false;
-                        }
-                    },
-
-                    resetImport() {
-                        this.importPreview = null;
-                    },
-
-                    closeImportModal() {
-                        this.showImportModal = false;
-                        this.importPreview = null;
-                    },
-
-                    async commitImport() {
-                        if (!this.importPreview || !this.importPreview.temp_token) return;
-
-                        this.isSubmittingImport = true;
-                        try {
-                            const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-                            const res = await fetch(`{{ route('tb.import.commit') }}`, {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                    'X-CSRF-TOKEN': token,
-                                    'Accept': 'application/json'
-                                },
-                                body: JSON.stringify({ temp_token: this.importPreview.temp_token })
-                            });
-                            const data = await res.json();
-                            if (data.success) {
-                                this.closeImportModal();
-                                this.applyFilters();
-                                this.loadKelurahanList();
-                                this.notify('success', 'Import Berhasil', data.message);
-                            } else {
-                                this.notify('error', 'Gagal Import', data.message || 'Gagal mengimpor data berkas');
-                            }
-                        } catch (e) {
-                            this.notify('error', 'Kesalahan Sistem', 'Terjadi kesalahan sistem saat menyimpan import.');
-                        } finally {
-                            this.isSubmittingImport = false;
-                        }
-                    },
-
-                    // Realtime Edit Patient
-                    openEditModal(patient) {
-                        this.editingPatient = JSON.parse(JSON.stringify(patient));
-                        this.showEditModal = true;
-                    },
-
-                    async saveEditPatient() {
-                        try {
-                            const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-                            const res = await fetch(`/tb/patients/${this.editingPatient.id}`, {
-                                method: 'PUT',
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                    'X-CSRF-TOKEN': token,
-                                    'Accept': 'application/json'
-                                },
-                                body: JSON.stringify(this.editingPatient)
-                            });
-                            const data = await res.json();
-                            if (data.success) {
-                                this.showEditModal = false;
-                                // Realtime table update
-                                const idx = this.patientsData.data.findIndex(p => p.id === this.editingPatient.id);
-                                if (idx !== -1) {
-                                    this.patientsData.data[idx] = data.data;
-                                }
-                                // Refresh stats & charts to reflect edit
-                                this.applyFilters(this.patientsData.current_page);
-                                this.notify('success', 'Data Diperbarui', 'Rekam data pasien berhasil diupdate secara realtime.');
-                            } else {
-                                this.notify('error', 'Gagal Simpan', data.message || 'Gagal memperbarui data');
-                            }
-                        } catch (e) {
-                            this.notify('error', 'Koneksi Bermasalah', 'Kesalahan koneksi saat menyimpan perubahan.');
-                        }
-                    },
-
-                    // Add Patient
-                    async saveNewPatient() {
-                        if (this.isSubmittingNewPatient) return;
-                        this.isSubmittingNewPatient = true;
-                        this.aiAddError = '';
-                        try {
-                            const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-                            const res = await fetch(`{{ route('tb.patients.store') }}`, {
-                                method: 'POST',
-                                headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': token, 'Accept': 'application/json' },
-                                body: JSON.stringify(this.newPatient)
-                            });
-                            const data = await res.json();
-                            if (data.success) {
-                                this.showAddModal = false;
-                                this.applyFilters();
-                                this.loadKelurahanList();
-                                this.notify('success', 'Pasien Ditambahkan', 'Data pasien baru berhasil disimpan ke database.');
-                            } else {
-                                this.aiAddError = data.message || 'Gagal menyimpan data pasien.';
-                            }
-                        } catch (e) {
-                            this.aiAddError = 'Gagal menyimpan: ' + e.message;
-                        } finally {
-                            this.isSubmittingNewPatient = false;
-                        }
-                    },
-
-                    // Delete Patient
-                    async deletePatient(patient) {
-                        if (!confirm(`Hapus rekam data ${patient.nama_lengkap}?`)) return;
-
-                        try {
-                            const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-                            const res = await fetch(`/tb/patients/${patient.id}`, {
-                                method: 'DELETE',
-                                headers: { 'X-CSRF-TOKEN': token, 'Accept': 'application/json' }
-                            });
-                            const data = await res.json();
-                            if (data.success) {
-                                this.applyFilters(this.patientsData.current_page);
-                                this.notify('success', 'Data Dihapus', `Data ${patient.nama_lengkap} berhasil dihapus.`);
-                            } else {
-                                this.notify('error', 'Gagal Hapus', 'Gagal menghapus data.');
-                            }
-                        } catch (e) {
-                            this.notify('error', 'Gagal Hapus', 'Terjadi kesalahan saat menghapus data.');
-                        }
-                    },
-
-                    // ================= INOVASI 1: WHATSAPP DIRECT (wa.me) =================
-                    openWhatsAppModal(patient) {
-                        if (!patient) return;
-                        this.targetPatient = JSON.parse(JSON.stringify(patient));
-                        this.waTemplateType = 'oat_daily';
-                        this.showWhatsAppModal = true;
-                        this.prepareWaMessage();
-                    },
-
-                    prepareWaMessage() {
-                        if (!this.targetPatient) return;
-                        const p = this.targetPatient;
-                        const kelStr = p.kelurahan || 'Puskesmas';
-                        const diagnosis = p.hasil_diagnosis || p.hasil_tcm || 'TBC';
-
-                        this.waPhone = p.no_telepon || '';
-
-                        if (this.waTemplateType === 'sputum_eval') {
-                            this.waMessage = `Halo Bpk/Ibu ${p.nama_lengkap || ''},\n\nPemberitahuan dari Tim Penanggulangan TBC Puskesmas ${kelStr} (SICEPOT):\nMengingatkan bahwa sudah waktunya untuk pemeriksaan dahak ulang (evaluasi laboratorium akhir bulan ke-2 / ke-5).\n\nPemeriksaan dahak sangat krusial untuk memastikan kuman TBC telah berkurang/hilang dan efektivitas obat berjalan baik.\n\nMohon hadir ke laboratorium puskesmas pada hari kerja membawa pot dahak. Pelayanan gratis. Mari tuntaskan pengobatan hingga sembuh!`;
-                        } else if (this.waTemplateType === 'dropout_warning') {
-                            this.waMessage = `PERINGATAN KESEHATAN TBC (Puskesmas ${kelStr})\n\nKepada Bpk/Ibu ${p.nama_lengkap || ''},\nBerdasarkan data SITB/SICEPOT, Anda terindikasi terlambat/belum mengambil obat TBC (OAT) sesuai jadwal.\n\nPENTING:\nPutus minum obat TBC berisiko tinggi menyebabkan resistensi kuman (TB Kebal Obat / MDR-TB) yang jauh lebih berbahaya dan memerlukan pengobatan bertahun-tahun.\n\nHarap SEGERA datang ke Puskesmas ${kelStr} hari ini atau hubungi petugas kami untuk pendampingan. Kami siap membantu Anda sampai tuntas.`;
-                        } else {
-                            // Default: Pengingat Minum Obat Harian
-                            this.waMessage = `Halo Bpk/Ibu ${p.nama_lengkap || ''},\n\nSalam sehat dari Petugas TBC Puskesmas ${kelStr} (SICEPOT).\nMengingatkan untuk tidak lupa meminum Obat Anti Tuberkulosis (OAT) hari ini secara teratur pada jam yang sama bersama Pengawas Minum Obat (PMO).\n\nKunci kesembuhan TBC adalah kedisiplinan minum obat tanpa terlewat satu hari pun. Tetap semangat menjalani pengobatan hingga tuntas!`;
-                        }
-                    },
-
-                    sendWhatsAppMessage() {
-                        let clean = String(this.waPhone || '').replace(/\D+/g, '');
-                        if (clean.startsWith('0')) clean = '62' + clean.substring(1);
-                        else if (clean.startsWith('8')) clean = '62' + clean;
-                        else if (!clean.startsWith('62')) clean = '62' + clean;
-
-                        const url = `https://wa.me/${clean}?text=${encodeURIComponent(this.waMessage)}`;
-                        window.open(url, '_blank');
-                    },
-
-                    // ================= INOVASI 2: SKRINING DUPLIKASI DATA =================
-                    async openDuplicateModal(patient) {
-                        if (!patient) return;
-                        this.targetPatient = JSON.parse(JSON.stringify(patient));
-                        this.showDuplicateModal = true;
-                        this.isLoadingDuplicates = true;
-                        this.duplicateResults = [];
-
-                        try {
-                            const res = await fetch(`/tb/patients/${patient.id}/duplicates`, {
-                                headers: { 'Accept': 'application/json' }
-                            });
-                            const data = await res.json();
-                            this.duplicateResults = data.duplicates || [];
-                        } catch (e) {
-                            this.notify('error', 'Gagal', 'Terjadi kesalahan saat memindai duplikasi.');
-                        } finally {
-                            this.isLoadingDuplicates = false;
-                        }
-                    },
-
-                    // ================= INOVASI 2: REKAM JEJAK / TIMELINE =================
-                    async openTimelineModal(patient) {
-                        if (!patient) return;
-                        this.targetPatient = JSON.parse(JSON.stringify(patient));
-                        this.showTimelineModal = true;
-                        this.isLoadingTimeline = true;
-                        this.timelineData = [];
-
-                        try {
-                            const res = await fetch(`/tb/patients/${patient.id}/timeline`, {
-                                headers: { 'Accept': 'application/json' }
-                            });
-                            const data = await res.json();
-                            this.timelineData = data.timeline || [];
-                        } catch (e) {
-                            this.notify('error', 'Gagal', 'Gagal memuat rekam jejak pasien.');
-                        } finally {
-                            this.isLoadingTimeline = false;
-                        }
-                    },
-
-                    // ================= INOVASI 5: AI TRIAGE (GEMINI 2.5 FLASH) =================
-                    async openAiTriage(patient) {
-                        if (!patient) return;
-                        this.targetPatient = JSON.parse(JSON.stringify(patient));
-                        this.showAiModal = true;
-                        this.isLoadingAi = true;
-                        this.aiAnalysisResult = '';
-
-                        try {
-                            const res = await fetch(`/tb/patients/${patient.id}/ai-triage`, {
-                                headers: { 'Accept': 'application/json' }
-                            });
-                            const data = await res.json();
-                            if (data.success) {
-                                this.aiAnalysisResult = data.content;
-                            } else {
-                                this.aiAnalysisResult = 'Gagal melakukan analisis AI: ' + (data.message || 'Koneksi API bermasalah.');
-                            }
-                        } catch (e) {
-                            this.aiAnalysisResult = 'Terjadi kesalahan saat menghubungi layanan Google Gemini: ' + e.message;
-                        } finally {
-                            this.isLoadingAi = false;
-                        }
-                    },
-
-                    formatAiContent(content) {
-                        if (!content) return '';
-                        let formatted = content
-                            .replace(/### (.*?)\n/g, '<h4 class="font-bold text-sm text-slate-800 mt-3 mb-1">$1</h4>')
-                            .replace(/## (.*?)\n/g, '<h3 class="font-bold text-base text-purple-900 mt-4 mb-2 pb-1 border-b border-purple-100">$1</h3>')
-                            .replace(/\*\*(.*?)\*\*/g, '<strong class="font-bold text-slate-900">$1</strong>')
-                            .replace(/\* (.*?)\n/g, '<div class="flex items-start gap-1.5 my-1 ml-2"><span class="text-purple-600 font-bold">•</span><span>$1</span></div>')
-                            .replace(/- (.*?)\n/g, '<div class="flex items-start gap-1.5 my-1 ml-2"><span class="text-purple-600 font-bold">•</span><span>$1</span></div>');
-                        return formatted;
+                    if (bounds.length > 0) {
+                        tbCharts.map.fitBounds(bounds, { padding: [40, 40], maxZoom: 14 });
                     }
-                };
-            }
-        </script>
+                },
+
+                // File Upload & Preview Handler
+                onFileSelected(event) {
+                    const file = event.target.files[0];
+                    if (file) {
+                        this.processFile(file);
+                    }
+                    event.target.value = '';
+                },
+
+                onFileDrop(event) {
+                    this.isDragging = false;
+                    const files = event.dataTransfer.files;
+                    if (files && files.length > 0) {
+                        const file = files[0];
+                        // Validate extension
+                        const ext = file.name.split('.').pop().toLowerCase();
+                        if (!['xlsx', 'xls', 'csv', 'txt'].includes(ext)) {
+                            alert('Format berkas tidak didukung. Harap masukkan berkas .xlsx, .xls, atau .csv');
+                            return;
+                        }
+                        this.processFile(file);
+                    }
+                },
+
+                async processFile(file) {
+                    const formData = new FormData();
+                    formData.append('file', file);
+
+                    this.isParsing = true;
+                    try {
+                        const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+                        const res = await fetch(`{{ route('tb.import.preview') }}`, {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': token,
+                                'Accept': 'application/json'
+                            },
+                            body: formData
+                        });
+                        const data = await res.json();
+                        if (data.success) {
+                            this.importPreview = data.data;
+                        } else {
+                            alert(data.message || 'Gagal mem-parsing berkas');
+                        }
+                    } catch (e) {
+                        alert('Terjadi kesalahan saat mengunggah berkas: ' + e.message);
+                    } finally {
+                        this.isParsing = false;
+                    }
+                },
+
+                resetImport() {
+                    this.importPreview = null;
+                },
+
+                closeImportModal() {
+                    this.showImportModal = false;
+                    this.importPreview = null;
+                },
+
+                async commitImport() {
+                    if (!this.importPreview || !this.importPreview.temp_token) return;
+
+                    this.isSubmittingImport = true;
+                    try {
+                        const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+                        const res = await fetch(`{{ route('tb.import.commit') }}`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': token,
+                                'Accept': 'application/json'
+                            },
+                            body: JSON.stringify({ temp_token: this.importPreview.temp_token })
+                        });
+                        const data = await res.json();
+                        if (data.success) {
+                            this.closeImportModal();
+                            this.applyFilters();
+                            this.loadKelurahanList();
+                            this.notify('success', 'Import Berhasil', data.message);
+                        } else {
+                            this.notify('error', 'Gagal Import', data.message || 'Gagal mengimpor data berkas');
+                        }
+                    } catch (e) {
+                        this.notify('error', 'Kesalahan Sistem', 'Terjadi kesalahan sistem saat menyimpan import.');
+                    } finally {
+                        this.isSubmittingImport = false;
+                    }
+                },
+
+                // Realtime Edit Patient
+                openEditModal(patient) {
+                    this.editingPatient = JSON.parse(JSON.stringify(patient));
+                    this.showEditModal = true;
+                },
+
+                async saveEditPatient() {
+                    try {
+                        const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+                        const res = await fetch(`/tb/patients/${this.editingPatient.id}`, {
+                            method: 'PUT',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': token,
+                                'Accept': 'application/json'
+                            },
+                            body: JSON.stringify(this.editingPatient)
+                        });
+                        const data = await res.json();
+                        if (data.success) {
+                            this.showEditModal = false;
+                            // Realtime table update
+                            const idx = this.patientsData.data.findIndex(p => p.id === this.editingPatient.id);
+                            if (idx !== -1) {
+                                this.patientsData.data[idx] = data.data;
+                            }
+                            // Refresh stats & charts to reflect edit
+                            this.applyFilters(this.patientsData.current_page);
+                            this.notify('success', 'Data Diperbarui', 'Rekam data pasien berhasil diupdate secara realtime.');
+                        } else {
+                            this.notify('error', 'Gagal Simpan', data.message || 'Gagal memperbarui data');
+                        }
+                    } catch (e) {
+                        this.notify('error', 'Koneksi Bermasalah', 'Kesalahan koneksi saat menyimpan perubahan.');
+                    }
+                },
+
+                // Add Patient
+                async saveNewPatient() {
+                    if (this.isSubmittingNewPatient) return;
+                    this.isSubmittingNewPatient = true;
+                    this.aiAddError = '';
+                    try {
+                        const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+                        const res = await fetch(`{{ route('tb.patients.store') }}`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': token, 'Accept': 'application/json' },
+                            body: JSON.stringify(this.newPatient)
+                        });
+                        const data = await res.json();
+                        if (data.success) {
+                            this.showAddModal = false;
+                            this.applyFilters();
+                            this.loadKelurahanList();
+                            this.notify('success', 'Pasien Ditambahkan', 'Data pasien baru berhasil disimpan ke database.');
+                        } else {
+                            this.aiAddError = data.message || 'Gagal menyimpan data pasien.';
+                        }
+                    } catch (e) {
+                        this.aiAddError = 'Gagal menyimpan: ' + e.message;
+                    } finally {
+                        this.isSubmittingNewPatient = false;
+                    }
+                },
+
+                // Delete Patient
+                async deletePatient(patient) {
+                    if (!confirm(`Hapus rekam data ${patient.nama_lengkap}?`)) return;
+
+                    try {
+                        const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+                        const res = await fetch(`/tb/patients/${patient.id}`, {
+                            method: 'DELETE',
+                            headers: { 'X-CSRF-TOKEN': token, 'Accept': 'application/json' }
+                        });
+                        const data = await res.json();
+                        if (data.success) {
+                            this.applyFilters(this.patientsData.current_page);
+                            this.notify('success', 'Data Dihapus', `Data ${patient.nama_lengkap} berhasil dihapus.`);
+                        } else {
+                            this.notify('error', 'Gagal Hapus', 'Gagal menghapus data.');
+                        }
+                    } catch (e) {
+                        this.notify('error', 'Gagal Hapus', 'Terjadi kesalahan saat menghapus data.');
+                    }
+                },
+
+                // ================= INOVASI 1: WHATSAPP DIRECT (wa.me) =================
+                openWhatsAppModal(patient) {
+                    if (!patient) return;
+                    this.targetPatient = JSON.parse(JSON.stringify(patient));
+                    this.waTemplateType = 'oat_daily';
+                    this.showWhatsAppModal = true;
+                    this.prepareWaMessage();
+                },
+
+                prepareWaMessage() {
+                    if (!this.targetPatient) return;
+                    const p = this.targetPatient;
+                    const kelStr = p.kelurahan || 'Puskesmas';
+                    const diagnosis = p.hasil_diagnosis || p.hasil_tcm || 'TBC';
+
+                    this.waPhone = p.no_telepon || '';
+
+                    if (this.waTemplateType === 'sputum_eval') {
+                        this.waMessage = `Halo Bpk/Ibu ${p.nama_lengkap || ''},\n\nPemberitahuan dari Tim Penanggulangan TBC Puskesmas ${kelStr} (SICEPOT):\nMengingatkan bahwa sudah waktunya untuk pemeriksaan dahak ulang (evaluasi laboratorium akhir bulan ke-2 / ke-5).\n\nPemeriksaan dahak sangat krusial untuk memastikan kuman TBC telah berkurang/hilang dan efektivitas obat berjalan baik.\n\nMohon hadir ke laboratorium puskesmas pada hari kerja membawa pot dahak. Pelayanan gratis. Mari tuntaskan pengobatan hingga sembuh!`;
+                    } else if (this.waTemplateType === 'dropout_warning') {
+                        this.waMessage = `PERINGATAN KESEHATAN TBC (Puskesmas ${kelStr})\n\nKepada Bpk/Ibu ${p.nama_lengkap || ''},\nBerdasarkan data SITB/SICEPOT, Anda terindikasi terlambat/belum mengambil obat TBC (OAT) sesuai jadwal.\n\nPENTING:\nPutus minum obat TBC berisiko tinggi menyebabkan resistensi kuman (TB Kebal Obat / MDR-TB) yang jauh lebih berbahaya dan memerlukan pengobatan bertahun-tahun.\n\nHarap SEGERA datang ke Puskesmas ${kelStr} hari ini atau hubungi petugas kami untuk pendampingan. Kami siap membantu Anda sampai tuntas.`;
+                    } else {
+                        // Default: Pengingat Minum Obat Harian
+                        this.waMessage = `Halo Bpk/Ibu ${p.nama_lengkap || ''},\n\nSalam sehat dari Petugas TBC Puskesmas ${kelStr} (SICEPOT).\nMengingatkan untuk tidak lupa meminum Obat Anti Tuberkulosis (OAT) hari ini secara teratur pada jam yang sama bersama Pengawas Minum Obat (PMO).\n\nKunci kesembuhan TBC adalah kedisiplinan minum obat tanpa terlewat satu hari pun. Tetap semangat menjalani pengobatan hingga tuntas!`;
+                    }
+                },
+
+                sendWhatsAppMessage() {
+                    let clean = String(this.waPhone || '').replace(/\D+/g, '');
+                    if (clean.startsWith('0')) clean = '62' + clean.substring(1);
+                    else if (clean.startsWith('8')) clean = '62' + clean;
+                    else if (!clean.startsWith('62')) clean = '62' + clean;
+
+                    const url = `https://wa.me/${clean}?text=${encodeURIComponent(this.waMessage)}`;
+                    window.open(url, '_blank');
+                },
+
+                // ================= INOVASI 2: SKRINING DUPLIKASI DATA =================
+                async openDuplicateModal(patient) {
+                    if (!patient) return;
+                    this.targetPatient = JSON.parse(JSON.stringify(patient));
+                    this.showDuplicateModal = true;
+                    this.isLoadingDuplicates = true;
+                    this.duplicateResults = [];
+
+                    try {
+                        const res = await fetch(`/tb/patients/${patient.id}/duplicates`, {
+                            headers: { 'Accept': 'application/json' }
+                        });
+                        const data = await res.json();
+                        this.duplicateResults = data.duplicates || [];
+                    } catch (e) {
+                        this.notify('error', 'Gagal', 'Terjadi kesalahan saat memindai duplikasi.');
+                    } finally {
+                        this.isLoadingDuplicates = false;
+                    }
+                },
+
+                // ================= INOVASI 2: REKAM JEJAK / TIMELINE =================
+                async openTimelineModal(patient) {
+                    if (!patient) return;
+                    this.targetPatient = JSON.parse(JSON.stringify(patient));
+                    this.showTimelineModal = true;
+                    this.isLoadingTimeline = true;
+                    this.timelineData = [];
+
+                    try {
+                        const res = await fetch(`/tb/patients/${patient.id}/timeline`, {
+                            headers: { 'Accept': 'application/json' }
+                        });
+                        const data = await res.json();
+                        this.timelineData = data.timeline || [];
+                    } catch (e) {
+                        this.notify('error', 'Gagal', 'Gagal memuat rekam jejak pasien.');
+                    } finally {
+                        this.isLoadingTimeline = false;
+                    }
+                },
+
+                // ================= INOVASI 5: AI TRIAGE (GEMINI 2.5 FLASH) =================
+                async openAiTriage(patient) {
+                    if (!patient) return;
+                    this.targetPatient = JSON.parse(JSON.stringify(patient));
+                    this.showAiModal = true;
+                    this.isLoadingAi = true;
+                    this.aiAnalysisResult = '';
+
+                    try {
+                        const res = await fetch(`/tb/patients/${patient.id}/ai-triage`, {
+                            headers: { 'Accept': 'application/json' }
+                        });
+                        const data = await res.json();
+                        if (data.success) {
+                            this.aiAnalysisResult = data.content;
+                        } else {
+                            this.aiAnalysisResult = 'Gagal melakukan analisis AI: ' + (data.message || 'Koneksi API bermasalah.');
+                        }
+                    } catch (e) {
+                        this.aiAnalysisResult = 'Terjadi kesalahan saat menghubungi layanan Google Gemini: ' + e.message;
+                    } finally {
+                        this.isLoadingAi = false;
+                    }
+                },
+
+                formatAiContent(content) {
+                    if (!content) return '';
+                    let formatted = content
+                        .replace(/### (.*?)\n/g, '<h4 class="font-bold text-sm text-slate-800 mt-3 mb-1">$1</h4>')
+                        .replace(/## (.*?)\n/g, '<h3 class="font-bold text-base text-purple-900 mt-4 mb-2 pb-1 border-b border-purple-100">$1</h3>')
+                        .replace(/\*\*(.*?)\*\*/g, '<strong class="font-bold text-slate-900">$1</strong>')
+                        .replace(/\* (.*?)\n/g, '<div class="flex items-start gap-1.5 my-1 ml-2"><span class="text-purple-600 font-bold">•</span><span>$1</span></div>')
+                        .replace(/- (.*?)\n/g, '<div class="flex items-start gap-1.5 my-1 ml-2"><span class="text-purple-600 font-bold">•</span><span>$1</span></div>');
+                    return formatted;
+                }
+            };
+        }
+    </script>
 </x-app-layout>

@@ -20,7 +20,7 @@
                         {{ __('Dashboard TBC') }}
                     </x-nav-link>
                     <x-nav-link :href="route('anc.dashboard')" :active="request()->routeIs('anc.*')">
-                        {{ __('Dashboard Ibu Hamil (ANC)') }}
+                        {{ __('ANC') }}
                     </x-nav-link>
                 </div>
             </div>
@@ -107,7 +107,7 @@
                 {{ __('Dashboard TBC') }}
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('anc.dashboard')" :active="request()->routeIs('anc.*')">
-                {{ __('Dashboard Ibu Hamil (ANC)') }}
+                {{ __('ANC') }}
             </x-responsive-nav-link>
         </div>
 
