@@ -2334,18 +2334,10 @@
                                 </p>
                             </div>
 
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                <div>
-                                    <label class="block font-semibold text-slate-700 mb-1">Tanggal Bersalin *</label>
-                                    <input type="date" x-model="birthForm.tanggal_bersalin" required
-                                        class="w-full px-3 py-2 text-xs border border-slate-300 rounded-xl focus:ring-2 focus:ring-pink-500 font-medium">
-                                </div>
-                                <div>
-                                    <label class="block font-semibold text-slate-700 mb-1">Berat Lahir Bayi (kg)</label>
-                                    <input type="number" step="0.01" x-model="birthForm.berat_lahir_bayi"
-                                        placeholder="Contoh: 3.20"
-                                        class="w-full px-3 py-2 text-xs border border-slate-300 rounded-xl focus:ring-2 focus:ring-pink-500">
-                                </div>
+                            <div>
+                                <label class="block font-semibold text-slate-700 mb-1">Tanggal Bersalin *</label>
+                                <input type="date" x-model="birthForm.tanggal_bersalin" required
+                                    class="w-full px-3 py-2 text-xs border border-slate-300 rounded-xl focus:ring-2 focus:ring-pink-500 font-medium">
                             </div>
 
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -2363,19 +2355,6 @@
                                 </div>
                             </div>
 
-                            <div>
-                                <label class="block font-semibold text-slate-700 mb-1">Kondisi Bayi Saat Lahir</label>
-                                <select x-model="birthForm.kondisi_bayi"
-                                    class="w-full px-3 py-2 text-xs border border-slate-300 rounded-xl focus:ring-2 focus:ring-pink-500">
-                                    <option value="Lahir Hidup, Sehat & Menangis Kuat">Lahir Hidup, Sehat & Menangis
-                                        Kuat</option>
-                                    <option value="Lahir Hidup, Asfiksia Ringan">Lahir Hidup, Asfiksia Ringan</option>
-                                    <option value="Lahir Hidup, Asfiksia Berat">Lahir Hidup, Asfiksia Berat</option>
-                                    <option value="Berat Badan Lahir Rendah (BBLR)">Berat Badan Lahir Rendah (BBLR < 2.5
-                                            kg)</option>
-                                    <option value="Lahir Mati (Stillbirth)">Lahir Mati (Stillbirth)</option>
-                                </select>
-                            </div>
 
                             <div>
                                 <label class="block font-semibold text-slate-700 mb-1">Komplikasi / Catatan Persalinan

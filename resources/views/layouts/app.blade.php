@@ -315,8 +315,8 @@
                             }
                         }
 
-                        // 3. Vibrasi HP jika didukung
-                        if ('vibrate' in navigator) {
+                        // 3. Vibrasi HP hanya jika user sudah berinteraksi (mencegah browser intervention)
+                        if (this.isAudioUnlocked && 'vibrate' in navigator) {
                             try { navigator.vibrate([300, 150, 300, 150, 600]); } catch (e) {}
                         }
 
@@ -326,8 +326,6 @@
                             const namaSuami = data.nama_suami ? `(Suami: Tn. ${data.nama_suami})` : '';
                             const faskes = data.tempat_bersalin || 'Puskesmas / Faskes Terdekat';
                             const tgl = data.tanggal_bersalin || new Date().toISOString().substring(0, 10);
-                            const kondisi = data.kondisi_bayi || 'Lahir Hidup / Sehat';
-                            const berat = data.berat_lahir_bayi ? `${data.berat_lahir_bayi} kg` : '-';
                             const penolong = data.penolong_persalinan || 'Bidan / Nakes';
                             const wilayah = `${data.kelurahan || '-'}, ${data.kabupaten || '-'}`;
 
@@ -350,14 +348,6 @@
                                             <div class="p-2.5 bg-slate-50 border border-slate-200 rounded-xl">
                                                 <span class="text-slate-400 block text-[10px]">Tanggal Bersalin</span>
                                                 <span class="font-bold text-slate-800">${tgl}</span>
-                                            </div>
-                                            <div class="p-2.5 bg-slate-50 border border-slate-200 rounded-xl">
-                                                <span class="text-slate-400 block text-[10px]">Berat Bayi</span>
-                                                <span class="font-bold text-emerald-700">${berat}</span>
-                                            </div>
-                                            <div class="p-2.5 bg-slate-50 border border-slate-200 rounded-xl">
-                                                <span class="text-slate-400 block text-[10px]">Kondisi Bayi</span>
-                                                <span class="font-bold text-slate-800">${kondisi}</span>
                                             </div>
                                             <div class="p-2.5 bg-slate-50 border border-slate-200 rounded-xl">
                                                 <span class="text-slate-400 block text-[10px]">Tempat & Penolong</span>
