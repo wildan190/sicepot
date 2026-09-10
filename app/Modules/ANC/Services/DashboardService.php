@@ -426,7 +426,7 @@ class DashboardService
                 'umur_muda'       => $umurMuda,
                 'umur_produktif'  => $umurProduktif,
                 'umur_risti'      => $umurRisti,
-                'total_h1'        => $imminentDeliveries->count(),
+                'total_h1'        => $upcomingDeliveries->count(),
                 'total_krr'       => $totalKrr,
                 'total_krt'       => $totalKrt,
                 'total_krst'      => $totalKrst,
