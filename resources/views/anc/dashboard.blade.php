@@ -117,12 +117,12 @@
                                 <div class="flex items-center gap-2">
                                     <span
                                         class="px-2.5 py-0.5 rounded-full bg-white text-rose-700 text-xs font-black uppercase tracking-wider">Perhatian
-                                        Khusus H-1</span>
+                                        Khusus H-14</span>
                                     <span class="text-xs text-rose-100 font-medium"
-                                        x-text="imminentDeliveries.length + ' Ibu Hamil Perkiraan Lahir Besok'"></span>
+                                        x-text="imminentDeliveries.length + ' Ibu Hamil HPL dalam 2 Minggu'"></span>
                                 </div>
                                 <h3 class="text-base sm:text-lg font-extrabold mt-0.5 tracking-tight">Peringatan Hari
-                                    Perkiraan Lahir (HPL) Tinggal 1 Hari!</h3>
+                                    Perkiraan Lahir (HPL) Tinggal 2 Minggu!</h3>
                                 <p class="text-xs text-rose-100 mt-0.5">Segera lakukan persiapan pertolongan persalinan,
                                     transportasi rujukan, dan kesiapan donor darah (P4K).</p>
                             </div>
@@ -859,11 +859,11 @@
                                         <td class="px-4 py-3 whitespace-nowrap">
                                             <div class="font-medium text-slate-800"
                                                 x-text="p.hpl ? p.hpl.substring(0, 10) : '-'"></div>
-                                            <template x-if="isDueTomorrow(p.hpl)">
+                                            <template x-if="isDueWithin14Days(p.hpl)">
                                                 <span
                                                     class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-black bg-rose-100 text-rose-700 animate-pulse border border-rose-300 mt-0.5">
                                                     <span class="w-1.5 h-1.5 rounded-full bg-rose-600"></span>
-                                                    H-1 Lahir!
+                                                    H-14!
                                                 </span>
                                             </template>
                                         </td>
@@ -3436,7 +3436,7 @@
                         html: `
                             <div class="text-left text-xs sm:text-sm space-y-2 mt-2">
                                 <p class="text-slate-600">Audio sirine siaga sedang berbunyi dari berkas: <br><code class="text-rose-600 font-bold bg-rose-50 px-2 py-0.5 rounded text-[11px] sm:text-xs break-all">public/assets/sounds/sirine.mp3</code></p>
-                                <p class="text-slate-500 text-[11px] sm:text-xs">Sirine ini akan otomatis dibunyikan bersama pop-up SweetAlert saat sistem mendeteksi ada ibu hamil yang mendekati <strong>H-1 Hari Perkiraan Lahir (HPL)</strong>.</p>
+                                <p class="text-slate-500 text-[11px] sm:text-xs">Sirine ini akan otomatis dibunyikan bersama pop-up SweetAlert saat sistem mendeteksi ada ibu hamil yang mendekati <strong>H-14 (2 Minggu) Hari Perkiraan Lahir (HPL)</strong>.</p>
                             </div>
                         `,
                         icon: 'warning',
@@ -3452,13 +3452,15 @@
                     });
                 },
 
-                isDueTomorrow(dateStr) {
+                isDueWithin14Days(dateStr) {
                     if (!dateStr) return false;
                     const cleanDate = dateStr.substring(0, 10);
-                    const tomorrow = new Date();
-                    tomorrow.setDate(tomorrow.getDate() + 1);
-                    const tmrStr = tomorrow.toISOString().substring(0, 10);
-                    return cleanDate === tmrStr;
+                    const today = new Date();
+                    const in14 = new Date();
+                    in14.setDate(today.getDate() + 14);
+                    const todayStr  = today.toISOString().substring(0, 10);
+                    const in14Str   = in14.toISOString().substring(0, 10);
+                    return cleanDate >= todayStr && cleanDate <= in14Str;
                 },
 
                 checkAndTriggerH1Alert() {
@@ -3474,8 +3476,8 @@
                     const count = this.imminentDeliveries ? this.imminentDeliveries.length : 0;
                     if (count === 0) {
                         Swal.fire({
-                            title: 'Tidak Ada Persalinan H-1',
-                            text: 'Saat ini tidak ada data ibu hamil yang perkiraan lahirnya besok.',
+                            title: 'Tidak Ada HPL dalam 2 Minggu',
+                            text: 'Saat ini tidak ada data ibu hamil yang perkiraan lahirnya dalam 14 hari ke depan.',
                             icon: 'info',
                             confirmButtonText: 'Tutup',
                             confirmButtonColor: '#ec4899',
@@ -3502,7 +3504,7 @@
                                 <div class="min-w-0 flex-1">
                                     <div class="font-bold text-slate-800 text-xs sm:text-sm break-words">${idx + 1}. ${p.nama_lengkap} (${p.umur || '-'} th)</div>
                                     <div class="text-slate-500 text-[10px] sm:text-[11px] mt-0.5 break-words">NIK: ${p.nik || '-'} | Kel: ${p.kelurahan || '-'}, ${p.kabupaten || '-'}</div>
-                                    <div class="text-rose-700 font-semibold text-[10px] sm:text-[11px] mt-0.5">HPL: ${p.hpl ? p.hpl.substring(0, 10) : '-'} (Besok)</div>
+                                    <div class="text-rose-700 font-semibold text-[10px] sm:text-[11px] mt-0.5">HPL: ${p.hpl ? p.hpl.substring(0, 10) : '-'}</div>
                                 </div>
                                 <div class="text-right shrink-0 mt-0.5 sm:mt-0">
                                     ${ristiBadge}
@@ -3515,11 +3517,11 @@
                     Swal.fire({
                         title: `<span class="text-rose-600 flex items-center justify-center gap-1.5 sm:gap-2 text-base sm:text-xl font-bold leading-snug">
                             <span class="animate-ping inline-flex h-2.5 w-2.5 sm:h-3 sm:w-3 rounded-full bg-rose-500 opacity-75 shrink-0"></span>
-                            <span>PERINGATAN H-1 PERSALINAN!</span>
+                            <span>PERINGATAN H-14 PERSALINAN!</span>
                         </span>`,
                         html: `
                             <div class="text-xs sm:text-sm text-slate-600">
-                                <p class="font-bold text-slate-800">Ditemukan <span class="text-rose-600 font-extrabold text-sm sm:text-base">${count} Ibu Hamil</span> dengan Hari Perkiraan Lahir (HPL) <u>BESOK</u>!</p>
+                                <p class="font-bold text-slate-800">Ditemukan <span class="text-rose-600 font-extrabold text-sm sm:text-base">${count} Ibu Hamil</span> dengan Hari Perkiraan Lahir (HPL) dalam <u>2 MINGGU</u> ke depan!</p>
                                 <p class="text-[11px] sm:text-xs text-slate-500 mt-1">Sirine siaga diaktifkan. Klik di mana saja pada layar jika browser Anda meminta interaksi suara untuk memutar sirine.</p>
                                 ${patientListHtml}
                             </div>
