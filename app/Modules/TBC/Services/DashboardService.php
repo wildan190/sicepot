@@ -119,7 +119,7 @@ class DashboardService
                 'kelurahan', 'kabupaten', 'kecamatan', 'fasyankes_name',
                 DB::raw('count(*) as total'),
                 DB::raw("sum(case when report_type = 'tb_03' then 1 else 0 end) as total_terkonfirmasi"),
-                DB::raw("sum(case when report_type = 'tb_06' then 1 else 0 end) as total_terduga"),
+                DB::raw("sum(case when report_type = 'tb_06' and batuk_2_minggu is null and bb_turun is null and keringat_malam is null and kontak_tb is null then 1 else 0 end) as total_terduga"),
                 DB::raw("sum(case when (status_pengobatan like '%pengobatan%' or status_pengobatan like '%aktif%') and hasil_akhir_pengobatan is null then 1 else 0 end) as total_active"),
                 DB::raw("sum(case when hasil_tcm like '%rr%' or hasil_tcm like '%ro%' or hasil_diagnosis like '%ro%' then 1 else 0 end) as total_ro"),
                 DB::raw("sum(case when status_hiv like '%positif%' then 1 else 0 end) as total_hiv")
@@ -230,7 +230,17 @@ class DashboardService
         }
 
         $totalAll           = (clone $baseQuery)->count();
-        $totalTerduga       = (clone $baseQuery)->where('report_type', 'tb_06')->count();
+        // Kasus yang diperiksa (TCM/X-Ray): hanya register TB-06 murni, tidak termasuk data hasil skrining
+        $totalTerduga       = (clone $baseQuery)
+            ->where('report_type', 'tb_06')
+            ->where(function ($q) {
+                $q->whereNull('report_type')->orWhere('report_type', '!=', 'skrining');
+            })
+            ->whereNull('batuk_2_minggu')
+            ->whereNull('bb_turun')
+            ->whereNull('keringat_malam')
+            ->whereNull('kontak_tb')
+            ->count();
         $totalTerkonfirmasi = (clone $baseQuery)->where(function ($q) {
             $q->where('report_type', 'tb_03')
                 ->orWhere('hasil_diagnosis', 'like', '%TBC SO%')

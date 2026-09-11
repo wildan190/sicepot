@@ -48,8 +48,8 @@ class PatientFormController extends Controller
             'sudah_pengobatan.required' => 'Harap jawab pertanyaan pengobatan.',
         ]);
 
-        // Auto-fill report_type as skrining / screening (tb_06 or default)
-        $validated['report_type'] = 'tb_06';
+        // Save report_type as 'skrining' so it does not count towards TCM/X-Ray examined cases (TB-06)
+        $validated['report_type'] = 'skrining';
         $validated['kabupaten']   = 'Tangerang';
         $validated['kecamatan']   = 'Pagedangan';
 
