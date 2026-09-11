@@ -136,7 +136,7 @@
                                         x-html="kpiIcon(kpi.icon)"></span>
                                 </div>
                                 <div class="mt-3">
-                                    <span class="text-3xl font-bold" x-text="Number(kpi.value).toLocaleString('id-ID')"></span>
+                                    <span class="text-3xl font-bold" x-text="formatKpiValue(kpi.value)"></span>
                                 </div>
                             </div>
                         </template>
@@ -352,6 +352,16 @@
                     trending: '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>',
                 };
                 return icons[icon] || icons.chart;
+            },
+
+            formatKpiValue(val) {
+                if (val === null || val === undefined) return '0';
+                if (typeof val === 'number') return Number(val).toLocaleString('id-ID');
+                const num = parseFloat(val);
+                if (!isNaN(num) && String(num) === String(val).trim()) {
+                    return Number(num).toLocaleString('id-ID');
+                }
+                return String(val);
             },
         };
     }
