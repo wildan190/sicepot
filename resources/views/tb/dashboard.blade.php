@@ -48,7 +48,7 @@
                         </a>
 
                         <!-- Clear Data Massive -->
-                        <button @click="openClearMassiveModal()" type="button" title="Kosongkan Semua Data Pasien TBC"
+                        <!-- <button @click="openClearMassiveModal()" type="button" title="Kosongkan Semua Data Pasien TBC"
                             class="inline-flex items-center gap-1.5 px-3 py-2 bg-rose-50 hover:bg-rose-100 active:bg-rose-200 text-rose-700 border border-rose-200 text-xs font-semibold rounded-xl shadow-xs transition-all duration-150 cursor-pointer">
                             <svg class="w-3.5 h-3.5 text-rose-600 shrink-0" fill="none" stroke="currentColor"
                                 viewBox="0 0 24 24">
@@ -57,7 +57,7 @@
                                 </path>
                             </svg>
                             <span>Clear Data</span>
-                        </button>
+                        </button> -->
 
                         <!-- Import Excel / CSV -->
                         <button @click="showImportModal = true" type="button" title="Import Data Excel atau CSV"
