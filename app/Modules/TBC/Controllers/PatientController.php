@@ -57,4 +57,19 @@ class PatientController extends Controller
             'message' => 'Data pasien berhasil dihapus.',
         ]);
     }
+
+    /**
+     * Clear all patient records massively from database.
+     */
+    public function clearMassive()
+    {
+        $deletedCount = TbPatient::count();
+        TbPatient::truncate();
+
+        return response()->json([
+            'success' => true,
+            'message' => "Semua data pasien TBC ({$deletedCount} data) berhasil dikosongkan secara permanen.",
+            'deleted_count' => $deletedCount,
+        ]);
+    }
 }

@@ -34,6 +34,7 @@ Route::post('/tb/import/preview', [ImportController::class, 'preview'])->name('t
 Route::post('/tb/import/commit', [ImportController::class, 'commit'])->name('tb.import.commit');
 
 // Patients CRUD
+Route::delete('/tb/patients/clear-massive', [PatientController::class, 'clearMassive'])->name('tb.patients.clear-massive');
 Route::get('/tb/patients/{patient}', [PatientController::class, 'show'])->name('tb.patients.show');
 Route::post('/tb/patients', [PatientController::class, 'store'])->name('tb.patients.store');
 Route::put('/tb/patients/{patient}', [PatientController::class, 'update'])->name('tb.patients.update');
