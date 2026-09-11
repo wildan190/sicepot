@@ -2,11 +2,17 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AiDashboardController;
+use App\Modules\TBC\Controllers\PatientFormController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return redirect()->route('dashboard');
 });
+
+// ── Public TB Skrining Form (no auth) ──────────────────────────────────────
+Route::get('/tb/skrining', [PatientFormController::class, 'show'])->name('tb.form');
+Route::post('/tb/skrining', [PatientFormController::class, 'store'])->name('tb.form.store');
+Route::get('/tb/skrining/terima-kasih', [PatientFormController::class, 'success'])->name('tb.form.success');
 
 // Authenticated routes
 Route::middleware(['auth', 'verified'])->group(function () {

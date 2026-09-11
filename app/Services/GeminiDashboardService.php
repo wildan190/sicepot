@@ -32,8 +32,9 @@ class GeminiDashboardService
         'tb_patients' => [
             'id', 'report_type', 'nama_lengkap', 'nik', 'no_rekam_medis', 'no_bpjs',
             'no_reg_sitb', 'no_reg_terduga', 'no_reg_pasien',
-            'umur', 'jenis_kelamin', 'pekerjaan',
+            'umur', 'kategori_usia', 'jenis_kelamin', 'pekerjaan',
             'kabupaten', 'kecamatan', 'kelurahan', 'alamat_lengkap',
+            'no_telepon', 'nama_pelapor', 'batuk_2_minggu', 'bb_turun', 'keringat_malam', 'kontak_tb', 'sudah_pengobatan',
             'bulan', 'tanggal_mulai_pengobatan', 'status_pengobatan',
             'tipe_diagnosis', 'lokasi_anatomi', 'riwayat_pengobatan',
             'status_hiv', 'riwayat_dm', 'hasil_tcm', 'hasil_mikroskopis',
