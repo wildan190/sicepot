@@ -308,8 +308,8 @@
                         </div>
                         <div class="mt-4 pt-3 border-t border-slate-100 grid grid-cols-3 gap-2 text-center">
                             <div class="bg-slate-50 p-2 rounded-xl">
-                                <span class="block text-[11px] text-slate-500 font-medium">Anak (<15)< /span>
-                                        <span class="text-sm font-bold text-slate-800" x-text="kpi.total_anak">0</span>
+                                <span class="block text-[11px] text-slate-500 font-medium">Anak (&lt;15)</span>
+                                <span class="text-sm font-bold text-slate-800" x-text="kpi.total_anak">0</span>
                             </div>
                             <div class="bg-slate-50 p-2 rounded-xl">
                                 <span class="block text-[11px] text-slate-500 font-medium">Produktif</span>
@@ -1490,6 +1490,7 @@
                                     </template>
                                 </button>
                             </div>
+                        </div>
                     </div>
                 </div>
             </div>
