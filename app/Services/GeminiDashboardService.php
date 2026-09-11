@@ -14,23 +14,31 @@ class GeminiDashboardService
 
     protected array $allowedTables = [
         'anc_patients',
-        'tbc_patients',
+        'tb_patients',
     ];
 
     protected array $tableSchemas = [
         'anc_patients' => [
-            'id', 'nama', 'nik', 'no_rm', 'kelurahan', 'kecamatan', 'kabupaten',
-            'tgl_hpht', 'tgl_taksiran_lahir', 'umur', 'gravida', 'para', 'abortus',
-            'faktor_risiko', 'riwayat_sc', 'hipertensi', 'anemia', 'lila',
-            'penyakit_penyerta', 'status', 'bulan_register', 'tahun_register',
-            'created_at',
+            'id', 'nama_lengkap', 'nik', 'no_rekam_medis', 'no_bpjs', 'umur',
+            'kabupaten', 'kecamatan', 'kelurahan', 'alamat_lengkap',
+            'gravida', 'para', 'abortus', 'usia_kehamilan', 'hpht', 'hpl',
+            'kunjungan_ke', 'jenis_kunjungan', 'berat_badan', 'tinggi_badan', 'lila',
+            'tekanan_darah_sistolik', 'tekanan_darah_diastolik', 'tinggi_fundus_uteri',
+            'hb', 'status_anemia', 'gds', 'protein_urine', 'hbsag', 'hiv_status', 'sifilis_status',
+            'faktor_risiko', 'status_risti', 'skor_poedji_rochjati', 'kategori_poedji_rochjati',
+            'rekomendasi_faskes', 'nama_suami', 'no_telepon', 'bulan', 'tahun',
+            'fasyankes_name', 'created_at',
         ],
-        'tbc_patients' => [
-            'id', 'nama', 'nik', 'kelurahan', 'kecamatan', 'kabupaten',
-            'status_terduga', 'status_terkonfirmasi', 'jenis_kelamin', 'umur',
-            'hasil_tcm', 'hasil_xray', 'klasifikasi', 'investigasi_kontak',
-            'tgl_mulai_oat', 'status_pengobatan', 'bulan', 'tahun',
-            'created_at',
+        'tb_patients' => [
+            'id', 'report_type', 'nama_lengkap', 'nik', 'no_rekam_medis', 'no_bpjs',
+            'no_reg_sitb', 'no_reg_terduga', 'no_reg_pasien',
+            'umur', 'jenis_kelamin', 'pekerjaan',
+            'kabupaten', 'kecamatan', 'kelurahan', 'alamat_lengkap',
+            'bulan', 'tanggal_mulai_pengobatan', 'status_pengobatan',
+            'tipe_diagnosis', 'lokasi_anatomi', 'riwayat_pengobatan',
+            'status_hiv', 'riwayat_dm', 'hasil_tcm', 'hasil_mikroskopis',
+            'hasil_diagnosis', 'hasil_akhir_pengobatan',
+            'fasyankes_name', 'created_at',
         ],
     ];
 
@@ -43,16 +51,31 @@ class GeminiDashboardService
 
     public function generate(string $prompt): array
     {
+        if (empty($this->apiKey)) {
+            throw new \Exception('GEMINI_API_KEY belum dikonfigurasi pada file .env');
+        }
+
         $systemPrompt = $this->buildSystemPrompt();
         $dashboardConfig = $this->callGemini($systemPrompt, $prompt);
 
         if (! $dashboardConfig) {
-            throw new \Exception('Gagal mendapatkan respons dari Gemini AI.');
+            throw new \Exception('Gagal mendapatkan konfigurasi dashboard dari Gemini AI.');
+        }
+
+        if (! isset($dashboardConfig['kpis']) || ! is_array($dashboardConfig['kpis'])) {
+            $dashboardConfig['kpis'] = [];
+        }
+        if (! isset($dashboardConfig['charts']) || ! is_array($dashboardConfig['charts'])) {
+            $dashboardConfig['charts'] = [];
+        }
+        if (! isset($dashboardConfig['insights']) || ! is_array($dashboardConfig['insights'])) {
+            $dashboardConfig['insights'] = [];
         }
 
         foreach ($dashboardConfig['kpis'] as &$kpi) {
             try {
-                $kpi['value'] = $this->safeQuery($kpi['query'] ?? '');
+                $rawVal = $this->safeQuery($kpi['query'] ?? '');
+                $kpi['value'] = is_numeric($rawVal) ? (float) $rawVal : $rawVal;
             } catch (\Throwable $e) {
                 Log::warning('AI Dashboard KPI query error', ['q' => $kpi['query'] ?? '', 'err' => $e->getMessage()]);
                 $kpi['value'] = 0;
@@ -64,8 +87,8 @@ class GeminiDashboardService
         foreach ($dashboardConfig['charts'] as &$chart) {
             try {
                 $rows = $this->safeQueryRows($chart['query'] ?? '');
-                $chart['labels'] = array_column($rows, 'label');
-                $chart['data']   = array_column($rows, 'value');
+                $chart['labels'] = array_map(fn($r) => (string)($r['label'] ?? '-'), $rows);
+                $chart['data']   = array_map(fn($r) => is_numeric($r['value'] ?? null) ? (float)$r['value'] : 0, $rows);
             } catch (\Throwable $e) {
                 Log::warning('AI Dashboard Chart query error', ['q' => $chart['query'] ?? '', 'err' => $e->getMessage()]);
                 $chart['labels'] = [];
@@ -86,14 +109,40 @@ class GeminiDashboardService
         }
 
         return <<<PROMPT
-Kamu adalah AI analis data kesehatan Indonesia untuk sistem SICEPOT.
-Kamu memiliki akses ke database SQLite dengan skema berikut:{$schemaDesc}
+Kamu adalah AI analis data kesehatan Indonesia untuk sistem SICEPOT (Satu Data Kesehatan Wilayah).
+Kamu memiliki akses ke database SQLite dengan skema aktual berikut:{$schemaDesc}
+
+PANDUAN NILAI KOLOM DALAM DATABASE:
+1. Tabel `anc_patients` (Data Ibu Hamil):
+   - `status_risti`: 'Risiko Tinggi' atau 'Normal'
+   - `kategori_poedji_rochjati`: 'KRR' (Risiko Rendah), 'KRT' (Risiko Tinggi), 'KRST' (Risiko Sangat Tinggi)
+   - `lila`: Ukuran LiLA dalam cm (contoh: LiLA < 23.5 cm mengindikasikan Kurang Energi Kronis / KEK)
+   - `faktor_risiko`: teks berisi risiko seperti '%KEK%', '%DM%', '%HDK%', '%BSC%' (Bekas Sesar), '%ANEMIA%'
+   - `hb`: Kadar hemoglobin (angka atau string, anemia jika Hb < 11)
+   - `tekanan_darah_sistolik` & `tekanan_darah_diastolik`: Tekanan darah (hipertensi jika sistolik >= 140 atau diastolik >= 90)
+   - `bulan`: Nama bulan dalam bahasa Indonesia ('Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember')
+   - `tahun`: Tahun register ('2025', '2026')
+   - `kecamatan`, `kelurahan`, `kabupaten`: Wilayah pasien
+
+2. Tabel `tb_patients` (Data Pasien & Terduga TBC):
+   - CATATAN PENTING: Nama tabel adalah `tb_patients` (BUKAN `tbc_patients`!).
+   - `report_type`: 'tb_03' (Kasus TBC dalam pengobatan) atau 'tb_06' (Register Terduga TBC)
+   - `hasil_diagnosis`: 'Terkonfirmasi TBC', 'Terduga', 'Bukan TBC'
+   - `tipe_diagnosis`: 'Terkonfirmasi bakteriologis', 'Terdiagnosis klinis'
+   - `hasil_tcm`: 'Rif Sen' (Sensitif Rifampisin), 'Rif Res' (Resisten Rifampisin / TB RO), 'Neg' (Negatif), 'ERROR'
+   - `status_pengobatan`: 'Sesuai standar', 'Tidak sesuai standar'
+   - `status_hiv`: 'ODHIV', 'Bukan ODHIV', 'Tidak diketahui'
+   - `riwayat_dm`: 'Ya', 'Tidak'
+   - `jenis_kelamin`: 'L' (Laki-laki), 'P' (Perempuan)
+   - `bulan`: Nama bulan dalam bahasa Indonesia ('Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember')
+   - `lokasi_anatomi`: 'TBC Paru', 'TBC Ekstra Paru'
+   - `kecamatan`, `kelurahan`, `kabupaten`: Wilayah pasien
 
 TUGAS:
 Berdasarkan permintaan user, hasilkan konfigurasi dashboard dalam format JSON STRICT berikut:
 {
-  "title": "Judul dashboard singkat",
-  "description": "Deskripsi singkat apa yang ditampilkan",
+  "title": "Judul dashboard singkat dan relevan",
+  "description": "Deskripsi singkat apa yang dianalisis",
   "kpis": [
     {
       "label": "Label KPI",
@@ -106,50 +155,58 @@ Berdasarkan permintaan user, hasilkan konfigurasi dashboard dalam format JSON ST
     {
       "type": "bar|line|doughnut",
       "title": "Judul chart",
-      "query": "SELECT kolom as label, COUNT(*) as value FROM tabel GROUP BY kolom ORDER BY value DESC LIMIT 20"
+      "query": "SELECT kolom as label, COUNT(*) as value FROM tabel GROUP BY kolom ORDER BY value DESC LIMIT 15"
     }
   ],
   "insights": [
-    "Insight 1 dalam bahasa Indonesia",
-    "Insight 2 dalam bahasa Indonesia"
+    "Insight naratif 1 dalam bahasa Indonesia yang bermakna klinis/kebijakan",
+    "Insight naratif 2 dalam bahasa Indonesia yang bermakna klinis/kebijakan"
   ]
 }
 
-ATURAN QUERY (WAJIB DIIKUTI):
-- Hanya boleh SELECT. DILARANG INSERT, UPDATE, DELETE, DROP, ALTER, CREATE.
-- Hanya boleh query dari tabel: anc_patients, tbc_patients.
-- Untuk KPI: query harus menghasilkan satu baris dengan kolom bernama `value` (angka).
-- Untuk Chart: query harus menghasilkan kolom `label` (string) dan `value` (angka).
-- Gunakan SQLite syntax. Gunakan strftime untuk tanggal jika perlu.
-- Buat 3-6 KPI dan 1-3 chart yang relevan dengan permintaan user.
-- Buat 2-4 insights berbahasa Indonesia yang informatif dan actionable.
+ATURAN QUERY SQL (WAJIB DIIKUTI):
+- HANYA gunakan tabel: `anc_patients` dan/atau `tb_patients`. DILARANG menggunakan tabel `tbc_patients`!
+- Hanya boleh perintah SELECT. DILARANG INSERT, UPDATE, DELETE, DROP, ALTER, CREATE, TRUNCATE.
+- Untuk KPI: query harus menghasilkan tepat 1 baris dengan kolom bernama `value` (contoh: `SELECT COUNT(*) as value FROM tb_patients WHERE hasil_diagnosis = 'Terkonfirmasi TBC'`).
+- Untuk Chart: query harus menghasilkan 2 kolom yaitu `label` dan `value` (contoh: `SELECT kelurahan as label, COUNT(*) as value FROM tb_patients WHERE kelurahan IS NOT NULL AND kelurahan != '' GROUP BY kelurahan ORDER BY value DESC LIMIT 10`).
+- Pastikan filter `WHERE kolom IS NOT NULL AND kolom != ''` jika melakukan GROUP BY agar chart tidak menampilkan label kosong.
+- Buat 3-6 KPI dan 1-3 chart yang paling informatif sesuai permintaan user.
+- Buat 2-4 poin insights naratif yang mendalam, informatif, dan actionable.
 
-PENTING: Kembalikan HANYA JSON murni tanpa markdown, tanpa kode fence, tanpa penjelasan.
+PENTING: Kembalikan HANYA JSON murni tanpa markdown, tanpa backtick kode ```json, tanpa teks pengantar maupun penutup.
 PROMPT;
     }
 
     protected function callGemini(string $systemPrompt, string $userPrompt): ?array
     {
-        $response = Http::timeout(60)->post("{$this->apiUrl}?key={$this->apiKey}", [
-            'system_instruction' => [
-                'parts' => [['text' => $systemPrompt]],
-            ],
-            'contents' => [
-                [
-                    'role'  => 'user',
-                    'parts' => [['text' => $userPrompt]],
+        try {
+            $response = Http::timeout(60)->post("{$this->apiUrl}?key={$this->apiKey}", [
+                'system_instruction' => [
+                    'parts' => [['text' => $systemPrompt]],
                 ],
-            ],
-            'generationConfig' => [
-                'temperature'      => 0.2,
-                'maxOutputTokens'  => 4096,
-                'responseMimeType' => 'application/json',
-            ],
-        ]);
+                'contents' => [
+                    [
+                        'role'  => 'user',
+                        'parts' => [['text' => $userPrompt]],
+                    ],
+                ],
+                'generationConfig' => [
+                    'temperature'      => 0.2,
+                    'maxOutputTokens'  => 4096,
+                    'responseMimeType' => 'application/json',
+                ],
+            ]);
+        } catch (\Throwable $e) {
+            Log::error('Gemini connection error', ['message' => $e->getMessage()]);
+            throw new \Exception('Koneksi ke Google Gemini AI gagal: ' . $e->getMessage());
+        }
 
         if (! $response->successful()) {
-            Log::error('Gemini API error', ['status' => $response->status(), 'body' => $response->body()]);
-            return null;
+            $errorBody = $response->body();
+            Log::error('Gemini API error', ['status' => $response->status(), 'body' => $errorBody]);
+            $decoded = json_decode($errorBody, true);
+            $msg = $decoded['error']['message'] ?? 'Status ' . $response->status();
+            throw new \Exception('Gemini API Error: ' . $msg);
         }
 
         $body = $response->json();
