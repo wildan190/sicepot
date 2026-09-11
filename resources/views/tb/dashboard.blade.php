@@ -133,9 +133,10 @@
                                     Register</label>
                                 <select x-model="selectedType" @change="applyFilters()"
                                     class="w-full pl-3.5 pr-8 py-2 text-sm bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors">
-                                    <option value="">Semua Data (TB-03 & TB-06)</option>
+                                    <option value="">Semua Data</option>
                                     <option value="tb_03">TB-03 SO (Register Pasien TBC)</option>
                                     <option value="tb_06">TB-06 (Register Terduga TBC)</option>
+                                    <option value="skrining">Hasil Skrining Warga</option>
                                 </select>
                             </div>
                         </div>
@@ -592,9 +593,13 @@
                                     <tr class="hover:bg-indigo-50/30 transition-colors">
                                         <td class="px-4 py-3 whitespace-nowrap">
                                             <span
-                                                :class="p.report_type === 'tb_03' ? 'bg-indigo-50 text-indigo-700 border-indigo-200' : 'bg-amber-50 text-amber-700 border-amber-200'"
+                                                :class="{
+                                                    'bg-indigo-50 text-indigo-700 border-indigo-200': p.report_type === 'tb_03',
+                                                    'bg-teal-50 text-teal-700 border-teal-200': p.report_type === 'skrining' || p.nama_pelapor || p.batuk_2_minggu,
+                                                    'bg-amber-50 text-amber-700 border-amber-200': p.report_type !== 'tb_03' && p.report_type !== 'skrining' && !p.nama_pelapor && !p.batuk_2_minggu
+                                                }"
                                                 class="px-2 py-0.5 rounded-md font-semibold text-[11px] border"
-                                                x-text="p.report_type === 'tb_03' ? 'TB-03 SO' : 'TB-06'"></span>
+                                                x-text="p.report_type === 'tb_03' ? 'TB-03 SO' : ((p.report_type === 'skrining' || p.nama_pelapor || p.batuk_2_minggu) ? 'Skrining' : 'TB-06')"></span>
                                         </td>
                                         <td class="px-4 py-3">
                                             <div class="font-semibold text-slate-800 text-sm"
@@ -2310,11 +2315,12 @@
                     this.aiAddPrompt = '';
                     this.aiAddError = '';
                     this.newPatient = {
+                        report_type: 'skrining',
                         batuk_2_minggu: 'Tidak',
                         bb_turun: 'Tidak',
                         keringat_malam: 'Tidak',
                         kontak_tb: 'Tidak',
-                        status_pengobatan: 'Belum'
+                        sudah_pengobatan: 'Belum'
                     };
                     this.showAddModal = true;
                 },

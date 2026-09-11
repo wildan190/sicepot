@@ -30,8 +30,8 @@ class StorePatientRequest extends FormRequest
             'keringat_malam'     => 'nullable|string|in:Ya,Tidak',
             'kontak_tb'          => 'nullable|string|in:Ya,Tidak',
             'sudah_pengobatan'   => 'nullable|string|in:Sudah,Belum',
-            // Optional advanced fields from AI/import
-            'report_type'            => 'nullable|string|in:tb_03,tb_06',
+            // Optional advanced fields from AI/import/screening
+            'report_type'            => 'nullable|string|in:tb_03,tb_06,skrining',
             'hasil_diagnosis'        => 'nullable|string|max:100',
             'hasil_akhir_pengobatan' => 'nullable|string|max:100',
         ];
