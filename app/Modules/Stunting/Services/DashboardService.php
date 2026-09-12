@@ -19,12 +19,13 @@ class DashboardService
             $q->where('desa', $desa);
         }
 
+        // Menggunakan method bawaan Laravel yang kompatibel dengan PostgreSQL & database lain
         if ($bulan = $request->input('bulan')) {
-            $q->whereRaw("strftime('%m', tanggal_pengukuran) = ?", [str_pad($bulan, 2, '0', STR_PAD_LEFT)]);
+            $q->whereMonth('tanggal_pengukuran', $bulan);
         }
 
         if ($tahun = $request->input('tahun')) {
-            $q->whereRaw("strftime('%Y', tanggal_pengukuran) = ?", [(string)$tahun]);
+            $q->whereYear('tanggal_pengukuran', $tahun);
         }
 
         if ($search = $request->input('search')) {
@@ -44,33 +45,33 @@ class DashboardService
     {
         $q = $this->baseQuery($request);
 
-        $total   = (clone $q)->count();
+        $total = (clone $q)->count();
 
         // TB/U (stunting status)
-        $normalCount       = (clone $q)->where('tbu_kategori', 'Normal')->count();
-        $pendekCount       = (clone $q)->where('tbu_kategori', 'Pendek')->count();
+        $normalCount = (clone $q)->where('tbu_kategori', 'Normal')->count();
+        $pendekCount = (clone $q)->where('tbu_kategori', 'Pendek')->count();
         $sangatPendekCount = (clone $q)->where('tbu_kategori', 'Sangat Pendek')->count();
-        $stuntingTotal     = $pendekCount + $sangatPendekCount;
+        $stuntingTotal = $pendekCount + $sangatPendekCount;
 
         // BB/U (weight-for-age)
-        $bbuGiziBaikCount       = (clone $q)->where('bbu_kategori', 'Normal')->count();
-        $bbuGiziBaikCount      += (clone $q)->where('bbu_kategori', 'Gizi Baik')->count();
-        $bbuKurangCount         = (clone $q)->where('bbu_kategori', 'Kurang')->count();
-        $bbuSangatKurangCount   = (clone $q)->where('bbu_kategori', 'Sangat Kurang')->count();
-        $bbuRisikoLebihCount    = (clone $q)->whereIn('bbu_kategori', ['Risiko Lebih', 'Risiko Gizi Lebih'])->count();
-        $bbuLebihCount          = (clone $q)->whereIn('bbu_kategori', ['Lebih', 'Gizi Lebih'])->count();
-        $bbuObesitasCount       = (clone $q)->where('bbu_kategori', 'Obesitas')->count();
+        $bbuGiziBaikCount = (clone $q)->where('bbu_kategori', 'Normal')->count();
+        $bbuGiziBaikCount += (clone $q)->where('bbu_kategori', 'Gizi Baik')->count();
+        $bbuKurangCount = (clone $q)->where('bbu_kategori', 'Kurang')->count();
+        $bbuSangatKurangCount = (clone $q)->where('bbu_kategori', 'Sangat Kurang')->count();
+        $bbuRisikoLebihCount = (clone $q)->whereIn('bbu_kategori', ['Risiko Lebih', 'Risiko Gizi Lebih'])->count();
+        $bbuLebihCount = (clone $q)->whereIn('bbu_kategori', ['Lebih', 'Gizi Lebih'])->count();
+        $bbuObesitasCount = (clone $q)->where('bbu_kategori', 'Obesitas')->count();
 
         // BB/TB (wasting status)
-        $bbtbGiziBaikCount      = (clone $q)->whereIn('bbtb_kategori', ['Gizi Baik', 'Normal'])->count();
-        $bbtbGiziKurangCount    = (clone $q)->whereIn('bbtb_kategori', ['Kurang', 'Gizi Kurang'])->count();
-        $bbtbGiziLebihCount     = (clone $q)->whereIn('bbtb_kategori', ['Lebih', 'Gizi Lebih', 'Risiko Gizi Lebih'])->count();
-        $bbtbObesitasCount      = (clone $q)->where('bbtb_kategori', 'Obesitas')->count();
+        $bbtbGiziBaikCount = (clone $q)->whereIn('bbtb_kategori', ['Gizi Baik', 'Normal'])->count();
+        $bbtbGiziKurangCount = (clone $q)->whereIn('bbtb_kategori', ['Kurang', 'Gizi Kurang'])->count();
+        $bbtbGiziLebihCount = (clone $q)->whereIn('bbtb_kategori', ['Lebih', 'Gizi Lebih', 'Risiko Gizi Lebih'])->count();
+        $bbtbObesitasCount = (clone $q)->where('bbtb_kategori', 'Obesitas')->count();
 
         // Naik berat badan
-        $naikBBCount            = (clone $q)->whereIn('naik_berat_badan', ['N', 'Y', 'T'])->count();
-        $naikBBYCount           = (clone $q)->where('naik_berat_badan', 'N')->count(); // N = Naik
-        $naikBBTCount           = (clone $q)->where('naik_berat_badan', 'T')->count(); // T = Turun
+        $naikBBCount = (clone $q)->whereIn('naik_berat_badan', ['N', 'Y', 'T'])->count();
+        $naikBBYCount = (clone $q)->where('naik_berat_badan', 'N')->count(); // N = Naik
+        $naikBBTCount = (clone $q)->where('naik_berat_badan', 'T')->count(); // T = Turun
 
         // Per-desa breakdown for chart
         $byDesa = (clone $q)->selectRaw("
@@ -85,17 +86,17 @@ class DashboardService
             ->get();
 
         // Gender breakdown
-        $lakiLaki   = (clone $q)->where('jenis_kelamin', 'L')->count();
-        $perempuan  = (clone $q)->where('jenis_kelamin', 'P')->count();
+        $lakiLaki = (clone $q)->where('jenis_kelamin', 'L')->count();
+        $perempuan = (clone $q)->where('jenis_kelamin', 'P')->count();
 
-        // Monthly trend (last 12 months)
+        // Monthly trend (last 12 months) - Menggunakan TO_CHAR untuk PostgreSQL
         $monthlyTrend = (clone $q)->selectRaw("
-                strftime('%Y-%m', tanggal_pengukuran) as bulan_label,
+                TO_CHAR(tanggal_pengukuran, 'YYYY-MM') as bulan_label,
                 COUNT(*) as total,
                 SUM(CASE WHEN tbu_kategori IN ('Pendek','Sangat Pendek') THEN 1 ELSE 0 END) as stunting
             ")
             ->whereNotNull('tanggal_pengukuran')
-            ->groupBy('bulan_label')
+            ->groupByRaw("TO_CHAR(tanggal_pengukuran, 'YYYY-MM')")
             ->orderBy('bulan_label')
             ->get();
 
@@ -106,13 +107,27 @@ class DashboardService
             ->get();
 
         return compact(
-            'total', 'stuntingTotal', 'normalCount', 'pendekCount', 'sangatPendekCount',
-            'bbuGiziBaikCount', 'bbuKurangCount', 'bbuSangatKurangCount',
-            'bbuRisikoLebihCount', 'bbuLebihCount', 'bbuObesitasCount',
-            'bbtbGiziBaikCount', 'bbtbGiziKurangCount', 'bbtbGiziLebihCount', 'bbtbObesitasCount',
-            'naikBBYCount', 'naikBBTCount',
-            'lakiLaki', 'perempuan',
-            'byDesa', 'monthlyTrend',
+            'total',
+            'stuntingTotal',
+            'normalCount',
+            'pendekCount',
+            'sangatPendekCount',
+            'bbuGiziBaikCount',
+            'bbuKurangCount',
+            'bbuSangatKurangCount',
+            'bbuRisikoLebihCount',
+            'bbuLebihCount',
+            'bbuObesitasCount',
+            'bbtbGiziBaikCount',
+            'bbtbGiziKurangCount',
+            'bbtbGiziLebihCount',
+            'bbtbObesitasCount',
+            'naikBBYCount',
+            'naikBBTCount',
+            'lakiLaki',
+            'perempuan',
+            'byDesa',
+            'monthlyTrend',
             'patients'
         );
     }
@@ -131,12 +146,12 @@ class DashboardService
     }
 
     /**
-     * Get available years for filter.
+     * Get available years for filter - Menggunakan TO_CHAR untuk PostgreSQL
      */
     public function getYearList(): array
     {
         return StuntingPatient::query()
-            ->selectRaw("strftime('%Y', tanggal_pengukuran) as tahun")
+            ->selectRaw("TO_CHAR(tanggal_pengukuran, 'YYYY') as tahun")
             ->whereNotNull('tanggal_pengukuran')
             ->distinct()
             ->orderByDesc('tahun')
