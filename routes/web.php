@@ -22,6 +22,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // ── ANC (Ibu Hamil) Module ─────────────────────────────────────────────
     require __DIR__ . '/../app/Modules/ANC/routes.php';
 
+    // ── Stunting (Balita Stunting) Module ──────────────────────────────────
+    require __DIR__ . '/../app/Modules/Stunting/routes.php';
+
     // ── AI Dashboard Builder ────────────────────────────────────────────────
     Route::prefix('ai')->name('ai.')->group(function () {
         Route::get('/dashboard', [AiDashboardController::class, 'index'])->name('dashboard');
