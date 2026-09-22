@@ -269,4 +269,56 @@ class GeminiAiService
 
         return $this->generate($prompt, $system);
     }
+
+    /**
+     * Parse free-text prompt describing a Stunting patient into structured JSON fields.
+     */
+    public function parseStuntingPatientFromPrompt(string $userPrompt): array
+    {
+        $system = "Anda adalah asisten input data Sistem Pemantauan Balita Stunting (e-PPGBM / Posyandu) di Puskesmas Indonesia. "
+            . "Tugas Anda adalah membaca deskripsi bebas dari bidan atau kader posyandu dan mengekstrak informasi "
+            . "rekam balita stunting menjadi objek JSON terstruktur. Jangan gunakan emoji dalam respons. "
+            . "Kembalikan HANYA satu objek JSON valid, tanpa markdown, tanpa komentar, tanpa backtick. "
+            . "Jika sebuah field tidak disebutkan, isi dengan null. "
+            . "Gunakan format tanggal YYYY-MM-DD jika ada tanggal. "
+            . "Field jenis_kelamin harus L atau P. "
+            . "Field usia_saat_ukur berupa integer (dalam satuan bulan). "
+            . "Field bb_lahir, berat, tinggi, tb_lahir, lila, bbu_zscore, tbu_zscore, bbtb_zscore berupa angka numerik/desimal. "
+            . "Field naik_berat_badan harus salah satu dari: N (Naik), T (Turun / Tidak Naik), atau Y (Baru Pertama Kali). "
+            . "Field tbu_kategori: Sangat Pendek, Pendek, Normal, Tinggi. "
+            . "Field bbu_kategori: Sangat Kurang, Kurang, Normal, Risiko Lebih. "
+            . "Field bbtb_kategori: Gizi Buruk, Gizi Kurang, Gizi Baik, Berisiko Gizi Lebih, Gizi Lebih, Obesitas.";
+
+        $prompt = "Ekstrak data balita stunting dari teks berikut dan kembalikan sebagai JSON dengan field-field ini:\n"
+            . "nik, nama, jenis_kelamin, tanggal_lahir, bb_lahir, tb_lahir, nama_ortu, puskesmas, desa, posyandu, "
+            . "rt, rw, alamat, usia_saat_ukur, tanggal_pengukuran, berat, tinggi, cara_ukur, lila, "
+            . "bbu_kategori, bbu_zscore, tbu_kategori, tbu_zscore, bbtb_kategori, bbtb_zscore, naik_berat_badan\n\n"
+            . "Teks dari kader / petugas:\n\"" . $userPrompt . "\"";
+
+        $result = $this->generate($prompt, $system);
+
+        if (!$result['success']) {
+            return $result;
+        }
+
+        $raw = trim($result['content']);
+        $raw = preg_replace('/^```(?:json)?\s*/i', '', $raw);
+        $raw = preg_replace('/\s*```$/', '', $raw);
+
+        $parsed = json_decode($raw, true);
+
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            return [
+                'success' => false,
+                'message' => 'Gemini mengembalikan format yang tidak dapat dibaca sebagai JSON. Coba ulangi dengan deskripsi yang lebih lengkap.',
+                'raw'     => $raw,
+            ];
+        }
+
+        return [
+            'success' => true,
+            'data'    => $parsed,
+        ];
+    }
 }
+
