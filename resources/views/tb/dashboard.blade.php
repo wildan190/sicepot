@@ -579,6 +579,119 @@
                     </div>
                 </div>
 
+                <!-- ============================================================ -->
+                <!-- DASHBOARD: PASIEN PENGOBATAN OAT (TB-03)                     -->
+                <!-- ============================================================ -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+                    <!-- Chart: Distribusi Pasien OAT per Kelurahan -->
+                    <div class="lg:col-span-2 bg-white p-5 rounded-2xl shadow-xs border border-rose-100">
+                        <div class="flex items-center justify-between mb-4">
+                            <div>
+                                <div class="flex items-center gap-2.5 mb-1">
+                                    <span class="p-1.5 rounded-lg bg-rose-50 text-rose-600 border border-rose-100">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                        </svg>
+                                    </span>
+                                    <h3 class="font-bold text-base text-slate-800">Distribusi Pasien Pengobatan OAT per Kelurahan</h3>
+                                </div>
+                                <p class="text-xs text-slate-500">10 Kelurahan dengan pasien TB-03 (Register Pasien TBC) tertinggi</p>
+                            </div>
+                            <span class="px-2 py-0.5 rounded-lg text-[11px] font-bold bg-rose-100 text-rose-700 border border-rose-200 shrink-0">TB-03 SO</span>
+                        </div>
+                        <div class="h-72">
+                            <canvas id="oatKelurahanChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- OAT KPI Mini-Cards -->
+                    <div class="bg-white p-5 rounded-2xl shadow-xs border border-rose-100 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center gap-2.5 mb-4">
+                                <span class="p-1.5 rounded-lg bg-rose-50 text-rose-600 border border-rose-100">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                                    </svg>
+                                </span>
+                                <h3 class="font-bold text-base text-slate-800">Ringkasan OAT</h3>
+                            </div>
+
+                            <!-- Progress bar: Dalam Pengobatan -->
+                            <div class="space-y-3">
+                                <div>
+                                    <div class="flex items-center justify-between mb-1">
+                                        <span class="text-xs font-semibold text-slate-600">Sedang Pengobatan</span>
+                                        <span class="text-xs font-bold text-rose-700" x-text="kpi.total_sedang_pengobatan || 0"></span>
+                                    </div>
+                                    <div class="h-2 bg-slate-100 rounded-full overflow-hidden">
+                                        <div class="h-2 bg-rose-500 rounded-full transition-all duration-500"
+                                            :style="'width:' + ((kpi.total_terkonfirmasi > 0 ? Math.min(100, Math.round((kpi.total_sedang_pengobatan / kpi.total_terkonfirmasi) * 100)) : 0)) + '%'"></div>
+                                    </div>
+                                    <span class="text-[10px] text-slate-400"
+                                        x-text="(kpi.total_terkonfirmasi > 0 ? Math.round((kpi.total_sedang_pengobatan / kpi.total_terkonfirmasi) * 100) : 0) + '% dari total terkonfirmasi'"></span>
+                                </div>
+
+                                <div>
+                                    <div class="flex items-center justify-between mb-1">
+                                        <span class="text-xs font-semibold text-slate-600">Sembuh</span>
+                                        <span class="text-xs font-bold text-emerald-700" x-text="kpi.total_sembuh || 0"></span>
+                                    </div>
+                                    <div class="h-2 bg-slate-100 rounded-full overflow-hidden">
+                                        <div class="h-2 bg-emerald-500 rounded-full transition-all duration-500"
+                                            :style="'width:' + ((kpi.total_terkonfirmasi > 0 ? Math.min(100, Math.round((kpi.total_sembuh / kpi.total_terkonfirmasi) * 100)) : 0)) + '%'"></div>
+                                    </div>
+                                    <span class="text-[10px] text-slate-400"
+                                        x-text="(kpi.total_terkonfirmasi > 0 ? Math.round((kpi.total_sembuh / kpi.total_terkonfirmasi) * 100) : 0) + '% dari total terkonfirmasi'"></span>
+                                </div>
+
+                                <div>
+                                    <div class="flex items-center justify-between mb-1">
+                                        <span class="text-xs font-semibold text-slate-600">Pengobatan Lengkap</span>
+                                        <span class="text-xs font-bold text-sky-700" x-text="kpi.total_lengkap || 0"></span>
+                                    </div>
+                                    <div class="h-2 bg-slate-100 rounded-full overflow-hidden">
+                                        <div class="h-2 bg-sky-500 rounded-full transition-all duration-500"
+                                            :style="'width:' + ((kpi.total_terkonfirmasi > 0 ? Math.min(100, Math.round((kpi.total_lengkap / kpi.total_terkonfirmasi) * 100)) : 0)) + '%'"></div>
+                                    </div>
+                                    <span class="text-[10px] text-slate-400"
+                                        x-text="(kpi.total_terkonfirmasi > 0 ? Math.round((kpi.total_lengkap / kpi.total_terkonfirmasi) * 100) : 0) + '% dari total terkonfirmasi'"></span>
+                                </div>
+
+                                <div>
+                                    <div class="flex items-center justify-between mb-1">
+                                        <span class="text-xs font-semibold text-slate-600">Lost to Follow Up</span>
+                                        <span class="text-xs font-bold text-amber-700" x-text="kpi.total_putus || 0"></span>
+                                    </div>
+                                    <div class="h-2 bg-slate-100 rounded-full overflow-hidden">
+                                        <div class="h-2 bg-amber-500 rounded-full transition-all duration-500"
+                                            :style="'width:' + ((kpi.total_terkonfirmasi > 0 ? Math.min(100, Math.round((kpi.total_putus / kpi.total_terkonfirmasi) * 100)) : 0)) + '%'"></div>
+                                    </div>
+                                    <span class="text-[10px] text-slate-400"
+                                        x-text="(kpi.total_terkonfirmasi > 0 ? Math.round((kpi.total_putus / kpi.total_terkonfirmasi) * 100) : 0) + '% dari total terkonfirmasi'"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Total Terkonfirmasi footer -->
+                        <div class="mt-5 pt-4 border-t border-slate-100">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-[11px] text-slate-500 font-medium">Total Terkonfirmasi (TB-03)</p>
+                                    <p class="text-2xl font-black text-rose-700" x-text="kpi.total_terkonfirmasi || 0"></p>
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-[11px] text-slate-500 font-medium">Success Rate</p>
+                                    <p class="text-2xl font-black text-emerald-700"
+                                        x-text="(kpi.total_terkonfirmasi > 0 ? Math.round(((kpi.total_sembuh + kpi.total_lengkap) / kpi.total_terkonfirmasi) * 100) : 0) + '%'"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- DATA TABLE SECTION -->
                 <div class="bg-white rounded-2xl shadow-xs border border-slate-200/80 overflow-hidden">
                     <div
@@ -2273,6 +2386,7 @@
             kelurahan: null,
             monthly: null,
             gender: null,
+            oat: null,
             map: null,
             markersLayer: null,
             fasyanksLayer: null,
@@ -2287,6 +2401,7 @@
                 kelurahanList: [],
                 kpi: @json($kpi),
                 kelurahanChartData: @json($kelurahan_chart),
+                oatKelurahanChartData: @json($oat_kelurahan_chart),
                 monthlyChartData: @json($monthly_chart),
                 genderChartData: @json($gender_chart),
                 ageChartData: @json($age_chart),
@@ -2494,6 +2609,7 @@
 
                         this.kpi = data.kpi;
                         this.kelurahanChartData = data.kelurahan_chart;
+                        this.oatKelurahanChartData = data.oat_kelurahan_chart;
                         this.monthlyChartData = data.monthly_chart;
                         this.genderChartData = data.gender_chart;
                         this.ageChartData = data.age_chart;
@@ -2611,6 +2727,36 @@
                             }
                         });
                     }
+
+                    // 4. OAT Kelurahan Horizontal Bar Chart
+                    const ctxOat = document.getElementById('oatKelurahanChart')?.getContext('2d');
+                    if (ctxOat) {
+                        if (tbCharts.oat) {
+                            try { tbCharts.oat.destroy(); } catch (e) { }
+                        }
+                        tbCharts.oat = new Chart(ctxOat, {
+                            type: 'bar',
+                            data: {
+                                labels: this.oatKelurahanChartData.labels,
+                                datasets: [{
+                                    label: 'Pasien OAT (TB-03)',
+                                    data: this.oatKelurahanChartData.values,
+                                    backgroundColor: 'rgba(244, 63, 94, 0.82)',
+                                    borderRadius: 6,
+                                }]
+                            },
+                            options: {
+                                indexAxis: 'y',
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                plugins: { legend: { display: false } },
+                                scales: {
+                                    x: { beginAtZero: true, grid: { color: '#fef2f2' }, ticks: { precision: 0 } },
+                                    y: { grid: { display: false } }
+                                }
+                            }
+                        });
+                    }
                 },
 
                 updateCharts() {
@@ -2628,6 +2774,11 @@
                         tbCharts.monthly.data.labels = this.monthlyChartData.labels;
                         tbCharts.monthly.data.datasets[0].data = this.monthlyChartData.values;
                         tbCharts.monthly.update();
+                    }
+                    if (tbCharts.oat) {
+                        tbCharts.oat.data.labels = this.oatKelurahanChartData.labels;
+                        tbCharts.oat.data.datasets[0].data = this.oatKelurahanChartData.values;
+                        tbCharts.oat.update();
                     }
                 },
 

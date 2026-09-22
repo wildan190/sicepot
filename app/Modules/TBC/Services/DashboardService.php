@@ -376,6 +376,25 @@ class DashboardService
             ->whereNotNull('kelurahan')->where('kelurahan', '!=', '')
             ->groupBy('kelurahan')->orderByDesc('total')->limit(10)->get();
 
+        // OAT kelurahan distribution: TB-03 patients per kelurahan (top 10)
+        $oatKelurahanDist = TbPatient::query()
+            ->tap(function ($q) use ($kabupaten, $kelurahan, $search) {
+                if (!empty($kabupaten)) \App\Services\RegionHelper::filterKabupaten($q, $kabupaten);
+                if (!empty($kelurahan)) \App\Services\RegionHelper::filterKelurahan($q, $kelurahan);
+                if (!empty($search)) {
+                    $q->where(function ($sq) use ($search) {
+                        $sq->where('nama_lengkap', 'like', "%{$search}%")
+                           ->orWhere('nik', 'like', "%{$search}%")
+                           ->orWhere('no_reg_sitb', 'like', "%{$search}%")
+                           ->orWhere('no_reg_terduga', 'like', "%{$search}%");
+                    });
+                }
+            })
+            ->where('report_type', 'tb_03')
+            ->select('kelurahan', DB::raw('count(*) as total'))
+            ->whereNotNull('kelurahan')->where('kelurahan', '!=', '')
+            ->groupBy('kelurahan')->orderByDesc('total')->limit(10)->get();
+
         $monthlyDist = (clone $baseQuery)
             ->select('bulan', DB::raw('count(*) as total'))
             ->whereNotNull('bulan')->where('bulan', '!=', '')
@@ -445,6 +464,10 @@ class DashboardService
             'kelurahan_chart' => [
                 'labels' => $kelurahanDist->pluck('kelurahan')->all(),
                 'values' => $kelurahanDist->pluck('total')->all(),
+            ],
+            'oat_kelurahan_chart' => [
+                'labels' => $oatKelurahanDist->pluck('kelurahan')->all(),
+                'values' => $oatKelurahanDist->pluck('total')->all(),
             ],
             'monthly_chart' => [
                 'labels' => $sortedMonthly->pluck('bulan')->all(),
