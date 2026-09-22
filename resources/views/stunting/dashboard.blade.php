@@ -335,10 +335,30 @@
                 </div>
             </div>
 
-            {{-- Per-Desa Bar Chart --}}
+            {{-- Monthly Trend Chart (Full Width) --}}
             <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs p-5">
-                <h3 class="text-sm font-bold text-slate-700 mb-4">Distribusi Stunting per Desa/Kelurahan</h3>
-                <canvas id="desaChart" height="90"></canvas>
+                <div class="flex items-center justify-between mb-4">
+                    <div>
+                        <h3 class="text-sm font-bold text-slate-700">Tren Kasus Stunting Bulanan</h3>
+                        <p class="text-xs text-slate-400">Perkembangan total pengukuran dan kasus balita stunting per bulan</p>
+                    </div>
+                </div>
+                <div class="relative h-72">
+                    <canvas id="monthlyChart"></canvas>
+                </div>
+            </div>
+
+            {{-- Per-Desa Bar Chart (Full Width) --}}
+            <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs p-5">
+                <div class="flex items-center justify-between mb-4">
+                    <div>
+                        <h3 class="text-sm font-bold text-slate-700">Distribusi Stunting per Desa/Kelurahan</h3>
+                        <p class="text-xs text-slate-400">Sebaran kategori TB/U per wilayah desa/kelurahan</p>
+                    </div>
+                </div>
+                <div class="relative h-72">
+                    <canvas id="desaChart"></canvas>
+                </div>
             </div>
 
             {{-- DATA TABLE --}}
@@ -1488,6 +1508,7 @@
                     bbuChart: null,
                     genderChart: null,
                     desaChart: null,
+                    monthlyChart: null,
 
                     initDashboard() {
                         this.renderCharts();
@@ -1641,6 +1662,7 @@
                             },
                             options: {
                                 responsive: true,
+                                maintainAspectRatio: false,
                                 scales: {
                                     x: { stacked: true, grid: { display: false } },
                                     y: { stacked: true, ticks: { stepSize: 1 } }
@@ -1648,6 +1670,67 @@
                                 plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11 } } } }
                             }
                         });
+
+                        // Monthly Trend Line/Bar Chart
+                        const monthlyData = @json($monthlyTrend ?? []);
+                        const monthLabels = monthlyData.map(m => {
+                            if (!m.bulan_label) return '-';
+                            const parts = m.bulan_label.split('-');
+                            if (parts.length === 2) {
+                                const d = new Date(parts[0], parseInt(parts[1]) - 1, 1);
+                                return d.toLocaleDateString('id-ID', { month: 'short', year: 'numeric' });
+                            }
+                            return m.bulan_label;
+                        });
+
+                        const ctxMonthly = document.getElementById('monthlyChart');
+                        if (ctxMonthly) {
+                            this.monthlyChart = new Chart(ctxMonthly, {
+                                type: 'line',
+                                data: {
+                                    labels: monthLabels,
+                                    datasets: [
+                                        {
+                                            label: 'Total Pengukuran',
+                                            data: monthlyData.map(m => m.total),
+                                            borderColor: '#3b82f6',
+                                            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                                            borderWidth: 2,
+                                            tension: 0.3,
+                                            fill: true,
+                                            pointBackgroundColor: '#3b82f6',
+                                            pointRadius: 4,
+                                        },
+                                        {
+                                            label: 'Kasus Stunting',
+                                            data: monthlyData.map(m => m.stunting),
+                                            borderColor: '#ef4444',
+                                            backgroundColor: 'rgba(239, 68, 68, 0.15)',
+                                            borderWidth: 2,
+                                            tension: 0.3,
+                                            fill: true,
+                                            pointBackgroundColor: '#ef4444',
+                                            pointRadius: 4,
+                                        }
+                                    ]
+                                },
+                                options: {
+                                    responsive: true,
+                                    maintainAspectRatio: false,
+                                    interaction: {
+                                        mode: 'index',
+                                        intersect: false,
+                                    },
+                                    scales: {
+                                        x: { grid: { display: false } },
+                                        y: { beginAtZero: true, ticks: { stepSize: 1 } }
+                                    },
+                                    plugins: {
+                                        legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11 } } }
+                                    }
+                                }
+                            });
+                        }
                     },
 
                     updateCharts(data) {
@@ -1674,6 +1757,21 @@
                             this.desaChart.data.datasets[1].data = data.byDesa.map(d => d.pendek);
                             this.desaChart.data.datasets[2].data = data.byDesa.map(d => d.sangat_pendek);
                             this.desaChart.update();
+                        }
+                        if (this.monthlyChart && data.monthlyTrend) {
+                            const newMonthLabels = data.monthlyTrend.map(m => {
+                                if (!m.bulan_label) return '-';
+                                const parts = m.bulan_label.split('-');
+                                if (parts.length === 2) {
+                                    const d = new Date(parts[0], parseInt(parts[1]) - 1, 1);
+                                    return d.toLocaleDateString('id-ID', { month: 'short', year: 'numeric' });
+                                }
+                                return m.bulan_label;
+                            });
+                            this.monthlyChart.data.labels = newMonthLabels;
+                            this.monthlyChart.data.datasets[0].data = data.monthlyTrend.map(m => m.total);
+                            this.monthlyChart.data.datasets[1].data = data.monthlyTrend.map(m => m.stunting);
+                            this.monthlyChart.update();
                         }
                     },
 
