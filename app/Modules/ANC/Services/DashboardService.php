@@ -325,6 +325,19 @@ class DashboardService
             ->whereNotNull('kelurahan')->where('kelurahan', '!=', '')
             ->groupBy('kelurahan')->orderByDesc('total')->limit(100)->get();
 
+        // BSC (Bekas Sesar) per kelurahan — untuk dataset kedua chart
+        $kelurahanBsc = (clone $base)
+            ->select('kelurahan', DB::raw('count(*) as bsc'))
+            ->whereNotNull('kelurahan')->where('kelurahan', '!=', '')
+            ->where('faktor_risiko', 'like', '%BSC%')
+            ->groupBy('kelurahan')
+            ->get()
+            ->keyBy('kelurahan');
+
+        // Map BSC values sesuai urutan label kelurahan_chart
+        $kelurahanLabels = $kelurahanDist->pluck('kelurahan')->all();
+        $bscValues = array_map(fn($kel) => (int)($kelurahanBsc->get($kel)?->bsc ?? 0), $kelurahanLabels);
+
         $monthOrder = [
             'Januari' => 1, 'Februari' => 2, 'Maret' => 3, 'April' => 4,
             'Mei' => 5, 'Juni' => 6, 'Juli' => 7, 'Agustus' => 8,
@@ -458,8 +471,9 @@ class DashboardService
                 'total_penyakit'  => $totalPenyakit,
             ],
             'kelurahan_chart' => [
-                'labels' => $kelurahanDist->pluck('kelurahan')->all(),
-                'values' => $kelurahanDist->pluck('total')->all(),
+                'labels'     => $kelurahanLabels,
+                'values'     => $kelurahanDist->pluck('total')->all(),
+                'bsc_values' => $bscValues,
             ],
             'monthly_chart' => [
                 'labels' => $monthlyLabels,
