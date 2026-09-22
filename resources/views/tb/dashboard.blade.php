@@ -171,13 +171,18 @@
 
                 <!-- KPI SUMMARY CARDS -->
                 <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-                    <!-- Card 1: Total Semua -->
+                    <!-- Card 1: Total Pelacakan (TB-06) -->
                     <div
-                        class="bg-white p-4 rounded-2xl shadow-xs border border-slate-200/80 flex flex-col justify-between">
-                        <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Total
-                            Pelacakan</span>
+                        class="bg-white p-4 rounded-2xl shadow-xs border border-blue-100 flex flex-col justify-between hover:shadow-md transition-shadow">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-bold text-blue-700 uppercase tracking-wider flex items-center gap-1.5">
+                                <span class="w-2.5 h-2.5 rounded-full bg-blue-500 inline-block shadow-xs"></span>
+                                Total Pelacakan
+                            </span>
+                            <span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-blue-100 text-blue-700">TB-06</span>
+                        </div>
                         <div class="mt-2 flex items-baseline justify-between">
-                            <span class="text-2xl font-bold text-slate-900" x-text="kpi.total_all">0</span>
+                            <span class="text-2xl font-black text-slate-900" x-text="kpi.total_pelacakan || kpi.total_terduga || kpi.total_all || 0">0</span>
                             <span class="p-1.5 rounded-lg bg-blue-50 text-blue-600">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -186,16 +191,21 @@
                                 </svg>
                             </span>
                         </div>
-                        <span class="text-[11px] text-slate-400 mt-2">Terduga & Terkonfirmasi</span>
+                        <span class="text-[11px] text-slate-500 mt-2 font-medium">Register Terduga TBC (TB-06)</span>
                     </div>
 
-                    <!-- Card 2: Terduga TBC -->
+                    <!-- Card 2: Kasus Diperiksa Lab/TCM -->
                     <div
-                        class="bg-white p-4 rounded-2xl shadow-xs border border-slate-200/80 flex flex-col justify-between">
-                        <span class="text-xs font-semibold text-amber-700 uppercase tracking-wider">Total kasus yang di
-                            periksa (TCM/X-Ray)</span>
+                        class="bg-white p-4 rounded-2xl shadow-xs border border-amber-100 flex flex-col justify-between hover:shadow-md transition-shadow">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-bold text-amber-700 uppercase tracking-wider flex items-center gap-1.5">
+                                <span class="w-2.5 h-2.5 rounded-full bg-amber-500 inline-block shadow-xs"></span>
+                                Diperiksa TCM/Lab
+                            </span>
+                            <span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-700">TCM</span>
+                        </div>
                         <div class="mt-2 flex items-baseline justify-between">
-                            <span class="text-2xl font-bold text-amber-700" x-text="kpi.total_terduga">0</span>
+                            <span class="text-2xl font-black text-amber-700" x-text="kpi.total_diperiksa_tcm || 0">0</span>
                             <span class="p-1.5 rounded-lg bg-amber-50 text-amber-600">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -204,16 +214,22 @@
                                 </svg>
                             </span>
                         </div>
-                        <span class="text-[11px] text-slate-400 mt-2">Register TB-06</span>
+                        <span class="text-[11px] text-slate-500 mt-2 font-medium"
+                            x-text="(kpi.total_diperiksa_tcm && kpi.total_terduga ? Math.round((kpi.total_diperiksa_tcm / kpi.total_terduga) * 100) : 0) + '% dari total terduga dilacak'"></span>
                     </div>
 
-                    <!-- Card 3: Terkonfirmasi TBC -->
+                    <!-- Card 3: Pasien Sedang Pengobatan (Merah / TB-03) -->
                     <div
-                        class="bg-white p-4 rounded-2xl shadow-xs border border-slate-200/80 flex flex-col justify-between">
-                        <span class="text-xs font-semibold text-rose-700 uppercase tracking-wider">Pasien dalam
-                            pengobatan</span>
+                        class="bg-white p-4 rounded-2xl shadow-xs border border-rose-100 flex flex-col justify-between hover:shadow-md transition-shadow">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-bold text-rose-700 uppercase tracking-wider flex items-center gap-1.5">
+                                <span class="w-2.5 h-2.5 rounded-full bg-rose-500 inline-block shadow-xs"></span>
+                                Pasien Pengobatan OAT
+                            </span>
+                            <span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-rose-100 text-rose-700">TB-03</span>
+                        </div>
                         <div class="mt-2 flex items-baseline justify-between">
-                            <span class="text-2xl font-bold text-rose-700" x-text="kpi.total_terkonfirmasi">0</span>
+                            <span class="text-2xl font-black text-rose-700" x-text="kpi.total_sedang_pengobatan">0</span>
                             <span class="p-1.5 rounded-lg bg-rose-50 text-rose-600">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -221,26 +237,33 @@
                                 </svg>
                             </span>
                         </div>
-                        <span class="text-[11px] text-slate-400 mt-2">Positif Bakteriologis/Klinis</span>
+                        <span class="text-[11px] text-slate-500 mt-2 font-medium"
+                            x-text="(kpi.total_terkonfirmasi || 0) + ' Terkonfirmasi Bakteriologis/Klinis'"></span>
                     </div>
 
-                    <!-- Card 4: Pengobatan Aktif -->
+                    <!-- Card 4: Investigasi Kontak (Hijau / TB-16K) -->
                     <div
-                        class="bg-white p-4 rounded-2xl shadow-xs border border-slate-200/80 flex flex-col justify-between">
-                        <span class="text-xs font-semibold text-indigo-700 uppercase tracking-wider">Investigasi
-                            Kontak</span>
+                        class="bg-white p-4 rounded-2xl shadow-xs border border-emerald-100 flex flex-col justify-between hover:shadow-md transition-shadow">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-bold text-emerald-700 uppercase tracking-wider flex items-center gap-1.5">
+                                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block shadow-xs"></span>
+                                Investigasi Kontak
+                            </span>
+                            <span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-700">TB-16K</span>
+                        </div>
                         <div class="mt-2 flex items-baseline justify-between">
-                            <span class="text-2xl font-bold text-indigo-700"
-                                x-text="kpi.total_sedang_pengobatan">0</span>
-                            <span class="p-1.5 rounded-lg bg-indigo-50 text-indigo-600">
+                            <span class="text-2xl font-black text-emerald-700"
+                                x-text="kpi.total_kontak || 0">0</span>
+                            <span class="p-1.5 rounded-lg bg-emerald-50 text-emerald-600">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z">
+                                        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z">
                                     </path>
                                 </svg>
                             </span>
                         </div>
-                        <span class="text-[11px] text-slate-400 mt-2">Sedang terapi OAT</span>
+                        <span class="text-[11px] text-slate-500 mt-2 font-medium"
+                            x-text="(kpi.total_indeks_ik || 0) + ' Kasus Indeks · ' + (kpi.total_kontak_serumah || 0) + ' Serumah'"></span>
                     </div>
 
                     <!-- Card 5: Pasien Sembuh -->
@@ -447,32 +470,21 @@
                             {{-- Layer toggles --}}
                             <div>
                                 <label
-                                    class="block text-[11px] font-bold text-slate-600 uppercase tracking-wider mb-2">Overlay
-                                    Layer</label>
+                                    class="block text-[11px] font-bold text-slate-600 uppercase tracking-wider mb-2">Layer Peta</label>
                                 <div class="flex flex-wrap gap-2">
                                     <label
-                                        class="inline-flex items-center gap-1.5 px-2.5 py-1.5 bg-white border border-slate-300 rounded-lg cursor-pointer text-xs select-none hover:bg-slate-50">
-                                        <input type="checkbox" x-model="tbMapCfg.showFasyankes"
-                                            @change="saveTbMapCfg(); updateMap()" class="rounded accent-indigo-600">
-                                        <span class="font-medium text-slate-700">Kluster Fasyankes</span>
-                                    </label>
-                                    <label
-                                        class="inline-flex items-center gap-1.5 px-2.5 py-1.5 bg-white border border-slate-300 rounded-lg cursor-pointer text-xs select-none hover:bg-slate-50">
-                                        <input type="checkbox" x-model="tbMapCfg.showRO"
+                                        class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white border border-rose-200 rounded-lg cursor-pointer text-xs select-none hover:bg-rose-50 transition-colors shadow-2xs">
+                                        <input type="checkbox" x-model="tbMapCfg.showPenderita"
                                             @change="saveTbMapCfg(); updateMap()" class="rounded accent-rose-600">
-                                        <span class="font-medium text-slate-700">Tandai Kasus RO</span>
+                                        <span class="w-2.5 h-2.5 rounded-full bg-rose-500 inline-block shadow-xs"></span>
+                                        <span class="font-bold text-rose-700">Data Penderita TB (Merah)</span>
                                     </label>
                                     <label
-                                        class="inline-flex items-center gap-1.5 px-2.5 py-1.5 bg-white border border-slate-300 rounded-lg cursor-pointer text-xs select-none hover:bg-slate-50">
-                                        <input type="checkbox" x-model="tbMapCfg.showHIV"
-                                            @change="saveTbMapCfg(); updateMap()" class="rounded accent-purple-600">
-                                        <span class="font-medium text-slate-700">Tandai Ko-infeksi HIV</span>
-                                    </label>
-                                    <label
-                                        class="inline-flex items-center gap-1.5 px-2.5 py-1.5 bg-white border border-slate-300 rounded-lg cursor-pointer text-xs select-none hover:bg-slate-50">
+                                        class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white border border-emerald-200 rounded-lg cursor-pointer text-xs select-none hover:bg-emerald-50 transition-colors shadow-2xs">
                                         <input type="checkbox" x-model="tbMapCfg.showInvestigasi"
                                             @change="saveTbMapCfg(); updateMap()" class="rounded accent-emerald-600">
-                                        <span class="font-medium text-slate-700">Investigasi Kontak</span>
+                                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block shadow-xs"></span>
+                                        <span class="font-bold text-emerald-700">Investigasi Kontak (Hijau)</span>
                                     </label>
                                 </div>
                             </div>
@@ -522,12 +534,6 @@
                                 <span
                                     class="inline-flex items-center gap-1 px-2 py-0.5 bg-slate-100 text-slate-600 text-[11px] font-semibold rounded-lg capitalize"
                                     x-text="{ markers:'Titik Sebaran', density:'Densitas Heatmap', geofence:'Geofence 500m' }[tbMapCfg.viewMode] || tbMapCfg.viewMode"></span>
-                                <span x-show="tbMapCfg.showFasyankes"
-                                    class="inline-flex items-center gap-1 px-2 py-0.5 bg-sky-100 text-sky-700 text-[11px] font-semibold rounded-lg">Fasyankes</span>
-                                <span x-show="tbMapCfg.showRO"
-                                    class="inline-flex items-center gap-1 px-2 py-0.5 bg-rose-100 text-rose-700 text-[11px] font-semibold rounded-lg">RO</span>
-                                <span x-show="tbMapCfg.showHIV"
-                                    class="inline-flex items-center gap-1 px-2 py-0.5 bg-purple-100 text-purple-700 text-[11px] font-semibold rounded-lg">HIV</span>
                                 <span x-show="tbMapCfg.showInvestigasi"
                                     class="inline-flex items-center gap-1 px-2 py-0.5 bg-emerald-100 text-emerald-700 text-[11px] font-semibold rounded-lg">Investigasi Kontak</span>
                                 <span x-show="tbMapLoading"
@@ -541,23 +547,9 @@
                                 </span>
                             </div>
 
-                            {{-- Baris 2: legenda warna --}}
                             <div class="flex items-center gap-4 pt-2 border-t border-slate-100 text-xs">
-                                <span
-                                    class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Legenda</span>
+                                <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Legenda</span>
                                 <div class="flex items-center gap-1.5">
-                                    <span class="w-3 h-3 rounded-full bg-rose-500 shrink-0"></span>
-                                    <span class="text-slate-500">≥ 10 Kasus</span>
-                                </div>
-                                <div class="flex items-center gap-1.5">
-                                    <span class="w-3 h-3 rounded-full bg-amber-500 shrink-0"></span>
-                                    <span class="text-slate-500">4–9 Kasus</span>
-                                </div>
-                                <div class="flex items-center gap-1.5">
-                                    <span class="w-3 h-3 rounded-full bg-indigo-400 shrink-0"></span>
-                                    <span class="text-slate-500">1–3 Kasus</span>
-                                </div>
-                                <div x-show="tbMapCfg.showInvestigasi" class="flex items-center gap-1.5">
                                     <span class="w-3 h-3 rounded-full bg-emerald-500 shrink-0" style="border:2px solid #059669;"></span>
                                     <span class="text-slate-500">Investigasi Kontak (OAT aktif)</span>
                                 </div>
@@ -882,10 +874,17 @@
                         class="inline-block w-full max-w-4xl p-6 my-8 text-left align-middle transition-all transform bg-white shadow-2xl rounded-3xl z-10 border border-slate-100">
                         <div class="flex items-center justify-between pb-4 border-b border-slate-100">
                             <div>
-                                <h3 class="text-lg font-bold text-slate-800">Import Data TBC (Universal Excel / CSV)
+                                <h3 class="text-lg font-bold text-slate-800">Import Data TBC (Dual Excel: Penderita & Investigasi Kontak)
                                 </h3>
-                                <p class="text-xs text-slate-500">Mendukung format otomatis tanpa template kaku: laporan
-                                    SITB TB-03, TB-06, maupun format kustom fasyankes lainnya.</p>
+                                <p class="text-xs text-slate-500">Mendukung otomatis 2 jenis berkas resmi program TBC:</p>
+                                <div class="flex items-center gap-2 mt-2">
+                                    <span class="inline-flex items-center gap-1 px-2.5 py-0.5 bg-rose-50 border border-rose-200 rounded-lg text-[11px] font-bold text-rose-700">
+                                        🔴 1. DATA PENDERITA TB (TB-03 SO)
+                                    </span>
+                                    <span class="inline-flex items-center gap-1 px-2.5 py-0.5 bg-emerald-50 border border-emerald-200 rounded-lg text-[11px] font-bold text-emerald-700">
+                                        🟢 2. INVESTIGASI KONTAK (TBC.16K)
+                                    </span>
+                                </div>
                             </div>
                             <button @click="closeImportModal()"
                                 class="p-2 text-slate-400 hover:text-slate-600 rounded-xl hover:bg-slate-100 cursor-pointer">
@@ -968,41 +967,78 @@
                                 <div>
                                     <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Cuplikan
                                         Preview 10 Baris Pertama:</h4>
-                                    <div class="overflow-x-auto max-h-60 border border-slate-200 rounded-xl">
-                                        <table class="w-full text-left text-xs">
-                                            <thead class="bg-slate-100 text-slate-700 font-semibold sticky top-0">
-                                                <tr>
-                                                    <th class="p-2.5">No</th>
-                                                    <th class="p-2.5">Nama Lengkap</th>
-                                                    <th class="p-2.5">NIK</th>
-                                                    <th class="p-2.5">L/P</th>
-                                                    <th class="p-2.5">Umur</th>
-                                                    <th class="p-2.5">Kabupaten</th>
-                                                    <th class="p-2.5">Kelurahan</th>
-                                                    <th class="p-2.5">Diagnosis</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody class="divide-y divide-slate-100">
-                                                <template x-for="(row, idx) in (importPreview?.preview_samples || [])"
-                                                    :key="idx">
-                                                    <tr class="hover:bg-slate-50">
-                                                        <td class="p-2.5 text-slate-500" x-text="idx + 1"></td>
-                                                        <td class="p-2.5 font-medium text-slate-800"
-                                                            x-text="row.nama_lengkap || '-'"></td>
-                                                        <td class="p-2.5 text-slate-600" x-text="row.nik || '-'"></td>
-                                                        <td class="p-2.5 text-slate-600"
-                                                            x-text="row.jenis_kelamin || '-'"></td>
-                                                        <td class="p-2.5 text-slate-600" x-text="row.umur || '-'"></td>
-                                                        <td class="p-2.5 text-slate-600" x-text="row.kabupaten || '-'">
-                                                        </td>
-                                                        <td class="p-2.5 text-slate-600" x-text="row.kelurahan || '-'">
-                                                        </td>
-                                                        <td class="p-2.5 text-slate-600"
-                                                            x-text="row.hasil_diagnosis || row.hasil_tcm || '-'"></td>
+                                    <div class="overflow-x-auto max-h-64 border border-slate-200 rounded-xl">
+                                        <!-- Table for TB-16K (Investigasi Kontak) -->
+                                        <template x-if="importPreview?.type === 'tb_16k'">
+                                            <table class="w-full text-left text-xs">
+                                                <thead class="bg-emerald-50 text-emerald-800 font-semibold sticky top-0">
+                                                    <tr>
+                                                        <th class="p-2.5">No</th>
+                                                        <th class="p-2.5">Kasus Indeks</th>
+                                                        <th class="p-2.5">Nama Kontak</th>
+                                                        <th class="p-2.5">NIK Kontak</th>
+                                                        <th class="p-2.5">L/P</th>
+                                                        <th class="p-2.5">Umur</th>
+                                                        <th class="p-2.5">Jenis Kontak</th>
+                                                        <th class="p-2.5">Kelurahan</th>
+                                                        <th class="p-2.5">Hasil Evaluasi</th>
                                                     </tr>
-                                                </template>
-                                            </tbody>
-                                        </table>
+                                                </thead>
+                                                <tbody class="divide-y divide-slate-100">
+                                                    <template x-for="(row, idx) in (importPreview?.preview_samples || [])" :key="idx">
+                                                        <tr class="hover:bg-slate-50">
+                                                            <td class="p-2.5 text-slate-500" x-text="idx + 1"></td>
+                                                            <td class="p-2.5 font-medium text-slate-800" x-text="row.kasus_indeks_nama || '-'"></td>
+                                                            <td class="p-2.5 font-semibold text-emerald-800" x-text="row.nama_kontak || '-'"></td>
+                                                            <td class="p-2.5 text-slate-600 font-mono text-[11px]" x-text="row.nik_kontak || '-'"></td>
+                                                            <td class="p-2.5 text-slate-600" x-text="row.jenis_kelamin_kontak || '-'"></td>
+                                                            <td class="p-2.5 text-slate-600" x-text="row.umur_kontak ? row.umur_kontak + ' th' : '-'"></td>
+                                                            <td class="p-2.5">
+                                                                <span class="px-1.5 py-0.5 rounded text-[10px] font-bold"
+                                                                    :class="row.jenis_kontak === 'Kontak Serumah' ? 'bg-amber-100 text-amber-800' : 'bg-blue-100 text-blue-800'"
+                                                                    x-text="row.jenis_kontak || '-'"></span>
+                                                            </td>
+                                                            <td class="p-2.5 text-slate-700 font-medium" x-text="row.kelurahan || '-'"></td>
+                                                            <td class="p-2.5 font-medium"
+                                                                :class="row.hasil_evaluasi === 'Sakit TBC' ? 'text-rose-600 font-bold' : 'text-emerald-700'"
+                                                                x-text="row.hasil_evaluasi || '-'"></td>
+                                                        </tr>
+                                                    </template>
+                                                </tbody>
+                                            </table>
+                                        </template>
+
+                                        <!-- Table for TB-03 / Generic (Data Penderita TB) -->
+                                        <template x-if="importPreview?.type !== 'tb_16k'">
+                                            <table class="w-full text-left text-xs">
+                                                <thead class="bg-slate-100 text-slate-700 font-semibold sticky top-0">
+                                                    <tr>
+                                                        <th class="p-2.5">No</th>
+                                                        <th class="p-2.5">Nama Lengkap</th>
+                                                        <th class="p-2.5">NIK</th>
+                                                        <th class="p-2.5">L/P</th>
+                                                        <th class="p-2.5">Umur</th>
+                                                        <th class="p-2.5">Kabupaten</th>
+                                                        <th class="p-2.5">Kelurahan</th>
+                                                        <th class="p-2.5">Diagnosis</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody class="divide-y divide-slate-100">
+                                                    <template x-for="(row, idx) in (importPreview?.preview_samples || [])" :key="idx">
+                                                        <tr class="hover:bg-slate-50">
+                                                            <td class="p-2.5 text-slate-500" x-text="idx + 1"></td>
+                                                            <td class="p-2.5 font-medium text-slate-800" x-text="row.nama_lengkap || '-'"></td>
+                                                            <td class="p-2.5 text-slate-600" x-text="row.nik || '-'"></td>
+                                                            <td class="p-2.5 text-slate-600" x-text="row.jenis_kelamin || '-'"></td>
+                                                            <td class="p-2.5 text-slate-600" x-text="row.umur || '-'"></td>
+                                                            <td class="p-2.5 text-slate-600" x-text="row.kabupaten || '-'"></td>
+                                                            <td class="p-2.5 text-slate-600" x-text="row.kelurahan || '-'"></td>
+                                                            <td class="p-2.5 text-slate-600" x-text="row.hasil_diagnosis || row.hasil_tcm || '-'"></td>
+                                                        </tr>
+                                                    </template>
+                                                </tbody>
+                                            </table>
+                                        </template>
                                     </div>
                                 </div>
                             </div>
@@ -2270,9 +2306,7 @@
                     kecamatan: '',
                     viewMode: 'markers',
                     height: 460,
-                    showFasyankes: true,
-                    showRO: false,
-                    showHIV: false,
+                    showPenderita: true,
                     showInvestigasi: true,
                 },
 
@@ -2576,7 +2610,7 @@
                 },
 
                 resetTbMapCfg() {
-                    this.tbMapCfg = { kecamatan: '', viewMode: 'markers', height: 460, showFasyankes: true, showRO: false, showHIV: false, showInvestigasi: true };
+                    this.tbMapCfg = { kecamatan: '', viewMode: 'markers', height: 460, showPenderita: true, showInvestigasi: true };
                     try { localStorage.removeItem('tb_map_cfg'); } catch (e) { }
                     this.tbMapCfgSaved = true;
                     setTimeout(() => { this.tbMapCfgSaved = false; }, 1800);
@@ -2658,156 +2692,111 @@
                     tbCharts.markersLayer.clearLayers();
                     if (tbCharts.fasyanksLayer) tbCharts.fasyanksLayer.clearLayers();
 
-                    const viewMode = this.tbMapCfg.viewMode || this.mapViewMode;
-
                     if (!this.mapData || this.mapData.length === 0) return;
 
                     const bounds = [];
+                    const showPenderita = this.tbMapCfg.showPenderita !== false;
+                    const showInvestigasi = this.tbMapCfg.showInvestigasi !== false;
 
                     this.mapData.forEach(item => {
-                        if (!item.lat || !item.lng) return;
-                        bounds.push([item.lat, item.lng]);
+                        const pTotal = item.penderita_total !== undefined ? item.penderita_total : (item.total || 0);
+                        const ikTotal = item.investigasi_total || 0;
 
-                        // ── Color by density ──
-                        let color = '#818cf8'; // indigo-400 (1-3)
-                        let radius = 10;
-                        if (item.total >= 10) {
-                            color = '#f43f5e'; radius = 20; // rose
-                        } else if (item.total >= 4) {
-                            color = '#f59e0b'; radius = 15; // amber
-                        }
+                        // ── 1. Titik Merah: Data Penderita TB (TB-03) ──
+                        if (showPenderita && pTotal > 0) {
+                            const latP = item.lat_penderita || item.lat;
+                            const lngP = item.lng_penderita || item.lng;
 
-                        // ── Mode: Density heatmap halo ──
-                        if (viewMode === 'density') {
-                            const haloR = Math.max(400, item.total * 80);
-                            tbCharts.markersLayer.addLayer(L.circle([item.lat, item.lng], {
-                                radius: haloR,
-                                color: 'transparent',
-                                fillColor: color,
-                                fillOpacity: Math.min(0.5, 0.1 + item.total * 0.03),
-                            }));
-                        }
+                            if (latP && lngP) {
+                                bounds.push([latP, lngP]);
+                                const pRadius = Math.max(9, Math.min(22, 6 + Math.sqrt(pTotal) * 2.8));
 
-                        // ── Mode: Geofence rings ──
-                        if (viewMode === 'geofence') {
-                            const bufR = item.total >= 10 ? 800 : 500;
-                            tbCharts.markersLayer.addLayer(L.circle([item.lat, item.lng], {
-                                radius: bufR,
-                                color: item.total >= 10 ? '#e11d48' : '#f59e0b',
-                                fillColor: item.total >= 10 ? '#f43f5e' : '#fbbf24',
-                                fillOpacity: item.total >= 10 ? 0.22 : 0.12,
-                                weight: 1.5, dashArray: '4 6',
-                            }));
-                        }
-
-                        // ── RO badge overlay ──
-                        if (this.tbMapCfg.showRO && item.total_ro > 0) {
-                            tbCharts.markersLayer.addLayer(L.circle([item.lat, item.lng], {
-                                radius: 350, color: '#9333ea', fillColor: '#c084fc',
-                                fillOpacity: 0.25, weight: 2, dashArray: '3 4',
-                            }));
-                        }
-
-                        // ── HIV badge overlay ──
-                        if (this.tbMapCfg.showHIV && item.total_hiv > 0) {
-                            tbCharts.markersLayer.addLayer(L.circle([item.lat, item.lng], {
-                                radius: 250, color: '#7c3aed', fillColor: '#a78bfa',
-                                fillOpacity: 0.3, weight: 1.5,
-                            }));
-                        }
-
-                        // ── Investigasi Kontak (Pasien OAT aktif) badge overlay ── green ──
-                        if (this.tbMapCfg.showInvestigasi && item.total_active > 0) {
-                            tbCharts.markersLayer.addLayer(L.circle([item.lat, item.lng], {
-                                radius: 350, color: '#059669', fillColor: '#34d399',
-                                fillOpacity: 0.28, weight: 2, dashArray: '5 5',
-                            }));
-                        }
-
-                        // ── Main marker ──
-                        const circle = L.circleMarker([item.lat, item.lng], {
-                            color, fillColor: color, fillOpacity: 0.85,
-                            radius, weight: 2,
-                        });
-
-                        // ── Fasyankes cluster sub-markers ──
-                        if (this.tbMapCfg.showFasyankes && item.fasyankes && item.fasyankes.length > 0) {
-                            const fasRows = item.fasyankes.slice(0, 5).map(f =>
-                                `<div style="display:flex;justify-content:space-between;padding:2px 0;border-top:1px solid #f1f5f9;">
-                                        <span style="color:#475569;font-size:10px;">${f.name}</span>
-                                        <span style="font-weight:700;color:#6366f1;font-size:10px;">${f.total} kasus</span>
-                                    </div>`
-                            ).join('');
-
-                            const fasLabel = item.fasyankes.map(f => f.name).join(', ');
-                            circle.bindTooltip(fasLabel, { direction: 'top', className: 'leaflet-tooltip-fas' });
-
-                            // Small offset markers for each fasyankes
-                            item.fasyankes.slice(0, 3).forEach((f, i) => {
-                                const angle = (i * 120) * (Math.PI / 180);
-                                const dlat = 0.002 * Math.cos(angle);
-                                const dlng = 0.002 * Math.sin(angle);
-                                const fm = L.circleMarker([item.lat + dlat, item.lng + dlng], {
-                                    color: '#0284c7', fillColor: '#38bdf8',
-                                    fillOpacity: 0.7, radius: 6, weight: 1.5,
+                                const redCircle = L.circleMarker([latP, lngP], {
+                                    color: '#b91c1c',
+                                    fillColor: '#ef4444',
+                                    fillOpacity: 0.88,
+                                    radius: pRadius,
+                                    weight: 2,
                                 });
-                                fm.bindPopup(`<div style="font-size:11px;font-weight:600;">${f.name}</div><div style="font-size:11px;color:#475569;">${f.total} kasus TBC</div>`);
-                                if (tbCharts.fasyanksLayer) tbCharts.fasyanksLayer.addLayer(fm);
-                            });
 
-                            const roInfo = item.total_ro > 0
-                                ? `<div style="margin-top:4px;padding:3px 5px;background:#fdf4ff;border-radius:5px;font-size:10px;color:#7e22ce;font-weight:600;">⚠ ${item.total_ro} Kasus RO (Resistan Obat)</div>` : '';
-                            const hivInfo = item.total_hiv > 0
-                                ? `<div style="padding:3px 5px;background:#f5f3ff;border-radius:5px;font-size:10px;color:#4c1d95;font-weight:600;">HIV+ Ko-infeksi: ${item.total_hiv}</div>` : '';
-
-                            circle.bindPopup(`
-                                    <div style="font-family:inherit;font-size:12px;min-width:200px;">
-                                        <div style="font-weight:700;font-size:13px;color:#1e293b;margin-bottom:2px;">${item.kelurahan}</div>
-                                        <div style="color:#64748b;font-size:11px;margin-bottom:1px;">${item.kecamatan ? 'Kec. ' + item.kecamatan + ' · ' : ''}${item.kabupaten || ''}</div>
-                                        <div style="display:flex;justify-content:space-between;border-top:1px solid #f1f5f9;padding-top:5px;font-weight:700;font-size:13px;">
-                                            <span>Total Kasus TBC</span>
-                                            <span style="color:${color};">${item.total}</span>
+                                redCircle.bindPopup(`
+                                    <div style="font-family:inherit;font-size:12px;min-width:210px;padding:2px;">
+                                        <div style="display:flex;align-items:center;gap:6px;margin-bottom:3px;">
+                                            <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#ef4444;border:2px solid #b91c1c;"></span>
+                                            <div style="font-weight:700;font-size:13px;color:#1e293b;">${item.kelurahan}</div>
                                         </div>
-                                        <div style="display:flex;justify-content:space-between;font-size:11px;color:#475569;">
-                                            <span>Terkonfirmasi</span><span style="font-weight:600;color:#e11d48;">${item.total_terkonfirmasi || 0}</span>
+                                        <div style="color:#64748b;font-size:11px;margin-bottom:6px;">${item.kecamatan ? 'Kec. ' + item.kecamatan + ' · ' : ''}${item.kabupaten || ''}</div>
+                                        <div style="background:#fef2f2;border:1px solid #fee2e2;border-radius:8px;padding:8px 10px;">
+                                            <div style="font-weight:700;font-size:10px;color:#991b1b;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;">📊 Data Penderita TB (TB-03)</div>
+                                            <div style="display:flex;justify-content:space-between;font-size:12px;color:#1e293b;margin-bottom:2px;">
+                                                <span>Total Kasus TBC:</span>
+                                                <strong style="color:#dc2626;">${pTotal} pasien</strong>
+                                            </div>
+                                            <div style="display:flex;justify-content:space-between;font-size:11px;color:#475569;margin-bottom:2px;">
+                                                <span>Sedang Terapi OAT:</span>
+                                                <strong style="color:#b91c1c;">${item.penderita_active || item.total_active || 0}</strong>
+                                            </div>
+                                            <div style="display:flex;justify-content:space-between;font-size:11px;color:#475569;">
+                                                <span>Sembuh / Lengkap:</span>
+                                                <strong style="color:#15803d;">${item.penderita_sembuh || 0}</strong>
+                                            </div>
                                         </div>
-                                        <div style="display:flex;justify-content:space-between;font-size:11px;color:#475569;">
-                                            <span>Terduga</span><span style="font-weight:600;color:#f59e0b;">${item.total_terduga || 0}</span>
-                                        </div>
-                                        <div style="display:flex;justify-content:space-between;font-size:11px;color:#475569;">
-                                            <span>Aktif OAT</span><span style="font-weight:600;color:#0284c7;">${item.total_active || 0}</span>
-                                        </div>
-                                        <div style="display:flex;justify-content:space-between;font-size:11px;color:#475569;margin-top:2px;padding:3px 5px;background:#f0fdf4;border-radius:5px;">
-                                            <span style="color:#065f46;font-weight:600;">🔎 Investigasi Kontak</span><span style="font-weight:700;color:#059669;">${item.total_active || 0} pasien</span>
-                                        </div>
-                                        ${roInfo}${hivInfo}
-                                        <div style="margin-top:5px;font-size:10px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.04em;">Fasyankes (${item.fasyankes.length})</div>
-                                        ${fasRows}
                                     </div>
                                 `);
-                        } else {
-                            circle.bindPopup(`
-                                    <div style="font-family:inherit;font-size:12px;min-width:170px;">
-                                        <div style="font-weight:700;font-size:13px;color:#1e293b;margin-bottom:4px;">${item.kelurahan}</div>
-                                        <div style="color:#64748b;margin-bottom:6px;">${item.kecamatan ? 'Kec. ' + item.kecamatan + ' · ' : ''}${item.kabupaten || ''}</div>
-                                        <div style="display:flex;justify-content:space-between;border-top:1px solid #f1f5f9;padding-top:4px;font-weight:600;">
-                                            <span>Total Kasus TBC:</span>
-                                            <span style="color:${color};">${item.total}</span>
-                                        </div>
-                                        <div style="display:flex;justify-content:space-between;font-size:11px;color:#475569;margin-top:2px;">
-                                            <span>Kasus Aktif OAT:</span>
-                                            <span style="font-weight:bold;color:#e11d48;">${item.total_active || 0}</span>
-                                        </div>
-                                        <div style="display:flex;justify-content:space-between;font-size:11px;margin-top:3px;padding:3px 5px;background:#f0fdf4;border-radius:5px;">
-                                            <span style="color:#065f46;font-weight:600;">🔎 Investigasi Kontak</span>
-                                            <span style="font-weight:700;color:#059669;">${item.total_active || 0} pasien</span>
-                                        </div>
-                                        ${viewMode === 'geofence' ? '<div style="margin-top:6px;padding:4px 6px;background:#fff1f2;border-radius:6px;font-size:10px;color:#be123c;font-weight:600;">[Geofence] Zona Kontak Erat 500m</div>' : ''}
-                                    </div>
-                                `);
+
+                                tbCharts.markersLayer.addLayer(redCircle);
+                            }
                         }
 
-                        tbCharts.markersLayer.addLayer(circle);
+                        // ── 2. Titik Hijau: Investigasi Kontak (TB-16K) ──
+                        if (showInvestigasi && ikTotal > 0) {
+                            const latIK = item.lat_investigasi || item.lat;
+                            const lngIK = item.lng_investigasi || item.lng;
+
+                            if (latIK && lngIK) {
+                                bounds.push([latIK, lngIK]);
+                                const ikRadius = Math.max(9, Math.min(24, 6 + Math.sqrt(ikTotal) * 1.6));
+
+                                const greenCircle = L.circleMarker([latIK, lngIK], {
+                                    color: '#059669',
+                                    fillColor: '#10b981',
+                                    fillOpacity: 0.88,
+                                    radius: ikRadius,
+                                    weight: 2,
+                                });
+
+                                greenCircle.bindPopup(`
+                                    <div style="font-family:inherit;font-size:12px;min-width:220px;padding:2px;">
+                                        <div style="display:flex;align-items:center;gap:6px;margin-bottom:3px;">
+                                            <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#10b981;border:2px solid #059669;"></span>
+                                            <div style="font-weight:700;font-size:13px;color:#1e293b;">${item.kelurahan}</div>
+                                        </div>
+                                        <div style="color:#64748b;font-size:11px;margin-bottom:6px;">${item.kecamatan ? 'Kec. ' + item.kecamatan + ' · ' : ''}${item.kabupaten || ''}</div>
+                                        <div style="background:#ecfdf5;border:1px solid #d1fae5;border-radius:8px;padding:8px 10px;">
+                                            <div style="font-weight:700;font-size:10px;color:#065f46;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;">🔎 Investigasi Kontak (TB-16K)</div>
+                                            <div style="display:flex;justify-content:space-between;font-size:12px;color:#1e293b;margin-bottom:2px;">
+                                                <span>Kontak Dilacak:</span>
+                                                <strong style="color:#059669;">${ikTotal} orang</strong>
+                                            </div>
+                                            <div style="display:flex;justify-content:space-between;font-size:11px;color:#475569;margin-bottom:2px;">
+                                                <span>Kasus Indeks Terkait:</span>
+                                                <strong style="color:#047857;">${item.investigasi_indeks || 0} pasien</strong>
+                                            </div>
+                                            <div style="display:flex;justify-content:space-between;font-size:11px;color:#475569;margin-bottom:2px;">
+                                                <span>Serumah / Erat:</span>
+                                                <strong style="color:#0f766e;">${item.investigasi_serumah || 0} / ${item.investigasi_erat || 0}</strong>
+                                            </div>
+                                            <div style="display:flex;justify-content:space-between;font-size:11px;color:#475569;">
+                                                <span>Ditemukan Sakit TBC:</span>
+                                                <strong style="color:#dc2626;">${item.investigasi_sakit || 0}</strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                `);
+
+                                tbCharts.markersLayer.addLayer(greenCircle);
+                            }
+                        }
                     });
 
                     if (bounds.length > 0) {

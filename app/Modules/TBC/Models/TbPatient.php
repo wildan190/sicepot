@@ -77,4 +77,12 @@ class TbPatient extends Model
     {
         $this->attributes['kecamatan'] = \App\Services\RegionHelper::normalizeKelurahan($value);
     }
+
+    /**
+     * Contact investigations linked to this patient via no_reg_sitb
+     */
+    public function contactInvestigations()
+    {
+        return $this->hasMany(TbContactInvestigation::class, 'kasus_indeks_sitb', 'no_reg_sitb');
+    }
 }

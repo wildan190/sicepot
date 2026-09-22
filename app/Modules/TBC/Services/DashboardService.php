@@ -3,6 +3,7 @@
 namespace App\Modules\TBC\Services;
 
 use App\Modules\TBC\Models\TbPatient;
+use App\Modules\TBC\Models\TbContactInvestigation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -20,9 +21,16 @@ class DashboardService
         'karang tengah'  => ['lat' => -6.3010, 'lng' => 106.5920, 'kecamatan' => 'Pagedangan'],
         'lengkong kulon' => ['lat' => -6.2950, 'lng' => 106.6210, 'kecamatan' => 'Pagedangan'],
         'kadusirung'     => ['lat' => -6.3280, 'lng' => 106.5980, 'kecamatan' => 'Pagedangan'],
+        'kadu sirung'    => ['lat' => -6.3280, 'lng' => 106.5980, 'kecamatan' => 'Pagedangan'],
         'malang nengah'  => ['lat' => -6.3350, 'lng' => 106.5850, 'kecamatan' => 'Pagedangan'],
         'situgadung'     => ['lat' => -6.3110, 'lng' => 106.6340, 'kecamatan' => 'Pagedangan'],
+        'situ gadung'    => ['lat' => -6.3110, 'lng' => 106.6340, 'kecamatan' => 'Pagedangan'],
         'medang'         => ['lat' => -6.2680, 'lng' => 106.6180, 'kecamatan' => 'Pagedangan'],
+        'cicalengka'     => ['lat' => -6.3250, 'lng' => 106.5720, 'kecamatan' => 'Pagedangan'],
+        'cihuni'         => ['lat' => -6.2750, 'lng' => 106.6300, 'kecamatan' => 'Pagedangan'],
+        'jatirasa'       => ['lat' => -6.3150, 'lng' => 106.5890, 'kecamatan' => 'Pagedangan'],
+        'nanggeleng'     => ['lat' => -6.3200, 'lng' => 106.6000, 'kecamatan' => 'Pagedangan'],
+        'ciburuy'        => ['lat' => -6.3080, 'lng' => 106.6080, 'kecamatan' => 'Pagedangan'],
         // Kec. Curug
         'curug'          => ['lat' => -6.2620, 'lng' => 106.5560, 'kecamatan' => 'Curug'],
         'curug wetan'    => ['lat' => -6.2550, 'lng' => 106.5640, 'kecamatan' => 'Curug'],
@@ -36,6 +44,7 @@ class DashboardService
         'legok'          => ['lat' => -6.3380, 'lng' => 106.5620, 'kecamatan' => 'Legok'],
         'rancagong'      => ['lat' => -6.3460, 'lng' => 106.5510, 'kecamatan' => 'Legok'],
         'babakan'        => ['lat' => -6.3520, 'lng' => 106.5700, 'kecamatan' => 'Legok'],
+        'cirarab'        => ['lat' => -6.3400, 'lng' => 106.5400, 'kecamatan' => 'Legok'],
         // Kec. Cisauk
         'cisauk'         => ['lat' => -6.3450, 'lng' => 106.6420, 'kecamatan' => 'Cisauk'],
         'sampora'        => ['lat' => -6.3530, 'lng' => 106.6500, 'kecamatan' => 'Cisauk'],
@@ -101,62 +110,96 @@ class DashboardService
      * Build GIS map points per-kelurahan, filtered optionally by kecamatan.
      * Includes fasyankes clustering aggregation and density levels.
      */
+    /**
+     * Build GIS map points per-kelurahan, filtered optionally by kecamatan.
+     * Integrates both Data Penderita TB (TB-03) and Investigasi Kontak (TB-16K).
+     */
     public function getMapData(Request $request): array
     {
         $kabupaten = $request->input('kabupaten');
         $kecamatan = $request->input('kecamatan');
 
-        $query = TbPatient::query();
+        // 1. Query Penderita TBC (tb_patients)
+        $pQuery = TbPatient::query();
         if (!empty($kabupaten)) {
-            \App\Services\RegionHelper::filterKabupaten($query, $kabupaten);
+            \App\Services\RegionHelper::filterKabupaten($pQuery, $kabupaten);
         }
         if (!empty($kecamatan)) {
-            $query->whereRaw('LOWER(TRIM(kecamatan)) = ?', [strtolower(trim($kecamatan))]);
+            $pQuery->whereRaw('LOWER(TRIM(kecamatan)) = ?', [strtolower(trim($kecamatan))]);
         }
 
-        $rows = $query
+        $pRows = $pQuery
             ->select(
                 'kelurahan', 'kabupaten', 'kecamatan', 'fasyankes_name',
                 DB::raw('count(*) as total'),
                 DB::raw("sum(case when report_type = 'tb_03' then 1 else 0 end) as total_terkonfirmasi"),
                 DB::raw("sum(case when report_type = 'tb_06' and batuk_2_minggu is null and bb_turun is null and keringat_malam is null and kontak_tb is null then 1 else 0 end) as total_terduga"),
                 DB::raw("sum(case when report_type = 'tb_03' and (hasil_akhir_pengobatan is null or hasil_akhir_pengobatan = '') then 1 else 0 end) as total_active"),
-                DB::raw("sum(case when hasil_tcm like '%rr%' or hasil_tcm like '%ro%' or hasil_diagnosis like '%ro%' then 1 else 0 end) as total_ro"),
-                DB::raw("sum(case when status_hiv like '%positif%' then 1 else 0 end) as total_hiv")
+                DB::raw("sum(case when hasil_akhir_pengobatan like '%Sembuh%' or hasil_akhir_pengobatan like '%Lengkap%' then 1 else 0 end) as total_sembuh")
             )
             ->whereNotNull('kelurahan')
             ->where('kelurahan', '!=', '')
             ->groupBy('kelurahan', 'kabupaten', 'kecamatan', 'fasyankes_name')
-            ->orderByDesc('total')
             ->get();
 
-        // Group by kelurahan (multiple fasyankes per kelurahan → cluster)
+        // 2. Query Investigasi Kontak (tb_contact_investigations)
+        $ikQuery = TbContactInvestigation::query();
+        if (!empty($kabupaten)) {
+            \App\Services\RegionHelper::filterKabupaten($ikQuery, $kabupaten);
+        }
+        if (!empty($kecamatan)) {
+            $ikQuery->whereRaw('LOWER(TRIM(kecamatan)) = ?', [strtolower(trim($kecamatan))]);
+        }
+
+        $ikRows = $ikQuery
+            ->select(
+                'kelurahan', 'kabupaten', 'kecamatan',
+                DB::raw('count(*) as total_investigasi'),
+                DB::raw('count(distinct kasus_indeks_sitb) as total_indeks'),
+                DB::raw("sum(case when jenis_kontak like '%Serumah%' then 1 else 0 end) as total_serumah"),
+                DB::raw("sum(case when jenis_kontak like '%Erat%' then 1 else 0 end) as total_erat"),
+                DB::raw("sum(case when hasil_evaluasi = 'Sakit TBC' then 1 else 0 end) as total_sakit"),
+                DB::raw("sum(case when hasil_evaluasi = 'Terduga TBC' then 1 else 0 end) as total_terduga_ik")
+            )
+            ->whereNotNull('kelurahan')
+            ->where('kelurahan', '!=', '')
+            ->groupBy('kelurahan', 'kabupaten', 'kecamatan')
+            ->get();
+
         $byKelurahan = [];
-        foreach ($rows as $idx => $row) {
+
+        // Ingest Penderita
+        foreach ($pRows as $idx => $row) {
             $kelKey = strtolower(trim($row->kelurahan ?? ''));
             if (!isset($byKelurahan[$kelKey])) {
-                $coords = $this->resolveCoords($kelKey, $idx);
+                $coords = $this->resolveCoords($kelKey, count($byKelurahan));
                 $byKelurahan[$kelKey] = [
-                    'kelurahan'         => $row->kelurahan,
-                    'kabupaten'         => $row->kabupaten ?? 'Kab. Tangerang',
-                    'kecamatan'         => $row->kecamatan ? ucwords(strtolower(trim($row->kecamatan))) : ($this->knownCoords[$kelKey]['kecamatan'] ?? '-'),
-                    'lat'               => $coords['lat'],
-                    'lng'               => $coords['lng'],
-                    'total'             => 0,
-                    'total_terkonfirmasi' => 0,
-                    'total_terduga'     => 0,
-                    'total_active'      => 0,
-                    'total_ro'          => 0,
-                    'total_hiv'         => 0,
-                    'fasyankes'         => [],
+                    'kelurahan'                => $row->kelurahan,
+                    'kabupaten'                => $row->kabupaten ?? 'Kab. Tangerang',
+                    'kecamatan'                => $row->kecamatan ? ucwords(strtolower(trim($row->kecamatan))) : ($this->knownCoords[$kelKey]['kecamatan'] ?? '-'),
+                    'lat'                      => $coords['lat'],
+                    'lng'                      => $coords['lng'],
+                    'penderita_total'          => 0,
+                    'penderita_active'         => 0,
+                    'penderita_terkonfirmasi'  => 0,
+                    'penderita_sembuh'         => 0,
+                    'investigasi_total'        => 0,
+                    'investigasi_indeks'       => 0,
+                    'investigasi_serumah'      => 0,
+                    'investigasi_erat'         => 0,
+                    'investigasi_sakit'        => 0,
+                    'investigasi_terduga'      => 0,
+                    'total'                    => 0,
+                    'total_active'             => 0,
+                    'fasyankes'                => [],
                 ];
             }
-            $byKelurahan[$kelKey]['total']               += (int) $row->total;
-            $byKelurahan[$kelKey]['total_terkonfirmasi'] += (int) $row->total_terkonfirmasi;
-            $byKelurahan[$kelKey]['total_terduga']       += (int) $row->total_terduga;
-            $byKelurahan[$kelKey]['total_active']        += (int) $row->total_active;
-            $byKelurahan[$kelKey]['total_ro']            += (int) $row->total_ro;
-            $byKelurahan[$kelKey]['total_hiv']           += (int) $row->total_hiv;
+            $byKelurahan[$kelKey]['penderita_total']         += (int) $row->total;
+            $byKelurahan[$kelKey]['penderita_active']        += (int) $row->total_active;
+            $byKelurahan[$kelKey]['penderita_terkonfirmasi'] += (int) $row->total_terkonfirmasi;
+            $byKelurahan[$kelKey]['penderita_sembuh']        += (int) $row->total_sembuh;
+            $byKelurahan[$kelKey]['total']                   += (int) $row->total;
+            $byKelurahan[$kelKey]['total_active']            += (int) $row->total_active;
 
             if (!empty($row->fasyankes_name)) {
                 $byKelurahan[$kelKey]['fasyankes'][] = [
@@ -165,6 +208,60 @@ class DashboardService
                 ];
             }
         }
+
+        // Ingest Investigasi Kontak
+        foreach ($ikRows as $idx => $row) {
+            $kelKey = strtolower(trim($row->kelurahan ?? ''));
+            if (!isset($byKelurahan[$kelKey])) {
+                $coords = $this->resolveCoords($kelKey, count($byKelurahan));
+                $byKelurahan[$kelKey] = [
+                    'kelurahan'                => $row->kelurahan,
+                    'kabupaten'                => $row->kabupaten ?? 'Kab. Tangerang',
+                    'kecamatan'                => $row->kecamatan ? ucwords(strtolower(trim($row->kecamatan))) : ($this->knownCoords[$kelKey]['kecamatan'] ?? '-'),
+                    'lat'                      => $coords['lat'],
+                    'lng'                      => $coords['lng'],
+                    'penderita_total'          => 0,
+                    'penderita_active'         => 0,
+                    'penderita_terkonfirmasi'  => 0,
+                    'penderita_sembuh'         => 0,
+                    'investigasi_total'        => 0,
+                    'investigasi_indeks'       => 0,
+                    'investigasi_serumah'      => 0,
+                    'investigasi_erat'         => 0,
+                    'investigasi_sakit'        => 0,
+                    'investigasi_terduga'      => 0,
+                    'total'                    => 0,
+                    'total_active'             => 0,
+                    'fasyankes'                => [],
+                ];
+            }
+            $byKelurahan[$kelKey]['investigasi_total']   += (int) $row->total_investigasi;
+            $byKelurahan[$kelKey]['investigasi_indeks']  += (int) $row->total_indeks;
+            $byKelurahan[$kelKey]['investigasi_serumah'] += (int) $row->total_serumah;
+            $byKelurahan[$kelKey]['investigasi_erat']    += (int) $row->total_erat;
+            $byKelurahan[$kelKey]['investigasi_sakit']   += (int) $row->total_sakit;
+            $byKelurahan[$kelKey]['investigasi_terduga'] += (int) $row->total_terduga_ik;
+        }
+
+        // Calculate visual offsets for dual points
+        foreach ($byKelurahan as &$point) {
+            $hasPenderita = $point['penderita_total'] > 0;
+            $hasIK = $point['investigasi_total'] > 0;
+
+            if ($hasPenderita && $hasIK) {
+                // Side-by-side offset: Penderita slightly South-West, Investigasi slightly North-East
+                $point['lat_penderita']   = round($point['lat'] - 0.0016, 5);
+                $point['lng_penderita']   = round($point['lng'] - 0.0016, 5);
+                $point['lat_investigasi'] = round($point['lat'] + 0.0016, 5);
+                $point['lng_investigasi'] = round($point['lng'] + 0.0016, 5);
+            } else {
+                $point['lat_penderita']   = $point['lat'];
+                $point['lng_penderita']   = $point['lng'];
+                $point['lat_investigasi'] = $point['lat'];
+                $point['lng_investigasi'] = $point['lng'];
+            }
+        }
+        unset($point);
 
         $points = array_values($byKelurahan);
 
@@ -180,8 +277,8 @@ class DashboardService
         }
 
         return [
-            'points'           => $points,
-            'center'           => $center,
+            'points'             => $points,
+            'center'             => $center,
             'selected_kecamatan' => $kecamatan ?? '',
         ];
     }
@@ -229,30 +326,44 @@ class DashboardService
             });
         }
 
-        $totalAll           = (clone $baseQuery)->count();
-        // Kasus yang diperiksa (TCM/X-Ray): hanya register TB-06 murni, tidak termasuk data hasil skrining
-        $totalTerduga       = (clone $baseQuery)
-            ->where('report_type', 'tb_06')
-            ->where(function ($q) {
-                $q->whereNull('report_type')->orWhere('report_type', '!=', 'skrining');
-            })
-            ->whereNull('batuk_2_minggu')
-            ->whereNull('bb_turun')
-            ->whereNull('keringat_malam')
-            ->whereNull('kontak_tb')
+        // Query with geographic & text filters for specialized KPI cards
+        $geoQuery = TbPatient::query();
+        if (!empty($kabupaten)) {
+            \App\Services\RegionHelper::filterKabupaten($geoQuery, $kabupaten);
+        }
+        if (!empty($kelurahan)) {
+            \App\Services\RegionHelper::filterKelurahan($geoQuery, $kelurahan);
+        }
+        if (!empty($search)) {
+            $geoQuery->where(function ($q) use ($search) {
+                $q->where('nama_lengkap', 'like', "%{$search}%")
+                    ->orWhere('nik', 'like', "%{$search}%")
+                    ->orWhere('no_reg_sitb', 'like', "%{$search}%")
+                    ->orWhere('no_reg_terduga', 'like', "%{$search}%");
+            });
+        }
+
+        // TB-06: Register Terduga TBC (Data Pelacakan Kasus Terduga)
+        $tb06Query = (clone $geoQuery)->where('report_type', 'tb_06');
+        $totalTerduga      = (clone $tb06Query)->count();
+        $totalDiperiksaTcm = (clone $tb06Query)
+            ->whereNotNull('hasil_tcm')
+            ->where('hasil_tcm', '!=', '')
             ->count();
-        $totalTerkonfirmasi = (clone $baseQuery)->where(function ($q) {
-            $q->where('report_type', 'tb_03')
-                ->orWhere('hasil_diagnosis', 'like', '%TBC SO%')
-                ->orWhere('hasil_diagnosis', 'like', '%Terkonfirmasi%');
-        })->count();
-        $totalSembuh            = (clone $baseQuery)->where('hasil_akhir_pengobatan', 'like', '%Sembuh%')->count();
-        $totalPengobatanLengkap = (clone $baseQuery)->where('hasil_akhir_pengobatan', 'like', '%Lengkap%')->count();
-        $totalPutusBerobat      = (clone $baseQuery)->where('hasil_akhir_pengobatan', 'like', '%Putus%')->count();
-        $totalSedangPengobatan  = (clone $baseQuery)->where('report_type', 'tb_03')
+        // Total Pelacakan secara eksplisit bersumber dari file Register Terduga TBC (TB-06)
+        $totalPelacakan    = $totalTerduga > 0 ? $totalTerduga : (clone $geoQuery)->count();
+        $totalAll          = $totalPelacakan;
+
+        // TB-03: Register Pasien TBC (Pengobatan OAT)
+        $tb03Query = (clone $geoQuery)->where('report_type', 'tb_03');
+        $totalTerkonfirmasi     = (clone $tb03Query)->count();
+        $totalSedangPengobatan  = (clone $tb03Query)
             ->where(function ($q) {
                 $q->whereNull('hasil_akhir_pengobatan')->orWhere('hasil_akhir_pengobatan', '');
             })->count();
+        $totalSembuh            = (clone $tb03Query)->where('hasil_akhir_pengobatan', 'like', '%Sembuh%')->count();
+        $totalPengobatanLengkap = (clone $tb03Query)->where('hasil_akhir_pengobatan', 'like', '%Lengkap%')->count();
+        $totalPutusBerobat      = (clone $tb03Query)->where('hasil_akhir_pengobatan', 'like', '%Putus%')->count();
 
         $totalLaki      = (clone $baseQuery)->where('jenis_kelamin', 'L')->count();
         $totalPerempuan = (clone $baseQuery)->where('jenis_kelamin', 'P')->count();
@@ -284,34 +395,33 @@ class DashboardService
             ->paginate(15)
             ->withQueryString();
 
-        // Legacy map_data for backward-compat (used by initial page load)
-        $kelurahanAll = (clone $baseQuery)
-            ->select('kelurahan', 'kabupaten', DB::raw('count(*) as total'),
-                DB::raw("sum(case when report_type = 'tb_03' and (hasil_akhir_pengobatan is null or hasil_akhir_pengobatan = '') then 1 else 0 end) as total_active"),
-                DB::raw("sum(case when hasil_tcm like '%rr%' or hasil_tcm like '%ro%' or hasil_diagnosis like '%ro%' then 1 else 0 end) as total_ro"))
-            ->whereNotNull('kelurahan')->where('kelurahan', '!=', '')
-            ->groupBy('kelurahan', 'kabupaten')->orderByDesc('total')->get();
-
-        $mapPoints = [];
-        foreach ($kelurahanAll as $idx => $row) {
-            $key    = strtolower(trim($row->kelurahan));
-            $coords = $this->resolveCoords($key, $idx);
-            $mapPoints[] = [
-                'kelurahan'    => $row->kelurahan,
-                'kabupaten'    => $row->kabupaten ?? 'Kab. Tangerang',
-                'kecamatan'    => $this->knownCoords[$key]['kecamatan'] ?? '-',
-                'total'        => (int) $row->total,
-                'total_active' => (int) $row->total_active,
-                'total_ro'     => (int) $row->total_ro,
-                'lat'          => $coords['lat'],
-                'lng'          => $coords['lng'],
-            ];
+        // Query Investigasi Kontak metrics
+        $ikQuery = TbContactInvestigation::query();
+        if (!empty($kabupaten)) {
+            \App\Services\RegionHelper::filterKabupaten($ikQuery, $kabupaten);
         }
+        if (!empty($kelurahan)) {
+            \App\Services\RegionHelper::filterKelurahan($ikQuery, $kelurahan);
+        }
+
+        $totalKontak        = (clone $ikQuery)->count();
+        $totalIndeksIk      = (clone $ikQuery)->distinct('kasus_indeks_sitb')->count('kasus_indeks_sitb');
+        $totalKontakSerumah = (clone $ikQuery)->where('jenis_kontak', 'like', '%Serumah%')->count();
+        $totalKontakErat    = (clone $ikQuery)->where('jenis_kontak', 'like', '%Erat%')->count();
+        $totalKontakSakit   = (clone $ikQuery)->where('hasil_evaluasi', 'Sakit TBC')->count();
+        $totalKontakTerduga = (clone $ikQuery)->where('hasil_evaluasi', 'Terduga TBC')->count();
+        $totalKontakTpt     = (clone $ikQuery)->whereNotNull('status_tpt')->count();
+        $rasioKontak        = $totalIndeksIk > 0 ? round($totalKontak / $totalIndeksIk, 1) : 0;
+
+        // Map data using unified dual-layer getMapData
+        $mapData = $this->getMapData($request)['points'] ?? [];
 
         return [
             'kpi' => [
                 'total_all'               => $totalAll,
+                'total_pelacakan'         => $totalPelacakan,
                 'total_terduga'           => $totalTerduga,
+                'total_diperiksa_tcm'     => $totalDiperiksaTcm,
                 'total_terkonfirmasi'     => $totalTerkonfirmasi,
                 'total_sedang_pengobatan' => $totalSedangPengobatan,
                 'total_sembuh'            => $totalSembuh,
@@ -322,6 +432,15 @@ class DashboardService
                 'total_anak'              => $totalAnak,
                 'total_produktif'         => $totalProduktif,
                 'total_lansia'            => $totalLansia,
+                // Investigasi Kontak KPI
+                'total_kontak'            => $totalKontak,
+                'total_indeks_ik'         => $totalIndeksIk,
+                'total_kontak_serumah'    => $totalKontakSerumah,
+                'total_kontak_erat'       => $totalKontakErat,
+                'total_kontak_sakit'      => $totalKontakSakit,
+                'total_kontak_terduga'    => $totalKontakTerduga,
+                'total_kontak_tpt'        => $totalKontakTpt,
+                'rasio_kontak'            => $rasioKontak,
             ],
             'kelurahan_chart' => [
                 'labels' => $kelurahanDist->pluck('kelurahan')->all(),
@@ -339,7 +458,7 @@ class DashboardService
                 'labels' => ['Anak (<15 th)', 'Produktif (15-59 th)', 'Lansia (≥60 th)'],
                 'values' => [$totalAnak, $totalProduktif, $totalLansia],
             ],
-            'map_data'  => $mapPoints,
+            'map_data'  => $mapData,
             'patients'  => $patients,
         ];
     }
