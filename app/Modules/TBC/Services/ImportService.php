@@ -3,8 +3,10 @@
 namespace App\Modules\TBC\Services;
 
 use App\Modules\TBC\Models\TbPatient;
+use App\Modules\TBC\Models\TbContactInvestigation;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
+use PhpOffice\PhpSpreadsheet\Shared\Date as ExcelDate;
 
 class ImportService
 {
@@ -19,6 +21,11 @@ class ImportService
         $sheet = $spreadsheet->getActiveSheet();
 
         $formatInfo = $this->detectFormatAndHeaders($sheet);
+
+        if ($formatInfo['type'] === 'tb_16k') {
+            return $this->previewTb16k($sheet, $formatInfo);
+        }
+
         $previewRows = [];
         $totalRows = 0;
 
@@ -60,6 +67,11 @@ class ImportService
         $sheet = $spreadsheet->getActiveSheet();
 
         $formatInfo = $this->detectFormatAndHeaders($sheet);
+
+        if ($formatInfo['type'] === 'tb_16k') {
+            return $this->importTb16k($sheet, $formatInfo);
+        }
+
         $highestRow = $sheet->getHighestRow();
         $startRow = $formatInfo['data_start_row'];
         $columnMap = $formatInfo['column_map'];
@@ -254,11 +266,22 @@ class ImportService
             }
         }
         $allHeaderStr = implode(' ', $mergedHeaders);
-
+        $sheetTitle = $sheet->getTitle();
         $type = 'generic';
         $label = 'Format Universal Puskesmas';
 
-        if (stripos($titleBlock, 'REGISTER PASIEN TBC') !== false || stripos($titleBlock, 'TB.03') !== false || stripos($allHeaderStr, 'Paduan OAT') !== false) {
+        if (
+            stripos($titleBlock, 'INVESTIGASI KONTAK') !== false ||
+            stripos($titleBlock, 'TBC.16K') !== false ||
+            stripos($sheetTitle, 'TBC.16K') !== false ||
+            stripos($sheetTitle, 'INVESTIGASI') !== false ||
+            stripos($allHeaderStr, 'Kasus Indeks') !== false ||
+            stripos($allHeaderStr, 'Petugas yang menginvestigasi') !== false
+        ) {
+            $type = 'tb_16k';
+            $label = 'Formulir Investigasi Kontak (TBC.16K)';
+            $dataStartRow = 15;
+        } elseif (stripos($titleBlock, 'REGISTER PASIEN TBC') !== false || stripos($titleBlock, 'TB.03') !== false || stripos($allHeaderStr, 'Paduan OAT') !== false) {
             $type = 'tb_03';
             $label = 'Register Pasien TBC (Standar TB-03 SO / SITB)';
         } elseif (stripos($titleBlock, 'REGISTER TERDUGA TBC') !== false || stripos($titleBlock, 'TB.06') !== false || stripos($allHeaderStr, 'Sediaan') !== false) {
@@ -563,5 +586,268 @@ class ImportService
         $str = trim((string) $val);
 
         return $str === '' ? null : $str;
+    }
+
+    /**
+     * Preview for Formulir Investigasi Kontak (TBC.16K)
+     */
+    protected function previewTb16k($sheet, array $formatInfo): array
+    {
+        $highestRow = $sheet->getHighestRow();
+        $startRow = $formatInfo['data_start_row'] ?? 15;
+        $previewRows = [];
+        $totalRows = 0;
+
+        $patientMap = TbPatient::get(['no_reg_sitb', 'kelurahan', 'kecamatan', 'kabupaten', 'provinsi'])
+            ->keyBy('no_reg_sitb')
+            ->toArray();
+
+        for ($rowNum = $startRow; $rowNum <= $highestRow; $rowNum++) {
+            $parsed = $this->parseTb16kRow($sheet, $rowNum, $patientMap);
+            if ($parsed !== null) {
+                $totalRows++;
+                if (count($previewRows) < 10) {
+                    $previewRows[] = $parsed;
+                }
+            }
+        }
+
+        return [
+            'type' => 'tb_16k',
+            'type_label' => $formatInfo['label'],
+            'fasyankes_name' => $formatInfo['fasyankes_name'],
+            'fasyankes_code' => $formatInfo['fasyankes_code'],
+            'period' => $formatInfo['period'],
+            'total_rows' => $totalRows,
+            'preview_samples' => $previewRows,
+            'detected_fields' => [
+                'kasus_indeks_sitb', 'kasus_indeks_nama', 'nama_kontak', 'nik_kontak',
+                'umur_kontak', 'jenis_kelamin_kontak', 'jenis_kontak', 'alamat_kontak',
+                'kelurahan', 'hasil_evaluasi'
+            ],
+            'header_row' => $formatInfo['header_row'] ?? 11,
+        ];
+    }
+
+    /**
+     * Import / Upsert for Formulir Investigasi Kontak (TBC.16K)
+     */
+    protected function importTb16k($sheet, array $formatInfo): array
+    {
+        $highestRow = $sheet->getHighestRow();
+        $startRow = $formatInfo['data_start_row'] ?? 15;
+        $insertedCount = 0;
+        $updatedCount = 0;
+
+        $patientMap = TbPatient::get(['no_reg_sitb', 'kelurahan', 'kecamatan', 'kabupaten', 'provinsi'])
+            ->keyBy('no_reg_sitb')
+            ->toArray();
+
+        for ($rowNum = $startRow; $rowNum <= $highestRow; $rowNum++) {
+            $parsed = $this->parseTb16kRow($sheet, $rowNum, $patientMap);
+            if ($parsed === null) {
+                continue;
+            }
+
+            if (empty($parsed['fasyankes_name']) && !empty($formatInfo['fasyankes_name'])) {
+                $parsed['fasyankes_name'] = $formatInfo['fasyankes_name'];
+            }
+            if (empty($parsed['fasyankes_code']) && !empty($formatInfo['fasyankes_code'])) {
+                $parsed['fasyankes_code'] = $formatInfo['fasyankes_code'];
+            }
+            if (empty($parsed['periode']) && !empty($formatInfo['period'])) {
+                $parsed['periode'] = $formatInfo['period'];
+            }
+
+            // Realtime Upsert: match by (kasus_indeks_sitb AND nama_kontak) OR (nik_kontak if valid)
+            $existing = null;
+            if (!empty($parsed['nik_kontak']) && !str_contains($parsed['nik_kontak'], '*')) {
+                $existing = TbContactInvestigation::where('nik_kontak', $parsed['nik_kontak'])->first();
+            }
+
+            if (!$existing && !empty($parsed['kasus_indeks_sitb']) && !empty($parsed['nama_kontak'])) {
+                $existing = TbContactInvestigation::where('kasus_indeks_sitb', $parsed['kasus_indeks_sitb'])
+                    ->where('nama_kontak', $parsed['nama_kontak'])
+                    ->first();
+            }
+
+            if (!$existing && !empty($parsed['nama_kontak']) && !empty($parsed['alamat_kontak'])) {
+                $existing = TbContactInvestigation::where('nama_kontak', $parsed['nama_kontak'])
+                    ->where('alamat_kontak', $parsed['alamat_kontak'])
+                    ->first();
+            }
+
+            if ($existing) {
+                $existing->update($parsed);
+                $updatedCount++;
+            } else {
+                TbContactInvestigation::create($parsed);
+                $insertedCount++;
+            }
+        }
+
+        return [
+            'type' => 'tb_16k',
+            'type_label' => $formatInfo['label'],
+            'inserted' => $insertedCount,
+            'updated' => $updatedCount,
+            'total' => $insertedCount + $updatedCount,
+        ];
+    }
+
+    /**
+     * Parse row of TBC.16K
+     */
+    protected function parseTb16kRow($sheet, int $rowNum, array &$patientMap): ?array
+    {
+        $no = $this->cleanVal($sheet->getCell([3, $rowNum])->getValue());
+        $sitb = $this->cleanVal($sheet->getCell([7, $rowNum])->getValue());
+        $namaIndeks = $this->cleanVal($sheet->getCell([8, $rowNum])->getValue());
+        $namaKontak = $this->cleanVal($sheet->getCell([13, $rowNum])->getValue());
+
+        // Skip empty or header rows
+        if (empty($namaKontak) && empty($namaIndeks) && empty($sitb)) {
+            return null;
+        }
+        if ($namaIndeks && (stripos($namaIndeks, 'Nama Kasus') !== false || stripos($namaIndeks, 'Kasus Indeks') !== false || preg_match('/^\(\d+\)$/', $namaIndeks))) {
+            return null;
+        }
+        if ($no && !is_numeric($no) && !preg_match('/^\d+$/', $no)) {
+            return null;
+        }
+
+        $nikKontak = $this->cleanVal($sheet->getCell([14, $rowNum])->getValue());
+        $umurKontak = $this->cleanVal($sheet->getCell([15, $rowNum])->getValue());
+        $jkRaw = strtoupper((string) $this->cleanVal($sheet->getCell([16, $rowNum])->getValue()));
+        $jkKontak = in_array($jkRaw, ['L', 'P']) ? $jkRaw : (!empty($jkRaw) ? substr($jkRaw, 0, 1) : null);
+
+        $alamatKontak = $this->cleanVal($sheet->getCell([17, $rowNum])->getValue());
+        $isSerumah = !empty($this->cleanVal($sheet->getCell([19, $rowNum])->getValue()));
+        $isErat = !empty($this->cleanVal($sheet->getCell([20, $rowNum])->getValue()));
+        $jenisKontak = $isSerumah ? 'Kontak Serumah' : ($isErat ? 'Kontak Erat' : 'Kontak Serumah');
+
+        $sakitTbc = !empty($this->cleanVal($sheet->getCell([35, $rowNum])->getValue()));
+        $tidakTbc = !empty($this->cleanVal($sheet->getCell([36, $rowNum])->getValue()));
+        $terduga = !empty($this->cleanVal($sheet->getCell([32, $rowNum])->getValue())) ||
+                   !empty($this->cleanVal($sheet->getCell([33, $rowNum])->getValue())) ||
+                   !empty($this->cleanVal($sheet->getCell([34, $rowNum])->getValue()));
+
+        $hasilEvaluasi = 'Skrining Sehat';
+        if ($sakitTbc) {
+            $hasilEvaluasi = 'Sakit TBC';
+        } elseif ($terduga) {
+            $hasilEvaluasi = 'Terduga TBC';
+        } elseif ($tidakTbc) {
+            $hasilEvaluasi = 'Tidak TBC';
+        }
+
+        $wilayah = $this->resolveIkWilayah($sitb, $alamatKontak, $patientMap);
+
+        return [
+            'petugas_investigasi' => $this->cleanVal($sheet->getCell([4, $rowNum])->getValue()),
+            'fasyankes_kader'     => $this->cleanVal($sheet->getCell([5, $rowNum])->getValue()),
+            'dirujuk_oleh'        => $this->cleanVal($sheet->getCell([6, $rowNum])->getValue()),
+            'kasus_indeks_sitb'   => $sitb,
+            'kasus_indeks_nama'   => $namaIndeks,
+            'kasus_indeks_umur'   => is_numeric($this->cleanVal($sheet->getCell([9, $rowNum])->getValue())) ? (int) $sheet->getCell([9, $rowNum])->getValue() : null,
+            'kasus_indeks_tipe_diagnosis' => $this->cleanVal($sheet->getCell([10, $rowNum])->getValue()),
+            'kasus_indeks_tgl_diagnosis'  => $this->cleanDateVal($sheet->getCell([11, $rowNum])->getValue()),
+            'kasus_indeks_jenis'  => $this->cleanVal($sheet->getCell([12, $rowNum])->getValue()),
+            'nama_kontak'         => $namaKontak,
+            'nik_kontak'          => $nikKontak,
+            'umur_kontak'         => is_numeric($umurKontak) ? (int) $umurKontak : null,
+            'jenis_kelamin_kontak'=> $jkKontak,
+            'alamat_kontak'       => $alamatKontak,
+            'provinsi'            => $wilayah['provinsi'],
+            'kabupaten'           => $wilayah['kabupaten'],
+            'kecamatan'           => $wilayah['kecamatan'],
+            'kelurahan'           => $wilayah['kelurahan'],
+            'metode_ik'           => $this->cleanVal($sheet->getCell([18, $rowNum])->getValue()),
+            'jenis_kontak'        => $jenisKontak,
+            'tanggal_investigasi' => $this->cleanDateVal($sheet->getCell([21, $rowNum])->getValue()),
+            'diperiksa_toraks'    => $this->cleanVal($sheet->getCell([22, $rowNum])->getValue()),
+            'gejala_batuk'        => $this->cleanVal($sheet->getCell([23, $rowNum])->getValue()),
+            'gejala_lain'         => $this->cleanVal($sheet->getCell([24, $rowNum])->getValue()),
+            'faktor_risiko'       => $this->cleanVal($sheet->getCell([27, $rowNum])->getValue()),
+            'status_rujukan_terduga' => $this->cleanVal($sheet->getCell([32, $rowNum])->getValue()),
+            'hasil_evaluasi'      => $hasilEvaluasi,
+            'status_tpt'          => !empty($this->cleanVal($sheet->getCell([39, $rowNum])->getValue())) ? 'Memenuhi Syarat TPT' : null,
+        ];
+    }
+
+    /**
+     * Resolve Kelurahan & Kecamatan for IK row
+     */
+    protected function resolveIkWilayah(?string $sitb, ?string $alamat, array &$patientMap): array
+    {
+        // 1. If index patient exists in tb_patients, inherit their kelurahan & kecamatan
+        if (!empty($sitb) && isset($patientMap[$sitb]) && !empty($patientMap[$sitb]['kelurahan'])) {
+            return [
+                'provinsi'  => $patientMap[$sitb]['provinsi'] ?? 'Banten',
+                'kabupaten' => $patientMap[$sitb]['kabupaten'] ?? 'Kab. Tangerang',
+                'kecamatan' => $patientMap[$sitb]['kecamatan'] ?? 'Pagedangan',
+                'kelurahan' => $patientMap[$sitb]['kelurahan'],
+            ];
+        }
+
+        // 2. Scan address text for known kelurahan
+        $known = [
+            'karang tengah'  => ['kel' => 'Karang Tengah', 'kec' => 'Pagedangan'],
+            'lengkong kulon' => ['kel' => 'Lengkong Kulon', 'kec' => 'Pagedangan'],
+            'kadusirung'     => ['kel' => 'Kadu Sirung', 'kec' => 'Pagedangan'],
+            'kadu sirung'    => ['kel' => 'Kadu Sirung', 'kec' => 'Pagedangan'],
+            'malang nengah'  => ['kel' => 'Malang Nengah', 'kec' => 'Pagedangan'],
+            'situgadung'     => ['kel' => 'Situ Gadung', 'kec' => 'Pagedangan'],
+            'situ gadung'    => ['kel' => 'Situ Gadung', 'kec' => 'Pagedangan'],
+            'medang'         => ['kel' => 'Medang', 'kec' => 'Pagedangan'],
+            'cijantra'       => ['kel' => 'Cijantra', 'kec' => 'Pagedangan'],
+            'cihuni'         => ['kel' => 'Cihuni', 'kec' => 'Pagedangan'],
+            'cicalengka'     => ['kel' => 'Cicalengka', 'kec' => 'Pagedangan'],
+            'jatake'         => ['kel' => 'Jatake', 'kec' => 'Pagedangan'],
+            'pagedangan'     => ['kel' => 'Pagedangan', 'kec' => 'Pagedangan'],
+            'curug'          => ['kel' => 'Curug', 'kec' => 'Curug'],
+            'legok'          => ['kel' => 'Legok', 'kec' => 'Legok'],
+            'cisauk'         => ['kel' => 'Cisauk', 'kec' => 'Cisauk'],
+        ];
+
+        if (!empty($alamat)) {
+            foreach ($known as $k => $info) {
+                if (stripos($alamat, $k) !== false) {
+                    return [
+                        'provinsi'  => 'Banten',
+                        'kabupaten' => 'Kab. Tangerang',
+                        'kecamatan' => $info['kec'],
+                        'kelurahan' => $info['kel'],
+                    ];
+                }
+            }
+        }
+
+        // Default
+        return [
+            'provinsi'  => 'Banten',
+            'kabupaten' => 'Kab. Tangerang',
+            'kecamatan' => 'Pagedangan',
+            'kelurahan' => 'Pagedangan',
+        ];
+    }
+
+    /**
+     * Clean date value from spreadsheet
+     */
+    protected function cleanDateVal($val): ?string
+    {
+        if ($val === null || $val === '') {
+            return null;
+        }
+        if ($val instanceof \DateTimeInterface) {
+            return $val->format('Y-m-d');
+        }
+        if (is_numeric($val)) {
+            try {
+                return ExcelDate::excelToDateTimeObject((float) $val)->format('Y-m-d');
+            } catch (\Throwable) {}
+        }
+        return trim((string) $val);
     }
 }

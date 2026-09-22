@@ -59,17 +59,20 @@ class PatientController extends Controller
     }
 
     /**
-     * Clear all patient records massively from database.
+     * Clear all patient and contact investigation records massively from database.
      */
     public function clearMassive()
     {
         $deletedCount = TbPatient::count();
+        $deletedIk = \App\Modules\TBC\Models\TbContactInvestigation::count();
         TbPatient::truncate();
+        \App\Modules\TBC\Models\TbContactInvestigation::truncate();
 
         return response()->json([
             'success' => true,
-            'message' => "Semua data pasien TBC ({$deletedCount} data) berhasil dikosongkan secara permanen.",
+            'message' => "Semua data pasien ({$deletedCount}) dan investigasi kontak ({$deletedIk}) berhasil dikosongkan secara permanen.",
             'deleted_count' => $deletedCount,
+            'deleted_ik'    => $deletedIk,
         ]);
     }
 }
