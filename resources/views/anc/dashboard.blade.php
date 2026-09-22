@@ -2851,7 +2851,7 @@
                 },
 
                 renderCharts() {
-                    // 1. Kelurahan Horizontal Bar Chart
+                    // 1. Kelurahan Horizontal Bar Chart (2 dataset: total & BSC)
                     const ctxKel = document.getElementById('ancKelurahanChart')?.getContext('2d');
                     if (ctxKel) {
                         if (ancCharts.kelurahan) {
@@ -2861,21 +2861,35 @@
                             type: 'bar',
                             data: {
                                 labels: this.kelurahanChartData.labels,
-                                datasets: [{
-                                    label: 'Jumlah Ibu Hamil',
-                                    data: this.kelurahanChartData.values,
-                                    backgroundColor: 'rgba(236, 72, 153, 0.85)',
-                                    borderRadius: 6,
-                                }]
+                                datasets: [
+                                    {
+                                        label: 'Total Ibu Hamil',
+                                        data: this.kelurahanChartData.values,
+                                        backgroundColor: 'rgba(236, 72, 153, 0.80)',
+                                        borderRadius: 6,
+                                    },
+                                    {
+                                        label: 'Bekas Sesar (BSC)',
+                                        data: this.kelurahanChartData.bsc_values ?? [],
+                                        backgroundColor: 'rgba(109, 40, 217, 0.75)',
+                                        borderRadius: 6,
+                                    }
+                                ]
                             },
                             options: {
                                 indexAxis: 'y',
                                 responsive: true,
                                 maintainAspectRatio: false,
-                                plugins: { legend: { display: false } },
+                                plugins: {
+                                    legend: {
+                                        display: true,
+                                        position: 'top',
+                                        labels: { boxWidth: 12, font: { size: 11 } }
+                                    }
+                                },
                                 scales: {
-                                    x: { grid: { color: '#f1f5f9' } },
-                                    y: { grid: { display: false } }
+                                    x: { grid: { color: '#f1f5f9' }, stacked: false },
+                                    y: { grid: { display: false }, stacked: false }
                                 }
                             }
                         });
@@ -2971,6 +2985,7 @@
                     if (ancCharts.kelurahan) {
                         ancCharts.kelurahan.data.labels = this.kelurahanChartData.labels;
                         ancCharts.kelurahan.data.datasets[0].data = this.kelurahanChartData.values;
+                        ancCharts.kelurahan.data.datasets[1].data = this.kelurahanChartData.bsc_values ?? [];
                         ancCharts.kelurahan.update();
                     }
                     if (ancCharts.age) {

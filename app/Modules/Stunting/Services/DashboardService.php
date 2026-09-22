@@ -47,6 +47,9 @@ class DashboardService
 
         $total = (clone $q)->count();
 
+        // Total balita unik (distinct NIK)
+        $totalBalita = (clone $q)->whereNotNull('nik')->distinct()->count('nik');
+
         // TB/U (stunting status)
         $normalCount = (clone $q)->where('tbu_kategori', 'Normal')->count();
         $pendekCount = (clone $q)->where('tbu_kategori', 'Pendek')->count();
@@ -70,16 +73,17 @@ class DashboardService
 
         // Naik berat badan
         $naikBBCount = (clone $q)->whereIn('naik_berat_badan', ['N', 'Y', 'T'])->count();
-        $naikBBYCount = (clone $q)->where('naik_berat_badan', 'N')->count(); // N = Naik
+        $naikBBYCount = (clone $q)->whereIn('tbu_kategori', ['Pendek', 'Sangat Pendek'])->where('naik_berat_badan', 'N')->count(); // N = Naik, hanya stunting
         $naikBBTCount = (clone $q)->where('naik_berat_badan', 'T')->count(); // T = Turun
 
-        // Skrining Klinis & Intervensi Spesifik
-        $hemoglobinCount = (clone $q)->where('test_hemoglobin', 'Ya')->count();
-        $mantouxCount    = (clone $q)->where('test_mantoux', 'Ya')->count();
-        $konsulSpaCount  = (clone $q)->where('konsul_spa', 'Ya')->count();
-        $vitACount       = (clone $q)->whereNotNull('jml_vit_a')->where('jml_vit_a', '>', 0)->count();
-        $kelasIbuCount   = (clone $q)->where('kelas_ibu', 'Ya')->count();
-        $mbgCount        = (clone $q)->where('mbg', 'Ya')->count();
+        // Skrining Klinis & Intervensi Spesifik — hanya dari balita STUNTING (Pendek + Sangat Pendek)
+        $stuntingQ = (clone $q)->whereIn('tbu_kategori', ['Pendek', 'Sangat Pendek']);
+        $hemoglobinCount = (clone $stuntingQ)->where('test_hemoglobin', 'Ya')->count();
+        $mantouxCount    = (clone $stuntingQ)->where('test_mantoux', 'Ya')->count();
+        $konsulSpaCount  = (clone $stuntingQ)->where('konsul_spa', 'Ya')->count();
+        $vitACount       = (clone $stuntingQ)->whereNotNull('jml_vit_a')->where('jml_vit_a', '>', 0)->count();
+        $kelasIbuCount   = (clone $stuntingQ)->where('kelas_ibu', 'Ya')->count();
+        $mbgCount        = (clone $stuntingQ)->where('mbg', 'Ya')->count();
 
         // Per-desa breakdown for chart
         $byDesa = (clone $q)->selectRaw("
@@ -133,6 +137,7 @@ class DashboardService
 
         return compact(
             'total',
+            'totalBalita',
             'stuntingTotal',
             'normalCount',
             'pendekCount',
