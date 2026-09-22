@@ -462,13 +462,12 @@
                     </div>
                 </div>
 
-                <!-- Chart 3: Tren Pendaftaran Bulanan (Line Chart) -->
+                <!-- Chart 3: Tren Tafsiran Persalinan / HPL (Line Chart) -->
                 <div class="bg-white p-5 rounded-2xl shadow-xs border border-slate-200/80">
                     <div class="flex items-center justify-between mb-4">
                         <div>
-                            <h3 class="font-bold text-base text-slate-800">Tren Kunjungan Ibu Hamil Perbulan</h3>
-                            <p class="text-xs text-slate-500">Perkembangan jumlah kunjungan pemeriksaan ibu hamil
-                                sepanjang tahun</p>
+                            <h3 class="font-bold text-base text-slate-800">Tren Tafsiran Persalinan</h3>
+                            <p class="text-xs text-slate-500">Jumlah ibu hamil dengan HPL (Hari Perkiraan Lahir) per bulan — 12 bulan ke depan</p>
                         </div>
                     </div>
                     <div class="h-60">
@@ -2928,24 +2927,28 @@
                             try { ancCharts.monthly.destroy(); } catch (e) { }
                         }
                         ancCharts.monthly = new Chart(ctxMonth, {
-                            type: 'line',
+                            type: 'bar',
                             data: {
                                 labels: this.monthlyChartData.labels,
                                 datasets: [{
-                                    label: 'Registrasi Baru',
+                                    label: 'Tafsiran Persalinan (HPL)',
                                     data: this.monthlyChartData.values,
-                                    borderColor: '#ec4899',
-                                    backgroundColor: 'rgba(236, 72, 153, 0.1)',
-                                    fill: true,
-                                    tension: 0.35,
-                                    pointRadius: 4,
-                                    pointBackgroundColor: '#ec4899',
+                                    backgroundColor: 'rgba(99, 102, 241, 0.75)',
+                                    borderColor: '#6366f1',
+                                    borderRadius: 6,
                                 }]
                             },
                             options: {
                                 responsive: true,
                                 maintainAspectRatio: false,
-                                plugins: { legend: { display: false } },
+                                plugins: {
+                                    legend: { display: false },
+                                    tooltip: {
+                                        callbacks: {
+                                            label: ctx => ` ${ctx.parsed.y} ibu hamil akan bersalin`
+                                        }
+                                    }
+                                },
                                 scales: {
                                     y: { beginAtZero: true, grid: { color: '#f1f5f9' } },
                                     x: { grid: { display: false } }
