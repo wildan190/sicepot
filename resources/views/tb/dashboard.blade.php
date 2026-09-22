@@ -328,7 +328,7 @@
                 <div class="bg-white p-5 rounded-2xl shadow-xs border border-slate-200/80">
                     <div class="flex items-center justify-between mb-4">
                         <div>
-                            <h3 class="font-bold text-base text-slate-800">Tren Pendaftaran Kasus per Bulan</h3>
+                            <h3 class="font-bold text-base text-slate-800">Tren Pelacakan Kasus per Bulan</h3>
                             <p class="text-xs text-slate-500">Perkembangan jumlah kasus sepanjang periode berjalan</p>
                         </div>
                     </div>
@@ -592,13 +592,11 @@
                                 <template x-for="p in (patientsData.data || [])" :key="p.id">
                                     <tr class="hover:bg-indigo-50/30 transition-colors">
                                         <td class="px-4 py-3 whitespace-nowrap">
-                                            <span
-                                                :class="{
+                                            <span :class="{
                                                     'bg-indigo-50 text-indigo-700 border-indigo-200': p.report_type === 'tb_03',
                                                     'bg-teal-50 text-teal-700 border-teal-200': p.report_type === 'skrining' || p.nama_pelapor || p.batuk_2_minggu,
                                                     'bg-amber-50 text-amber-700 border-amber-200': p.report_type !== 'tb_03' && p.report_type !== 'skrining' && !p.nama_pelapor && !p.batuk_2_minggu
-                                                }"
-                                                class="px-2 py-0.5 rounded-md font-semibold text-[11px] border"
+                                                }" class="px-2 py-0.5 rounded-md font-semibold text-[11px] border"
                                                 x-text="p.report_type === 'tb_03' ? 'TB-03 SO' : ((p.report_type === 'skrining' || p.nama_pelapor || p.batuk_2_minggu) ? 'Skrining' : 'TB-06')"></span>
                                         </td>
                                         <td class="px-4 py-3">
@@ -1170,20 +1168,24 @@
 
                         {{-- Tab switcher --}}
                         <div class="flex border-b border-slate-100 bg-slate-50">
-                            <button type="button" @click="addModalTab = 'manual'"
-                                :class="addModalTab === 'manual'
+                            <button type="button" @click="addModalTab = 'manual'" :class="addModalTab === 'manual'
                                     ? 'border-b-2 border-indigo-500 text-indigo-700 font-semibold bg-white'
                                     : 'text-slate-500 hover:text-slate-700'"
                                 class="flex-1 py-3 text-xs flex items-center justify-center gap-1.5 transition-all cursor-pointer">
-                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                                </svg>
                                 Formulir Manual
                             </button>
-                            <button type="button" @click="addModalTab = 'ai'"
-                                :class="addModalTab === 'ai'
+                            <button type="button" @click="addModalTab = 'ai'" :class="addModalTab === 'ai'
                                     ? 'border-b-2 border-indigo-500 text-indigo-700 font-semibold bg-white'
                                     : 'text-slate-500 hover:text-slate-700'"
                                 class="flex-1 py-3 text-xs flex items-center justify-center gap-1.5 transition-all cursor-pointer">
-                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M13 10V3L4 14h7v7l9-11h-7z" />
+                                </svg>
                                 Bantu AI
                             </button>
                         </div>
@@ -1197,7 +1199,8 @@
 
                                     {{-- Nama Pasien --}}
                                     <div class="sm:col-span-2">
-                                        <label class="block text-[11px] font-semibold text-slate-500 mb-1">Nama Lengkap Pasien <span class="text-rose-500">*</span></label>
+                                        <label class="block text-[11px] font-semibold text-slate-500 mb-1">Nama Lengkap
+                                            Pasien <span class="text-rose-500">*</span></label>
                                         <input type="text" x-model="newPatient.nama_lengkap"
                                             placeholder="Nama sesuai KTP"
                                             class="w-full px-3.5 py-2.5 text-xs border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-slate-50 focus:bg-white transition-all">
@@ -1206,22 +1209,24 @@
                                     {{-- NIK --}}
                                     <div>
                                         <label class="block text-[11px] font-semibold text-slate-500 mb-1">NIK</label>
-                                        <input type="text" x-model="newPatient.nik"
-                                            placeholder="16 digit NIK" maxlength="16"
+                                        <input type="text" x-model="newPatient.nik" placeholder="16 digit NIK"
+                                            maxlength="16"
                                             class="w-full px-3.5 py-2.5 text-xs border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-slate-50 focus:bg-white transition-all">
                                     </div>
 
                                     {{-- Umur --}}
                                     <div>
-                                        <label class="block text-[11px] font-semibold text-slate-500 mb-1">Umur (Tahun)</label>
-                                        <input type="number" x-model="newPatient.umur"
-                                            placeholder="Contoh: 32" min="0" max="120"
+                                        <label class="block text-[11px] font-semibold text-slate-500 mb-1">Umur
+                                            (Tahun)</label>
+                                        <input type="number" x-model="newPatient.umur" placeholder="Contoh: 32" min="0"
+                                            max="120"
                                             class="w-full px-3.5 py-2.5 text-xs border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-slate-50 focus:bg-white transition-all">
                                     </div>
 
                                     {{-- Kategori Usia --}}
                                     <div>
-                                        <label class="block text-[11px] font-semibold text-slate-500 mb-1">Kategori Usia</label>
+                                        <label class="block text-[11px] font-semibold text-slate-500 mb-1">Kategori
+                                            Usia</label>
                                         <select x-model="newPatient.kategori_usia"
                                             class="w-full px-3.5 py-2.5 text-xs border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-slate-50 focus:bg-white transition-all">
                                             <option value="">— Pilih —</option>
@@ -1234,7 +1239,8 @@
 
                                     {{-- Jenis Kelamin --}}
                                     <div>
-                                        <label class="block text-[11px] font-semibold text-slate-500 mb-1">Jenis Kelamin</label>
+                                        <label class="block text-[11px] font-semibold text-slate-500 mb-1">Jenis
+                                            Kelamin</label>
                                         <select x-model="newPatient.jenis_kelamin"
                                             class="w-full px-3.5 py-2.5 text-xs border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-slate-50 focus:bg-white transition-all">
                                             <option value="">— Pilih —</option>
@@ -1245,7 +1251,8 @@
 
                                     {{-- Alamat Desa --}}
                                     <div>
-                                        <label class="block text-[11px] font-semibold text-slate-500 mb-1">Alamat Desa / Kelurahan</label>
+                                        <label class="block text-[11px] font-semibold text-slate-500 mb-1">Alamat Desa /
+                                            Kelurahan</label>
                                         <select x-model="newPatient.kelurahan"
                                             class="w-full px-3.5 py-2.5 text-xs border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-slate-50 focus:bg-white transition-all">
                                             <option value="">— Pilih Desa —</option>
@@ -1265,15 +1272,16 @@
 
                                     {{-- No HP --}}
                                     <div>
-                                        <label class="block text-[11px] font-semibold text-slate-500 mb-1">No. HP / WhatsApp</label>
-                                        <input type="tel" x-model="newPatient.no_telepon"
-                                            placeholder="08xxxxxxxxxx"
+                                        <label class="block text-[11px] font-semibold text-slate-500 mb-1">No. HP /
+                                            WhatsApp</label>
+                                        <input type="tel" x-model="newPatient.no_telepon" placeholder="08xxxxxxxxxx"
                                             class="w-full px-3.5 py-2.5 text-xs border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-slate-50 focus:bg-white transition-all">
                                     </div>
 
                                     {{-- Nama Pelapor --}}
                                     <div>
-                                        <label class="block text-[11px] font-semibold text-slate-500 mb-1">Nama Pelapor</label>
+                                        <label class="block text-[11px] font-semibold text-slate-500 mb-1">Nama
+                                            Pelapor</label>
                                         <input type="text" x-model="newPatient.nama_pelapor"
                                             placeholder="Nama kader / petugas"
                                             class="w-full px-3.5 py-2.5 text-xs border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-slate-50 focus:bg-white transition-all">
@@ -1283,7 +1291,8 @@
 
                                 {{-- Skrining Section --}}
                                 <div class="mt-1">
-                                    <p class="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-2.5">Skrining Gejala</p>
+                                    <p class="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-2.5">
+                                        Skrining Gejala</p>
                                     <div class="space-y-2">
 
                                         {{-- Helper macro: yes/no row --}}
@@ -1293,12 +1302,13 @@
                                             { label: 'Keringat Malam',           key: 'keringat_malam', opts: ['Ya','Tidak'] },
                                             { label: 'Kontak Erat dengan Penderita TB', key: 'kontak_tb', opts: ['Ya','Tidak'] }
                                         ]" :key="item.key">
-                                            <div class="flex items-center justify-between gap-3 bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5">
-                                                <span class="text-xs font-medium text-slate-700 flex-1" x-text="item.label"></span>
+                                            <div
+                                                class="flex items-center justify-between gap-3 bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5">
+                                                <span class="text-xs font-medium text-slate-700 flex-1"
+                                                    x-text="item.label"></span>
                                                 <div class="flex gap-1.5 shrink-0">
                                                     <template x-for="opt in item.opts" :key="opt">
-                                                        <button type="button"
-                                                            @click="newPatient[item.key] = opt"
+                                                        <button type="button" @click="newPatient[item.key] = opt"
                                                             :class="newPatient[item.key] === opt
                                                                 ? (opt === 'Ya' ? 'bg-emerald-600 text-white border-emerald-600' : 'bg-rose-500 text-white border-rose-500')
                                                                 : 'bg-white text-slate-500 border-slate-300 hover:border-slate-400'"
@@ -1311,15 +1321,15 @@
                                         </template>
 
                                         {{-- Sudah Pengobatan (Sudah / Belum) --}}
-                                        <div class="flex items-center justify-between gap-3 bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5">
-                                            <span class="text-xs font-medium text-slate-700 flex-1">Apakah sudah melakukan Pengobatan?</span>
+                                        <div
+                                            class="flex items-center justify-between gap-3 bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5">
+                                            <span class="text-xs font-medium text-slate-700 flex-1">Apakah sudah
+                                                melakukan Pengobatan?</span>
                                             <div class="flex gap-1.5 shrink-0">
-                                                <button type="button"
-                                                    @click="newPatient.sudah_pengobatan = 'Sudah'"
+                                                <button type="button" @click="newPatient.sudah_pengobatan = 'Sudah'"
                                                     :class="newPatient.sudah_pengobatan === 'Sudah' ? 'bg-emerald-600 text-white border-emerald-600' : 'bg-white text-slate-500 border-slate-300 hover:border-slate-400'"
                                                     class="px-3 py-1 text-[11px] font-bold border rounded-lg transition-all cursor-pointer">Sudah</button>
-                                                <button type="button"
-                                                    @click="newPatient.sudah_pengobatan = 'Belum'"
+                                                <button type="button" @click="newPatient.sudah_pengobatan = 'Belum'"
                                                     :class="newPatient.sudah_pengobatan === 'Belum' ? 'bg-amber-500 text-white border-amber-500' : 'bg-white text-slate-500 border-slate-300 hover:border-slate-400'"
                                                     class="px-3 py-1 text-[11px] font-bold border rounded-lg transition-all cursor-pointer">Belum</button>
                                             </div>
@@ -1379,7 +1389,8 @@
                                 <div x-show="aiAddStep === 'preview'" class="space-y-3">
                                     <div
                                         class="p-3 bg-emerald-50 border border-emerald-200 rounded-xl text-xs text-emerald-700 font-medium">
-                                        AI berhasil mengekstrak data. Periksa hasil di bawah dan koreksi jika perlu sebelum
+                                        AI berhasil mengekstrak data. Periksa hasil di bawah dan koreksi jika perlu
+                                        sebelum
                                         menyimpan.
                                     </div>
                                     <div
@@ -1388,7 +1399,8 @@
                                             x-for="[key, val] in Object.entries(newPatient).filter(([k,v]) => v !== null && v !== '' && v !== undefined)"
                                             :key="key">
                                             <div class="flex items-start gap-2 px-3.5 py-2.5 hover:bg-slate-50">
-                                                <span class="text-[11px] font-semibold text-slate-500 w-44 shrink-0 pt-0.5"
+                                                <span
+                                                    class="text-[11px] font-semibold text-slate-500 w-44 shrink-0 pt-0.5"
                                                     x-text="key.replace(/_/g,' ')"></span>
                                                 <input type="text" :value="val"
                                                     @change="newPatient[key] = $event.target.value"
@@ -1411,8 +1423,7 @@
                             <div>
                                 {{-- AI: back button --}}
                                 <button x-show="addModalTab === 'ai' && aiAddStep === 'preview'"
-                                    @click="aiAddStep = 'prompt'; aiAddError = ''"
-                                    type="button"
+                                    @click="aiAddStep = 'prompt'; aiAddError = ''" type="button"
                                     class="text-xs font-semibold text-slate-500 hover:text-slate-700 cursor-pointer">
                                     Kembali ke Deskripsi
                                 </button>
@@ -1430,8 +1441,10 @@
                                     class="px-5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl shadow-xs flex items-center gap-2 cursor-pointer disabled:opacity-50 transition-colors">
                                     <template x-if="!isSubmittingNewPatient">
                                         <span class="flex items-center gap-1.5">
-                                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M5 13l4 4L19 7" />
                                             </svg>
                                             Simpan Data
                                         </span>
@@ -1439,8 +1452,10 @@
                                     <template x-if="isSubmittingNewPatient">
                                         <span class="flex items-center gap-2">
                                             <svg class="animate-spin h-3.5 w-3.5" viewBox="0 0 24 24">
-                                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
-                                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
+                                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                                    stroke-width="4" />
+                                                <path class="opacity-75" fill="currentColor"
+                                                    d="M4 12a8 8 0 018-8v8H4z" />
                                             </svg>
                                             Menyimpan...
                                         </span>
@@ -1448,14 +1463,15 @@
                                 </button>
 
                                 {{-- AI Step 1: Parse --}}
-                                <button x-show="addModalTab === 'ai' && aiAddStep === 'prompt'"
-                                    @click="runTbAiParse()" type="button"
-                                    :disabled="aiAddLoading || aiAddPrompt.trim().length < 10"
+                                <button x-show="addModalTab === 'ai' && aiAddStep === 'prompt'" @click="runTbAiParse()"
+                                    type="button" :disabled="aiAddLoading || aiAddPrompt.trim().length < 10"
                                     class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-xl shadow-xs flex items-center gap-2 cursor-pointer disabled:opacity-50 transition-colors">
                                     <template x-if="!aiAddLoading">
                                         <span class="flex items-center gap-1.5">
-                                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M13 10V3L4 14h7v7l9-11h-7z" />
                                             </svg>
                                             Proses dengan AI
                                         </span>
@@ -1463,8 +1479,10 @@
                                     <template x-if="aiAddLoading">
                                         <span class="flex items-center gap-2">
                                             <svg class="animate-spin h-3.5 w-3.5" viewBox="0 0 24 24">
-                                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
-                                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
+                                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                                    stroke-width="4" />
+                                                <path class="opacity-75" fill="currentColor"
+                                                    d="M4 12a8 8 0 018-8v8H4z" />
                                             </svg>
                                             Memproses...
                                         </span>
@@ -1473,13 +1491,14 @@
 
                                 {{-- AI Step 2: Save --}}
                                 <button x-show="addModalTab === 'ai' && aiAddStep === 'preview'"
-                                    @click="saveNewPatient()" type="button"
-                                    :disabled="isSubmittingNewPatient"
+                                    @click="saveNewPatient()" type="button" :disabled="isSubmittingNewPatient"
                                     class="px-5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl shadow-xs flex items-center gap-2 cursor-pointer disabled:opacity-50 transition-colors">
                                     <template x-if="!isSubmittingNewPatient">
                                         <span class="flex items-center gap-1.5">
-                                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M5 13l4 4L19 7" />
                                             </svg>
                                             Simpan ke Database
                                         </span>
@@ -1487,8 +1506,10 @@
                                     <template x-if="isSubmittingNewPatient">
                                         <span class="flex items-center gap-2">
                                             <svg class="animate-spin h-3.5 w-3.5" viewBox="0 0 24 24">
-                                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
-                                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
+                                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                                    stroke-width="4" />
+                                                <path class="opacity-75" fill="currentColor"
+                                                    d="M4 12a8 8 0 018-8v8H4z" />
                                             </svg>
                                             Menyimpan...
                                         </span>
