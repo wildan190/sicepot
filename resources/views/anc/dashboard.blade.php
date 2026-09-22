@@ -2869,9 +2869,9 @@
                                         borderRadius: 6,
                                     },
                                     {
-                                        label: 'Bekas Sesar (BSC)',
-                                        data: this.kelurahanChartData.bsc_values ?? [],
-                                        backgroundColor: 'rgba(109, 40, 217, 0.75)',
+                                        label: 'Ibu Hamil Risiko',
+                                        data: this.kelurahanChartData.risiko_values ?? [],
+                                        backgroundColor: 'rgba(239, 68, 68, 0.75)',
                                         borderRadius: 6,
                                     }
                                 ]
@@ -2985,7 +2985,7 @@
                     if (ancCharts.kelurahan) {
                         ancCharts.kelurahan.data.labels = this.kelurahanChartData.labels;
                         ancCharts.kelurahan.data.datasets[0].data = this.kelurahanChartData.values;
-                        ancCharts.kelurahan.data.datasets[1].data = this.kelurahanChartData.bsc_values ?? [];
+                        ancCharts.kelurahan.data.datasets[1].data = this.kelurahanChartData.risiko_values ?? [];
                         ancCharts.kelurahan.update();
                     }
                     if (ancCharts.age) {
