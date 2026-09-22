@@ -73,6 +73,14 @@ class DashboardService
         $naikBBYCount = (clone $q)->where('naik_berat_badan', 'N')->count(); // N = Naik
         $naikBBTCount = (clone $q)->where('naik_berat_badan', 'T')->count(); // T = Turun
 
+        // Skrining Klinis & Intervensi Spesifik
+        $hemoglobinCount = (clone $q)->where('test_hemoglobin', 'Ya')->count();
+        $mantouxCount    = (clone $q)->where('test_mantoux', 'Ya')->count();
+        $konsulSpaCount  = (clone $q)->where('konsul_spa', 'Ya')->count();
+        $vitACount       = (clone $q)->whereNotNull('jml_vit_a')->where('jml_vit_a', '>', 0)->count();
+        $kelasIbuCount   = (clone $q)->where('kelas_ibu', 'Ya')->count();
+        $mbgCount        = (clone $q)->where('mbg', 'Ya')->count();
+
         // Per-desa breakdown for chart
         $byDesa = (clone $q)->selectRaw("
                 desa,
@@ -141,6 +149,12 @@ class DashboardService
             'bbtbObesitasCount',
             'naikBBYCount',
             'naikBBTCount',
+            'hemoglobinCount',
+            'mantouxCount',
+            'konsulSpaCount',
+            'vitACount',
+            'kelasIbuCount',
+            'mbgCount',
             'lakiLaki',
             'perempuan',
             'byDesa',
