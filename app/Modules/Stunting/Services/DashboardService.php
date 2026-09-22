@@ -89,14 +89,25 @@ class DashboardService
         $lakiLaki = (clone $q)->where('jenis_kelamin', 'L')->count();
         $perempuan = (clone $q)->where('jenis_kelamin', 'P')->count();
 
-        // Monthly trend - strftime compatible with SQLite & MySQL/PostgreSQL fallback
+        // Monthly trend — driver-aware (PostgreSQL / MySQL / SQLite)
+        $driver = \Illuminate\Support\Facades\DB::getDriverName();
+
+        if ($driver === 'pgsql') {
+            $monthExpr   = "TO_CHAR(tanggal_pengukuran, 'YYYY-MM')";
+        } elseif (in_array($driver, ['mysql', 'mariadb'])) {
+            $monthExpr   = "DATE_FORMAT(tanggal_pengukuran, '%Y-%m')";
+        } else {
+            // SQLite
+            $monthExpr   = "strftime('%Y-%m', tanggal_pengukuran)";
+        }
+
         $monthlyTrend = (clone $q)->selectRaw("
-                strftime('%Y-%m', tanggal_pengukuran) as bulan_label,
+                {$monthExpr} as bulan_label,
                 COUNT(*) as total,
                 SUM(CASE WHEN tbu_kategori IN ('Pendek','Sangat Pendek') THEN 1 ELSE 0 END) as stunting
             ")
             ->whereNotNull('tanggal_pengukuran')
-            ->groupByRaw("strftime('%Y-%m', tanggal_pengukuran)")
+            ->groupByRaw($monthExpr)
             ->orderBy('bulan_label')
             ->get();
 
@@ -156,8 +167,18 @@ class DashboardService
      */
     public function getYearList(): array
     {
+        $driver = \Illuminate\Support\Facades\DB::getDriverName();
+
+        if ($driver === 'pgsql') {
+            $expr = "EXTRACT(YEAR FROM tanggal_pengukuran)::TEXT";
+        } elseif (in_array($driver, ['mysql', 'mariadb'])) {
+            $expr = "DATE_FORMAT(tanggal_pengukuran, '%Y')";
+        } else {
+            $expr = "strftime('%Y', tanggal_pengukuran)";
+        }
+
         return StuntingPatient::query()
-            ->selectRaw("strftime('%Y', tanggal_pengukuran) as tahun")
+            ->selectRaw("{$expr} as tahun")
             ->whereNotNull('tanggal_pengukuran')
             ->distinct()
             ->orderByDesc('tahun')
