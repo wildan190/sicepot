@@ -128,25 +128,19 @@
                 </div>
             </div>
 
-            {{-- KPI CARDS --}}
+            {{-- KPI CARDS: STATUS PERTUMBUHAN & STUNTING --}}
             <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
-                {{-- Total Balita --}}
+                {{-- Total Kasus Stunting Terdaftar --}}
                 <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs p-4 col-span-1">
-                    <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide">Total Balita</p>
+                    <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide">Total Rekam Kasus</p>
                     <p class="text-3xl font-bold text-slate-800 mt-1" x-text="stats.total ?? '{{ $total }}'"></p>
-                    <p class="text-xs text-slate-400 mt-1">Seluruh data</p>
+                    <p class="text-xs text-slate-400 mt-1">Data stunting perbulan</p>
                 </div>
-                {{-- Stunting (Pendek + Sangat Pendek) --}}
+                {{-- Kasus Stunting Aktif (Pendek + Sangat Pendek) --}}
                 <div class="bg-gradient-to-br from-red-50 to-rose-50 rounded-2xl border border-red-100 shadow-xs p-4 col-span-1">
-                    <p class="text-xs font-semibold text-red-500 uppercase tracking-wide">Stunting</p>
+                    <p class="text-xs font-semibold text-red-500 uppercase tracking-wide">Kasus Stunting</p>
                     <p class="text-3xl font-bold text-red-600 mt-1" x-text="stats.stuntingTotal ?? '{{ $stuntingTotal }}'"></p>
                     <p class="text-xs text-red-400 mt-1">Pendek + Sangat Pendek</p>
-                </div>
-                {{-- Pendek --}}
-                <div class="bg-gradient-to-br from-orange-50 to-amber-50 rounded-2xl border border-orange-100 shadow-xs p-4">
-                    <p class="text-xs font-semibold text-orange-500 uppercase tracking-wide">Pendek</p>
-                    <p class="text-3xl font-bold text-orange-600 mt-1" x-text="stats.pendekCount ?? '{{ $pendekCount }}'"></p>
-                    <p class="text-xs text-orange-400 mt-1">TB/U: Pendek</p>
                 </div>
                 {{-- Sangat Pendek --}}
                 <div class="bg-gradient-to-br from-red-50 to-red-100 rounded-2xl border border-red-200 shadow-xs p-4">
@@ -154,31 +148,98 @@
                     <p class="text-3xl font-bold text-red-700 mt-1" x-text="stats.sangatPendekCount ?? '{{ $sangatPendekCount }}'"></p>
                     <p class="text-xs text-red-500 mt-1">TB/U: Sangat Pendek</p>
                 </div>
-                {{-- Normal --}}
+                {{-- Pendek --}}
+                <div class="bg-gradient-to-br from-orange-50 to-amber-50 rounded-2xl border border-orange-100 shadow-xs p-4">
+                    <p class="text-xs font-semibold text-orange-500 uppercase tracking-wide">Pendek</p>
+                    <p class="text-3xl font-bold text-orange-600 mt-1" x-text="stats.pendekCount ?? '{{ $pendekCount }}'"></p>
+                    <p class="text-xs text-orange-400 mt-1">TB/U: Pendek</p>
+                </div>
+                {{-- Normal (Recovery / Outcome) --}}
                 <div class="bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl border border-green-100 shadow-xs p-4">
-                    <p class="text-xs font-semibold text-green-600 uppercase tracking-wide">Normal</p>
+                    <p class="text-xs font-semibold text-green-600 uppercase tracking-wide">Tinggi Normal</p>
                     <p class="text-3xl font-bold text-green-700 mt-1" x-text="stats.normalCount ?? '{{ $normalCount }}'"></p>
-                    <p class="text-xs text-green-500 mt-1">TB/U: Normal</p>
+                    <p class="text-xs text-green-500 mt-1">TB/U: Normal / Pulih</p>
                 </div>
             </div>
 
-            {{-- SECONDARY KPI --}}
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs p-4">
-                    <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide">Gizi Baik (BB/U)</p>
-                    <p class="text-2xl font-bold text-emerald-600 mt-1" x-text="stats.bbuGiziBaikCount ?? '{{ $bbuGiziBaikCount }}'"></p>
+            {{-- SECONDARY KPI: INTERVENSI KLINIS & LAYANAN SPESIFIK --}}
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3.5">
+                {{-- Hemoglobin Test --}}
+                <div class="bg-white rounded-2xl border border-rose-100/90 shadow-xs p-3.5 relative overflow-hidden group hover:border-rose-300 transition-colors">
+                    <div class="flex items-center justify-between">
+                        <p class="text-[11px] font-bold text-rose-700 uppercase tracking-wide">Test Hemoglobin</p>
+                        <span class="w-2 h-2 rounded-full bg-rose-500"></span>
+                    </div>
+                    <p class="text-2xl font-black text-rose-800 mt-1.5" x-text="stats.hemoglobinCount ?? '{{ $hemoglobinCount }}'"></p>
+                    <div class="flex items-center justify-between text-[10px] text-slate-500 mt-1">
+                        <span>Skrining Anemia</span>
+                        <span class="font-semibold text-rose-600" x-text="((stats.total || {{ $total }}) > 0 ? Math.round(((stats.hemoglobinCount ?? {{ $hemoglobinCount }}) / (stats.total || {{ $total }})) * 100) : 0) + '%'"></span>
+                    </div>
                 </div>
-                <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs p-4">
-                    <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide">Gizi Kurang (BB/U)</p>
-                    <p class="text-2xl font-bold text-amber-600 mt-1" x-text="(stats.bbuKurangCount ?? {{ $bbuKurangCount }}) + (stats.bbuSangatKurangCount ?? {{ $bbuSangatKurangCount }})"></p>
+
+                {{-- Mantoux Test --}}
+                <div class="bg-white rounded-2xl border border-sky-100/90 shadow-xs p-3.5 relative overflow-hidden group hover:border-sky-300 transition-colors">
+                    <div class="flex items-center justify-between">
+                        <p class="text-[11px] font-bold text-sky-700 uppercase tracking-wide">Test Mantoux</p>
+                        <span class="w-2 h-2 rounded-full bg-sky-500"></span>
+                    </div>
+                    <p class="text-2xl font-black text-sky-800 mt-1.5" x-text="stats.mantouxCount ?? '{{ $mantouxCount }}'"></p>
+                    <div class="flex items-center justify-between text-[10px] text-slate-500 mt-1">
+                        <span>Skrining TBC Anak</span>
+                        <span class="font-semibold text-sky-600" x-text="((stats.total || {{ $total }}) > 0 ? Math.round(((stats.mantouxCount ?? {{ $mantouxCount }}) / (stats.total || {{ $total }})) * 100) : 0) + '%'"></span>
+                    </div>
                 </div>
-                <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs p-4">
-                    <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide">Naik Berat Badan</p>
-                    <p class="text-2xl font-bold text-blue-600 mt-1" x-text="stats.naikBBYCount ?? '{{ $naikBBYCount }}'"></p>
+
+                {{-- Konsul Spesialis Anak --}}
+                <div class="bg-white rounded-2xl border border-indigo-100/90 shadow-xs p-3.5 relative overflow-hidden group hover:border-indigo-300 transition-colors">
+                    <div class="flex items-center justify-between">
+                        <p class="text-[11px] font-bold text-indigo-700 uppercase tracking-wide">Konsul Sp.A</p>
+                        <span class="w-2 h-2 rounded-full bg-indigo-500"></span>
+                    </div>
+                    <p class="text-2xl font-black text-indigo-800 mt-1.5" x-text="stats.konsulSpaCount ?? '{{ $konsulSpaCount }}'"></p>
+                    <div class="flex items-center justify-between text-[10px] text-slate-500 mt-1">
+                        <span>Spesialis Anak</span>
+                        <span class="font-semibold text-indigo-600" x-text="((stats.total || {{ $total }}) > 0 ? Math.round(((stats.konsulSpaCount ?? {{ $konsulSpaCount }}) / (stats.total || {{ $total }})) * 100) : 0) + '%'"></span>
+                    </div>
                 </div>
-                <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs p-4">
-                    <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide">Tidak Naik BB</p>
-                    <p class="text-2xl font-bold text-rose-600 mt-1" x-text="stats.naikBBTCount ?? '{{ $naikBBTCount }}'"></p>
+
+                {{-- Vitamin A --}}
+                <div class="bg-white rounded-2xl border border-amber-100/90 shadow-xs p-3.5 relative overflow-hidden group hover:border-amber-300 transition-colors">
+                    <div class="flex items-center justify-between">
+                        <p class="text-[11px] font-bold text-amber-700 uppercase tracking-wide">Suplementasi Vit A</p>
+                        <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+                    </div>
+                    <p class="text-2xl font-black text-amber-800 mt-1.5" x-text="stats.vitACount ?? '{{ $vitACount }}'"></p>
+                    <div class="flex items-center justify-between text-[10px] text-slate-500 mt-1">
+                        <span>Kapsul Vitamin A</span>
+                        <span class="font-semibold text-amber-600" x-text="((stats.total || {{ $total }}) > 0 ? Math.round(((stats.vitACount ?? {{ $vitACount }}) / (stats.total || {{ $total }})) * 100) : 0) + '%'"></span>
+                    </div>
+                </div>
+
+                {{-- Kelas Ibu Balita --}}
+                <div class="bg-white rounded-2xl border border-purple-100/90 shadow-xs p-3.5 relative overflow-hidden group hover:border-purple-300 transition-colors">
+                    <div class="flex items-center justify-between">
+                        <p class="text-[11px] font-bold text-purple-700 uppercase tracking-wide">Kelas Ibu Balita</p>
+                        <span class="w-2 h-2 rounded-full bg-purple-500"></span>
+                    </div>
+                    <p class="text-2xl font-black text-purple-800 mt-1.5" x-text="stats.kelasIbuCount ?? '{{ $kelasIbuCount }}'"></p>
+                    <div class="flex items-center justify-between text-[10px] text-slate-500 mt-1">
+                        <span>Edukasi Gizi</span>
+                        <span class="font-semibold text-purple-600" x-text="((stats.total || {{ $total }}) > 0 ? Math.round(((stats.kelasIbuCount ?? {{ $kelasIbuCount }}) / (stats.total || {{ $total }})) * 100) : 0) + '%'"></span>
+                    </div>
+                </div>
+
+                {{-- Naik Berat Badan (N) --}}
+                <div class="bg-white rounded-2xl border border-emerald-100/90 shadow-xs p-3.5 relative overflow-hidden group hover:border-emerald-300 transition-colors">
+                    <div class="flex items-center justify-between">
+                        <p class="text-[11px] font-bold text-emerald-700 uppercase tracking-wide">Naik BB (N)</p>
+                        <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                    </div>
+                    <p class="text-2xl font-black text-emerald-800 mt-1.5" x-text="stats.naikBBYCount ?? '{{ $naikBBYCount }}'"></p>
+                    <div class="flex items-center justify-between text-[10px] text-slate-500 mt-1">
+                        <span>Tren Positif</span>
+                        <span class="font-semibold text-emerald-600" x-text="((stats.total || {{ $total }}) > 0 ? Math.round(((stats.naikBBYCount ?? {{ $naikBBYCount }}) / (stats.total || {{ $total }})) * 100) : 0) + '%'"></span>
+                    </div>
                 </div>
             </div>
 
@@ -270,6 +331,9 @@
                                 <th class="px-3 py-3 text-left text-slate-500 font-semibold">BB/U</th>
                                 <th class="px-3 py-3 text-left text-slate-500 font-semibold">BB/TB</th>
                                 <th class="px-3 py-3 text-center text-slate-500 font-semibold">Naik BB</th>
+                                <th class="px-3 py-3 text-center text-rose-600 font-semibold">Test Hb</th>
+                                <th class="px-3 py-3 text-center text-sky-600 font-semibold">Mantoux</th>
+                                <th class="px-3 py-3 text-center text-indigo-600 font-semibold">Sp.A</th>
                                 <th class="px-3 py-3 text-left text-slate-500 font-semibold">Tgl Ukur</th>
                                 <th class="px-3 py-3 text-center text-slate-500 font-semibold">Aksi</th>
                             </tr>
@@ -318,7 +382,22 @@
                                             <span class="text-slate-400">-</span>
                                         </template>
                                     </td>
-                                    <td class="px-3 py-2.5 text-slate-500" x-text="formatDate(p.tanggal_pengukuran)"></td>
+                                    <td class="px-3 py-2.5 text-center">
+                                        <span class="inline-block px-2 py-0.5 rounded-full text-[10px] font-bold"
+                                            :class="p.test_hemoglobin === 'Ya' ? 'bg-rose-50 text-rose-700 border border-rose-200' : 'text-slate-400'"
+                                            x-text="p.test_hemoglobin || '-'"></span>
+                                    </td>
+                                    <td class="px-3 py-2.5 text-center">
+                                        <span class="inline-block px-2 py-0.5 rounded-full text-[10px] font-bold"
+                                            :class="p.test_mantoux === 'Ya' ? 'bg-sky-50 text-sky-700 border border-sky-200' : 'text-slate-400'"
+                                            x-text="p.test_mantoux || '-'"></span>
+                                    </td>
+                                    <td class="px-3 py-2.5 text-center">
+                                        <span class="inline-block px-2 py-0.5 rounded-full text-[10px] font-bold"
+                                            :class="p.konsul_spa === 'Ya' ? 'bg-indigo-50 text-indigo-700 border border-indigo-200' : 'text-slate-400'"
+                                            x-text="p.konsul_spa || '-'"></span>
+                                    </td>
+                                    <td class="px-3 py-2.5 text-slate-500 whitespace-nowrap" x-text="formatDate(p.tanggal_pengukuran)"></td>
                                     <td class="px-3 py-2.5 whitespace-nowrap text-center">
                                         <div class="flex items-center justify-center gap-1">
                                             <!-- View Detail Balita -->
@@ -1011,6 +1090,38 @@
                                     <div><span class="text-slate-400 block">Tgl Pengukuran</span><span class="font-semibold text-slate-700" x-text="formatDate(viewingPatient?.tanggal_pengukuran)"></span></div>
                                     <div><span class="text-slate-400 block">Kategori BB/U</span><span class="font-semibold text-slate-700" x-text="viewingPatient?.bbu_kategori || '-'"></span></div>
                                     <div><span class="text-slate-400 block">Kategori BB/TB</span><span class="font-semibold text-slate-700" x-text="viewingPatient?.bbtb_kategori || '-'"></span></div>
+                                </div>
+                            </div>
+
+                            <div class="col-span-1 md:col-span-2 p-3.5 bg-gradient-to-br from-rose-50/50 via-sky-50/50 to-indigo-50/50 rounded-2xl border border-indigo-100 space-y-2.5">
+                                <h4 class="font-bold text-slate-800 flex items-center gap-2 border-b border-indigo-100 pb-1.5 text-xs">
+                                    Skrining Klinis &amp; Layanan Intervensi Spesifik
+                                </h4>
+                                <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 text-[11px]">
+                                    <div class="p-2 bg-white/80 rounded-xl border border-rose-100">
+                                        <span class="text-rose-600 block font-semibold">Test Hemoglobin</span>
+                                        <span class="font-bold text-slate-800" x-text="viewingPatient?.test_hemoglobin || '-'"></span>
+                                    </div>
+                                    <div class="p-2 bg-white/80 rounded-xl border border-sky-100">
+                                        <span class="text-sky-600 block font-semibold">Test Mantoux</span>
+                                        <span class="font-bold text-slate-800" x-text="viewingPatient?.test_mantoux || '-'"></span>
+                                    </div>
+                                    <div class="p-2 bg-white/80 rounded-xl border border-indigo-100">
+                                        <span class="text-indigo-600 block font-semibold">Konsul Dokter Sp.A</span>
+                                        <span class="font-bold text-slate-800" x-text="viewingPatient?.konsul_spa || '-'"></span>
+                                    </div>
+                                    <div class="p-2 bg-white/80 rounded-xl border border-amber-100">
+                                        <span class="text-amber-600 block font-semibold">Suplementasi Vit A</span>
+                                        <span class="font-bold text-slate-800" x-text="viewingPatient?.jml_vit_a ? viewingPatient.jml_vit_a + ' Kapsul' : '-'"></span>
+                                    </div>
+                                    <div class="p-2 bg-white/80 rounded-xl border border-purple-100">
+                                        <span class="text-purple-600 block font-semibold">Kelas Ibu Balita</span>
+                                        <span class="font-bold text-slate-800" x-text="viewingPatient?.kelas_ibu || '-'"></span>
+                                    </div>
+                                    <div class="p-2 bg-white/80 rounded-xl border border-emerald-100">
+                                        <span class="text-emerald-600 block font-semibold">Naik Berat Badan</span>
+                                        <span class="font-bold text-slate-800" x-text="viewingPatient?.naik_berat_badan === 'N' ? 'Naik (N)' : (viewingPatient?.naik_berat_badan === 'T' ? 'Turun (T)' : (viewingPatient?.naik_berat_badan || '-'))"></span>
+                                    </div>
                                 </div>
                             </div>
                         </div>

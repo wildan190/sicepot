@@ -11,13 +11,15 @@ class StuntingPatient extends Model
     protected $fillable = [
         'nik', 'nama', 'jenis_kelamin',
         'tanggal_lahir', 'bb_lahir', 'tb_lahir',
-        'nama_ortu', 'puskesmas', 'desa', 'posyandu',
+        'nama_ortu', 'prov', 'kab_kota', 'kec', 'puskesmas', 'desa', 'posyandu',
         'rt', 'rw', 'alamat', 'usia_saat_ukur',
         'tanggal_pengukuran', 'berat', 'tinggi', 'cara_ukur', 'lila',
         'bbu_kategori', 'bbu_zscore',
         'tbu_kategori', 'tbu_zscore',
         'bbtb_kategori', 'bbtb_zscore',
         'naik_berat_badan',
+        'jml_vit_a', 'kpsp', 'kia', 'kelas_ibu', 'mbg',
+        'test_mantoux', 'test_hemoglobin', 'konsul_spa',
     ];
 
     protected $casts = [
