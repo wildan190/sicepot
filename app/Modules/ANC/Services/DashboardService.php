@@ -339,12 +339,21 @@ class DashboardService
         $risikoValues = array_map(fn($kel) => (int)($kelurahanRisiko->get($kel)?->risiko ?? 0), $kelurahanLabels);
 
         // ── Tren Tafsiran Persalinan (HPL) per bulan — 12 bulan ke depan ──
+        $driver = DB::connection()->getDriverName();
+        if ($driver === 'pgsql') {
+            $monthExpr = "TO_CHAR(hpl, 'YYYY-MM')";
+        } elseif (in_array($driver, ['mysql', 'mariadb'])) {
+            $monthExpr = "DATE_FORMAT(hpl, '%Y-%m')";
+        } else {
+            $monthExpr = "strftime('%Y-%m', hpl)";
+        }
+
         $hplRaw = AncPatient::whereNotNull('hpl')
             ->whereNull('tanggal_bersalin')
             ->whereDate('hpl', '>=', now()->startOfMonth()->toDateString())
             ->whereDate('hpl', '<=', now()->addMonths(11)->endOfMonth()->toDateString())
-            ->selectRaw("strftime('%Y-%m', hpl) as bulan_hpl, count(*) as total")
-            ->groupByRaw("bulan_hpl")
+            ->selectRaw("{$monthExpr} as bulan_hpl, count(*) as total")
+            ->groupByRaw("{$monthExpr}")
             ->orderBy('bulan_hpl')
             ->pluck('total', 'bulan_hpl')
             ->all();
