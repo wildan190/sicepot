@@ -175,14 +175,17 @@
                     <div
                         class="bg-white p-4 rounded-2xl shadow-xs border border-blue-100 flex flex-col justify-between hover:shadow-md transition-shadow">
                         <div class="flex items-center justify-between">
-                            <span class="text-xs font-bold text-blue-700 uppercase tracking-wider flex items-center gap-1.5">
+                            <span
+                                class="text-xs font-bold text-blue-700 uppercase tracking-wider flex items-center gap-1.5">
                                 <span class="w-2.5 h-2.5 rounded-full bg-blue-500 inline-block shadow-xs"></span>
                                 Total Pelacakan
                             </span>
-                            <span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-blue-100 text-blue-700">TB-06</span>
+                            <span
+                                class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-blue-100 text-blue-700">TB-06</span>
                         </div>
                         <div class="mt-2 flex items-baseline justify-between">
-                            <span class="text-2xl font-black text-slate-900" x-text="kpi.total_pelacakan || kpi.total_terduga || kpi.total_all || 0">0</span>
+                            <span class="text-2xl font-black text-slate-900"
+                                x-text="kpi.total_pelacakan || kpi.total_terduga || kpi.total_all || 0">0</span>
                             <span class="p-1.5 rounded-lg bg-blue-50 text-blue-600">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -198,14 +201,17 @@
                     <div
                         class="bg-white p-4 rounded-2xl shadow-xs border border-amber-100 flex flex-col justify-between hover:shadow-md transition-shadow">
                         <div class="flex items-center justify-between">
-                            <span class="text-xs font-bold text-amber-700 uppercase tracking-wider flex items-center gap-1.5">
+                            <span
+                                class="text-xs font-bold text-amber-700 uppercase tracking-wider flex items-center gap-1.5">
                                 <span class="w-2.5 h-2.5 rounded-full bg-amber-500 inline-block shadow-xs"></span>
                                 Diperiksa TCM/Lab
                             </span>
-                            <span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-700">TCM</span>
+                            <span
+                                class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-700">TCM</span>
                         </div>
                         <div class="mt-2 flex items-baseline justify-between">
-                            <span class="text-2xl font-black text-amber-700" x-text="kpi.total_diperiksa_tcm || 0">0</span>
+                            <span class="text-2xl font-black text-amber-700"
+                                x-text="kpi.total_diperiksa_tcm || 0">0</span>
                             <span class="p-1.5 rounded-lg bg-amber-50 text-amber-600">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -222,14 +228,17 @@
                     <div
                         class="bg-white p-4 rounded-2xl shadow-xs border border-rose-100 flex flex-col justify-between hover:shadow-md transition-shadow">
                         <div class="flex items-center justify-between">
-                            <span class="text-xs font-bold text-rose-700 uppercase tracking-wider flex items-center gap-1.5">
+                            <span
+                                class="text-xs font-bold text-rose-700 uppercase tracking-wider flex items-center gap-1.5">
                                 <span class="w-2.5 h-2.5 rounded-full bg-rose-500 inline-block shadow-xs"></span>
                                 Pasien Pengobatan OAT
                             </span>
-                            <span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-rose-100 text-rose-700">TB-03</span>
+                            <span
+                                class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-rose-100 text-rose-700">TB-03</span>
                         </div>
                         <div class="mt-2 flex items-baseline justify-between">
-                            <span class="text-2xl font-black text-rose-700" x-text="kpi.total_sedang_pengobatan">0</span>
+                            <span class="text-2xl font-black text-rose-700"
+                                x-text="kpi.total_sedang_pengobatan">0</span>
                             <span class="p-1.5 rounded-lg bg-rose-50 text-rose-600">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -245,15 +254,16 @@
                     <div
                         class="bg-white p-4 rounded-2xl shadow-xs border border-emerald-100 flex flex-col justify-between hover:shadow-md transition-shadow">
                         <div class="flex items-center justify-between">
-                            <span class="text-xs font-bold text-emerald-700 uppercase tracking-wider flex items-center gap-1.5">
+                            <span
+                                class="text-xs font-bold text-emerald-700 uppercase tracking-wider flex items-center gap-1.5">
                                 <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block shadow-xs"></span>
                                 Investigasi Kontak
                             </span>
-                            <span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-700">TB-16K</span>
+                            <span
+                                class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-700">TB-16K</span>
                         </div>
                         <div class="mt-2 flex items-baseline justify-between">
-                            <span class="text-2xl font-black text-emerald-700"
-                                x-text="kpi.total_kontak || 0">0</span>
+                            <span class="text-2xl font-black text-emerald-700" x-text="kpi.total_kontak || 0">0</span>
                             <span class="p-1.5 rounded-lg bg-emerald-50 text-emerald-600">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -470,20 +480,23 @@
                             {{-- Layer toggles --}}
                             <div>
                                 <label
-                                    class="block text-[11px] font-bold text-slate-600 uppercase tracking-wider mb-2">Layer Peta</label>
+                                    class="block text-[11px] font-bold text-slate-600 uppercase tracking-wider mb-2">Layer
+                                    Peta</label>
                                 <div class="flex flex-wrap gap-2">
                                     <label
                                         class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white border border-rose-200 rounded-lg cursor-pointer text-xs select-none hover:bg-rose-50 transition-colors shadow-2xs">
                                         <input type="checkbox" x-model="tbMapCfg.showPenderita"
                                             @change="saveTbMapCfg(); updateMap()" class="rounded accent-rose-600">
-                                        <span class="w-2.5 h-2.5 rounded-full bg-rose-500 inline-block shadow-xs"></span>
+                                        <span
+                                            class="w-2.5 h-2.5 rounded-full bg-rose-500 inline-block shadow-xs"></span>
                                         <span class="font-bold text-rose-700">Data Penderita TB (Merah)</span>
                                     </label>
                                     <label
                                         class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white border border-emerald-200 rounded-lg cursor-pointer text-xs select-none hover:bg-emerald-50 transition-colors shadow-2xs">
                                         <input type="checkbox" x-model="tbMapCfg.showInvestigasi"
                                             @change="saveTbMapCfg(); updateMap()" class="rounded accent-emerald-600">
-                                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block shadow-xs"></span>
+                                        <span
+                                            class="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block shadow-xs"></span>
                                         <span class="font-bold text-emerald-700">Investigasi Kontak (Hijau)</span>
                                     </label>
                                 </div>
@@ -535,7 +548,8 @@
                                     class="inline-flex items-center gap-1 px-2 py-0.5 bg-slate-100 text-slate-600 text-[11px] font-semibold rounded-lg capitalize"
                                     x-text="{ markers:'Titik Sebaran', density:'Densitas Heatmap', geofence:'Geofence 500m' }[tbMapCfg.viewMode] || tbMapCfg.viewMode"></span>
                                 <span x-show="tbMapCfg.showInvestigasi"
-                                    class="inline-flex items-center gap-1 px-2 py-0.5 bg-emerald-100 text-emerald-700 text-[11px] font-semibold rounded-lg">Investigasi Kontak</span>
+                                    class="inline-flex items-center gap-1 px-2 py-0.5 bg-emerald-100 text-emerald-700 text-[11px] font-semibold rounded-lg">Investigasi
+                                    Kontak</span>
                                 <span x-show="tbMapLoading"
                                     class="inline-flex items-center gap-1 text-[11px] text-slate-500">
                                     <svg class="animate-spin w-3 h-3" viewBox="0 0 24 24">
@@ -548,9 +562,11 @@
                             </div>
 
                             <div class="flex items-center gap-4 pt-2 border-t border-slate-100 text-xs">
-                                <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Legenda</span>
+                                <span
+                                    class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Legenda</span>
                                 <div class="flex items-center gap-1.5">
-                                    <span class="w-3 h-3 rounded-full bg-emerald-500 shrink-0" style="border:2px solid #059669;"></span>
+                                    <span class="w-3 h-3 rounded-full bg-emerald-500 shrink-0"
+                                        style="border:2px solid #059669;"></span>
                                     <span class="text-slate-500">Investigasi Kontak (OAT aktif)</span>
                                 </div>
                             </div>
@@ -874,14 +890,18 @@
                         class="inline-block w-full max-w-4xl p-6 my-8 text-left align-middle transition-all transform bg-white shadow-2xl rounded-3xl z-10 border border-slate-100">
                         <div class="flex items-center justify-between pb-4 border-b border-slate-100">
                             <div>
-                                <h3 class="text-lg font-bold text-slate-800">Import Data TBC (Dual Excel: Penderita & Investigasi Kontak)
+                                <h3 class="text-lg font-bold text-slate-800">Import Data TBC (Dual Excel: Penderita &
+                                    Investigasi Kontak)
                                 </h3>
-                                <p class="text-xs text-slate-500">Mendukung otomatis 2 jenis berkas resmi program TBC:</p>
+                                <p class="text-xs text-slate-500">Mendukung otomatis 2 jenis berkas resmi program TBC:
+                                </p>
                                 <div class="flex items-center gap-2 mt-2">
-                                    <span class="inline-flex items-center gap-1 px-2.5 py-0.5 bg-rose-50 border border-rose-200 rounded-lg text-[11px] font-bold text-rose-700">
+                                    <span
+                                        class="inline-flex items-center gap-1 px-2.5 py-0.5 bg-rose-50 border border-rose-200 rounded-lg text-[11px] font-bold text-rose-700">
                                         🔴 1. DATA PENDERITA TB (TB-03 SO)
                                     </span>
-                                    <span class="inline-flex items-center gap-1 px-2.5 py-0.5 bg-emerald-50 border border-emerald-200 rounded-lg text-[11px] font-bold text-emerald-700">
+                                    <span
+                                        class="inline-flex items-center gap-1 px-2.5 py-0.5 bg-emerald-50 border border-emerald-200 rounded-lg text-[11px] font-bold text-emerald-700">
                                         🟢 2. INVESTIGASI KONTAK (TBC.16K)
                                     </span>
                                 </div>
@@ -971,7 +991,8 @@
                                         <!-- Table for TB-16K (Investigasi Kontak) -->
                                         <template x-if="importPreview?.type === 'tb_16k'">
                                             <table class="w-full text-left text-xs">
-                                                <thead class="bg-emerald-50 text-emerald-800 font-semibold sticky top-0">
+                                                <thead
+                                                    class="bg-emerald-50 text-emerald-800 font-semibold sticky top-0">
                                                     <tr>
                                                         <th class="p-2.5">No</th>
                                                         <th class="p-2.5">Kasus Indeks</th>
@@ -985,20 +1006,30 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody class="divide-y divide-slate-100">
-                                                    <template x-for="(row, idx) in (importPreview?.preview_samples || [])" :key="idx">
+                                                    <template
+                                                        x-for="(row, idx) in (importPreview?.preview_samples || [])"
+                                                        :key="idx">
                                                         <tr class="hover:bg-slate-50">
                                                             <td class="p-2.5 text-slate-500" x-text="idx + 1"></td>
-                                                            <td class="p-2.5 font-medium text-slate-800" x-text="row.kasus_indeks_nama || '-'"></td>
-                                                            <td class="p-2.5 font-semibold text-emerald-800" x-text="row.nama_kontak || '-'"></td>
-                                                            <td class="p-2.5 text-slate-600 font-mono text-[11px]" x-text="row.nik_kontak || '-'"></td>
-                                                            <td class="p-2.5 text-slate-600" x-text="row.jenis_kelamin_kontak || '-'"></td>
-                                                            <td class="p-2.5 text-slate-600" x-text="row.umur_kontak ? row.umur_kontak + ' th' : '-'"></td>
+                                                            <td class="p-2.5 font-medium text-slate-800"
+                                                                x-text="row.kasus_indeks_nama || '-'"></td>
+                                                            <td class="p-2.5 font-semibold text-emerald-800"
+                                                                x-text="row.nama_kontak || '-'"></td>
+                                                            <td class="p-2.5 text-slate-600 font-mono text-[11px]"
+                                                                x-text="row.nik_kontak || '-'"></td>
+                                                            <td class="p-2.5 text-slate-600"
+                                                                x-text="row.jenis_kelamin_kontak || '-'"></td>
+                                                            <td class="p-2.5 text-slate-600"
+                                                                x-text="row.umur_kontak ? row.umur_kontak + ' th' : '-'">
+                                                            </td>
                                                             <td class="p-2.5">
-                                                                <span class="px-1.5 py-0.5 rounded text-[10px] font-bold"
+                                                                <span
+                                                                    class="px-1.5 py-0.5 rounded text-[10px] font-bold"
                                                                     :class="row.jenis_kontak === 'Kontak Serumah' ? 'bg-amber-100 text-amber-800' : 'bg-blue-100 text-blue-800'"
                                                                     x-text="row.jenis_kontak || '-'"></span>
                                                             </td>
-                                                            <td class="p-2.5 text-slate-700 font-medium" x-text="row.kelurahan || '-'"></td>
+                                                            <td class="p-2.5 text-slate-700 font-medium"
+                                                                x-text="row.kelurahan || '-'"></td>
                                                             <td class="p-2.5 font-medium"
                                                                 :class="row.hasil_evaluasi === 'Sakit TBC' ? 'text-rose-600 font-bold' : 'text-emerald-700'"
                                                                 x-text="row.hasil_evaluasi || '-'"></td>
@@ -1024,16 +1055,26 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody class="divide-y divide-slate-100">
-                                                    <template x-for="(row, idx) in (importPreview?.preview_samples || [])" :key="idx">
+                                                    <template
+                                                        x-for="(row, idx) in (importPreview?.preview_samples || [])"
+                                                        :key="idx">
                                                         <tr class="hover:bg-slate-50">
                                                             <td class="p-2.5 text-slate-500" x-text="idx + 1"></td>
-                                                            <td class="p-2.5 font-medium text-slate-800" x-text="row.nama_lengkap || '-'"></td>
-                                                            <td class="p-2.5 text-slate-600" x-text="row.nik || '-'"></td>
-                                                            <td class="p-2.5 text-slate-600" x-text="row.jenis_kelamin || '-'"></td>
-                                                            <td class="p-2.5 text-slate-600" x-text="row.umur || '-'"></td>
-                                                            <td class="p-2.5 text-slate-600" x-text="row.kabupaten || '-'"></td>
-                                                            <td class="p-2.5 text-slate-600" x-text="row.kelurahan || '-'"></td>
-                                                            <td class="p-2.5 text-slate-600" x-text="row.hasil_diagnosis || row.hasil_tcm || '-'"></td>
+                                                            <td class="p-2.5 font-medium text-slate-800"
+                                                                x-text="row.nama_lengkap || '-'"></td>
+                                                            <td class="p-2.5 text-slate-600" x-text="row.nik || '-'">
+                                                            </td>
+                                                            <td class="p-2.5 text-slate-600"
+                                                                x-text="row.jenis_kelamin || '-'"></td>
+                                                            <td class="p-2.5 text-slate-600" x-text="row.umur || '-'">
+                                                            </td>
+                                                            <td class="p-2.5 text-slate-600"
+                                                                x-text="row.kabupaten || '-'"></td>
+                                                            <td class="p-2.5 text-slate-600"
+                                                                x-text="row.kelurahan || '-'"></td>
+                                                            <td class="p-2.5 text-slate-600"
+                                                                x-text="row.hasil_diagnosis || row.hasil_tcm || '-'">
+                                                            </td>
                                                         </tr>
                                                     </template>
                                                 </tbody>
@@ -2729,7 +2770,7 @@
                                         <div style="background:#fef2f2;border:1px solid #fee2e2;border-radius:8px;padding:8px 10px;">
                                             <div style="font-weight:700;font-size:10px;color:#991b1b;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;">📊 Data Penderita TB (TB-03)</div>
                                             <div style="display:flex;justify-content:space-between;font-size:12px;color:#1e293b;margin-bottom:2px;">
-                                                <span>Total Kasus TBC:</span>
+                                                <span hidden>Total Kasus TBC:</span>
                                                 <strong style="color:#dc2626;">${pTotal} pasien</strong>
                                             </div>
                                             <div style="display:flex;justify-content:space-between;font-size:11px;color:#475569;margin-bottom:2px;">

@@ -35,4 +35,19 @@ class DashboardController extends Controller
     {
         return response()->json($this->service->getStatsData($request));
     }
+
+    /**
+     * Clear all stunting records massively from database.
+     */
+    public function clearMassive()
+    {
+        $deletedCount = \App\Modules\Stunting\Models\StuntingPatient::count();
+        \App\Modules\Stunting\Models\StuntingPatient::truncate();
+
+        return response()->json([
+            'success' => true,
+            'message' => "Semua data balita stunting ({$deletedCount} data) berhasil dikosongkan secara permanen.",
+            'deleted_count' => $deletedCount,
+        ]);
+    }
 }

@@ -89,22 +89,28 @@ class DashboardService
         $lakiLaki = (clone $q)->where('jenis_kelamin', 'L')->count();
         $perempuan = (clone $q)->where('jenis_kelamin', 'P')->count();
 
-        // Monthly trend (last 12 months) - Menggunakan TO_CHAR untuk PostgreSQL
+        // Monthly trend - strftime compatible with SQLite & MySQL/PostgreSQL fallback
         $monthlyTrend = (clone $q)->selectRaw("
-                TO_CHAR(tanggal_pengukuran, 'YYYY-MM') as bulan_label,
+                strftime('%Y-%m', tanggal_pengukuran) as bulan_label,
                 COUNT(*) as total,
                 SUM(CASE WHEN tbu_kategori IN ('Pendek','Sangat Pendek') THEN 1 ELSE 0 END) as stunting
             ")
             ->whereNotNull('tanggal_pengukuran')
-            ->groupByRaw("TO_CHAR(tanggal_pengukuran, 'YYYY-MM')")
+            ->groupByRaw("strftime('%Y-%m', tanggal_pengukuran)")
             ->orderBy('bulan_label')
             ->get();
 
-        // Patient list for table (latest 200)
+        // Patient list for table (paginated)
+        $perPage = (int) $request->input('per_page', 15);
+        if ($perPage <= 0 || $perPage > 100) {
+            $perPage = 15;
+        }
+
         $patients = (clone $q)
             ->orderByDesc('tanggal_pengukuran')
-            ->limit(200)
-            ->get();
+            ->orderByDesc('id')
+            ->paginate($perPage)
+            ->withQueryString();
 
         return compact(
             'total',
@@ -146,12 +152,12 @@ class DashboardService
     }
 
     /**
-     * Get available years for filter - Menggunakan TO_CHAR untuk PostgreSQL
+     * Get available years for filter - SQLite compatible strftime
      */
     public function getYearList(): array
     {
         return StuntingPatient::query()
-            ->selectRaw("TO_CHAR(tanggal_pengukuran, 'YYYY') as tahun")
+            ->selectRaw("strftime('%Y', tanggal_pengukuran) as tahun")
             ->whereNotNull('tanggal_pengukuran')
             ->distinct()
             ->orderByDesc('tahun')

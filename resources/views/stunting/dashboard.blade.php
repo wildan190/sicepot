@@ -19,6 +19,17 @@
                             Intervensi Stunting</p>
                     </div>
                     <div class="flex items-center flex-wrap gap-2">
+                        {{-- Clear Data --}}
+                        <button @click="openClearMassiveModal()" type="button" title="Kosongkan Semua Data Balita Stunting"
+                            class="inline-flex items-center gap-1.5 px-3 py-2 bg-rose-50 hover:bg-rose-100 active:bg-rose-200 text-rose-700 border border-rose-200/80 text-xs font-semibold rounded-xl shadow-xs hover:shadow transition-all duration-150 cursor-pointer">
+                            <svg class="w-3.5 h-3.5 shrink-0 text-rose-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                                </path>
+                            </svg>
+                            <span>Clear Data</span>
+                        </button>
+
                         {{-- Import Excel --}}
                         <button @click="showImportModal = true" type="button"
                             class="inline-flex items-center gap-1.5 px-3 py-2 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white text-xs font-semibold rounded-xl shadow-xs hover:shadow transition-all duration-150 cursor-pointer">
@@ -187,9 +198,24 @@
 
             {{-- DATA TABLE --}}
             <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden">
-                <div class="flex items-center justify-between px-5 py-4 border-b border-slate-100">
-                    <h3 class="text-sm font-bold text-slate-700">Data Balita</h3>
-                    <span class="text-xs text-slate-400">Menampilkan maks. 200 data terbaru</span>
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between px-5 py-4 border-b border-slate-100 gap-3">
+                    <div>
+                        <h3 class="text-sm font-bold text-slate-700">Data Balita</h3>
+                        <p class="text-xs text-slate-400">Daftar rekaman pengukuran balita stunting</p>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div class="flex items-center gap-1.5 text-xs text-slate-500">
+                            <span>Per halaman:</span>
+                            <select x-model="perPage" @change="changePerPage()" class="text-xs border border-slate-200 rounded-lg px-2.5 py-1 bg-white focus:outline-none focus:ring-1 focus:ring-green-500 font-medium cursor-pointer">
+                                <option value="10">10</option>
+                                <option value="15">15</option>
+                                <option value="25">25</option>
+                                <option value="50">50</option>
+                            </select>
+                        </div>
+                        <span class="text-xs font-semibold px-2.5 py-1 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-lg"
+                            x-text="(patientsData.total || 0) + ' Total Balita'"></span>
+                    </div>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-xs">
@@ -212,79 +238,103 @@
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-slate-50">
-                            @forelse ($patients as $i => $p)
-                                @php
-                                    $tbuBadge = match($p->tbu_kategori) {
-                                        'Sangat Pendek' => 'bg-red-100 text-red-700 border border-red-200',
-                                        'Pendek'        => 'bg-amber-100 text-amber-700 border border-amber-200',
-                                        'Normal'        => 'bg-green-100 text-green-700 border border-green-200',
-                                        'Tinggi'        => 'bg-blue-100 text-blue-700 border border-blue-200',
-                                        default         => 'bg-slate-100 text-slate-500',
-                                    };
-                                    $bbuBadge = match(true) {
-                                        in_array($p->bbu_kategori, ['Sangat Kurang']) => 'bg-red-100 text-red-700 border border-red-200',
-                                        in_array($p->bbu_kategori, ['Kurang'])        => 'bg-amber-100 text-amber-700 border border-amber-200',
-                                        in_array($p->bbu_kategori, ['Normal', 'Gizi Baik']) => 'bg-green-100 text-green-700 border border-green-200',
-                                        in_array($p->bbu_kategori, ['Risiko Lebih', 'Risiko Gizi Lebih']) => 'bg-yellow-100 text-yellow-700 border border-yellow-200',
-                                        in_array($p->bbu_kategori, ['Lebih', 'Gizi Lebih', 'Obesitas'])   => 'bg-purple-100 text-purple-700 border border-purple-200',
-                                        default => 'bg-slate-100 text-slate-500',
-                                    };
-                                    $bbtbBadge = match(true) {
-                                        in_array($p->bbtb_kategori, ['Gizi Kurang', 'Kurang']) => 'bg-amber-100 text-amber-700 border border-amber-200',
-                                        in_array($p->bbtb_kategori, ['Gizi Baik', 'Normal'])   => 'bg-green-100 text-green-700 border border-green-200',
-                                        in_array($p->bbtb_kategori, ['Risiko Gizi Lebih'])     => 'bg-yellow-100 text-yellow-700 border border-yellow-200',
-                                        in_array($p->bbtb_kategori, ['Gizi Lebih', 'Obesitas']) => 'bg-purple-100 text-purple-700 border border-purple-200',
-                                        default => 'bg-slate-100 text-slate-500',
-                                    };
-                                @endphp
+                            <template x-for="(p, i) in (patientsData.data || [])" :key="p.id">
                                 <tr class="hover:bg-slate-50/60 transition-colors">
-                                    <td class="px-3 py-2.5 text-slate-400">{{ $i + 1 }}</td>
-                                    <td class="px-3 py-2.5 font-medium text-slate-800">{{ $p->nama }}</td>
-                                    <td class="px-3 py-2.5 text-slate-600">{{ $p->jenis_kelamin === 'L' ? '♂' : '♀' }}</td>
-                                    <td class="px-3 py-2.5 text-slate-600">{{ $p->tanggal_lahir?->format('d/m/Y') }}</td>
-                                    <td class="px-3 py-2.5 text-slate-600">{{ $p->desa }}</td>
-                                    <td class="px-3 py-2.5 text-slate-500">{{ $p->posyandu }}</td>
-                                    <td class="px-3 py-2.5 text-right text-slate-600">{{ $p->bb_lahir ? number_format($p->bb_lahir, 2) . ' kg' : '-' }}</td>
-                                    <td class="px-3 py-2.5 text-right font-medium text-slate-700">{{ $p->berat ? number_format($p->berat, 2) . ' kg' : '-' }}</td>
-                                    <td class="px-3 py-2.5 text-right font-medium text-slate-700">{{ $p->tinggi ? number_format($p->tinggi, 1) . ' cm' : '-' }}</td>
+                                    <td class="px-3 py-2.5 text-slate-400" x-text="((patientsData.current_page || 1) - 1) * (patientsData.per_page || 15) + i + 1"></td>
+                                    <td class="px-3 py-2.5 font-medium text-slate-800" x-text="p.nama"></td>
+                                    <td class="px-3 py-2.5 text-slate-600 font-medium" x-text="p.jenis_kelamin === 'L' ? '♂' : (p.jenis_kelamin === 'P' ? '♀' : '-')"></td>
+                                    <td class="px-3 py-2.5 text-slate-600" x-text="formatDate(p.tanggal_lahir)"></td>
+                                    <td class="px-3 py-2.5 text-slate-600" x-text="p.desa || '-'"></td>
+                                    <td class="px-3 py-2.5 text-slate-500" x-text="p.posyandu || '-'"></td>
+                                    <td class="px-3 py-2.5 text-right text-slate-600" x-text="p.bb_lahir ? Number(p.bb_lahir).toFixed(2) + ' kg' : '-'"></td>
+                                    <td class="px-3 py-2.5 text-right font-medium text-slate-700" x-text="p.berat ? Number(p.berat).toFixed(2) + ' kg' : '-'"></td>
+                                    <td class="px-3 py-2.5 text-right font-medium text-slate-700" x-text="p.tinggi ? Number(p.tinggi).toFixed(1) + ' cm' : '-'"></td>
                                     <td class="px-3 py-2.5">
-                                        @if($p->tbu_kategori)
-                                            <span class="inline-block px-2 py-0.5 rounded-full text-[10px] font-semibold {{ $tbuBadge }}">{{ $p->tbu_kategori }}</span>
-                                        @endif
+                                        <template x-if="p.tbu_kategori">
+                                            <span class="inline-block px-2 py-0.5 rounded-full text-[10px] font-semibold"
+                                                :class="getTbuBadgeClass(p.tbu_kategori)"
+                                                x-text="p.tbu_kategori"></span>
+                                        </template>
                                     </td>
                                     <td class="px-3 py-2.5">
-                                        @if($p->bbu_kategori)
-                                            <span class="inline-block px-2 py-0.5 rounded-full text-[10px] font-semibold {{ $bbuBadge }}">{{ $p->bbu_kategori }}</span>
-                                        @endif
+                                        <template x-if="p.bbu_kategori">
+                                            <span class="inline-block px-2 py-0.5 rounded-full text-[10px] font-semibold"
+                                                :class="getBbuBadgeClass(p.bbu_kategori)"
+                                                x-text="p.bbu_kategori"></span>
+                                        </template>
                                     </td>
                                     <td class="px-3 py-2.5">
-                                        @if($p->bbtb_kategori)
-                                            <span class="inline-block px-2 py-0.5 rounded-full text-[10px] font-semibold {{ $bbtbBadge }}">{{ $p->bbtb_kategori }}</span>
-                                        @endif
+                                        <template x-if="p.bbtb_kategori">
+                                            <span class="inline-block px-2 py-0.5 rounded-full text-[10px] font-semibold"
+                                                :class="getBbtbBadgeClass(p.bbtb_kategori)"
+                                                x-text="p.bbtb_kategori"></span>
+                                        </template>
                                     </td>
                                     <td class="px-3 py-2.5 text-center">
-                                        @if($p->naik_berat_badan === 'N')
-                                            <span class="inline-block w-5 h-5 rounded-full bg-green-100 text-green-600 text-center leading-5 font-bold">↑</span>
-                                        @elseif($p->naik_berat_badan === 'T')
-                                            <span class="inline-block w-5 h-5 rounded-full bg-red-100 text-red-600 text-center leading-5 font-bold">↓</span>
-                                        @else
+                                        <template x-if="p.naik_berat_badan === 'N'">
+                                            <span class="inline-block w-5 h-5 rounded-full bg-green-100 text-green-600 text-center leading-5 font-bold" title="Naik">↑</span>
+                                        </template>
+                                        <template x-if="p.naik_berat_badan === 'T'">
+                                            <span class="inline-block w-5 h-5 rounded-full bg-red-100 text-red-600 text-center leading-5 font-bold" title="Turun">↓</span>
+                                        </template>
+                                        <template x-if="p.naik_berat_badan !== 'N' && p.naik_berat_badan !== 'T'">
                                             <span class="text-slate-400">-</span>
-                                        @endif
+                                        </template>
                                     </td>
-                                    <td class="px-3 py-2.5 text-slate-500">{{ $p->tanggal_pengukuran?->format('d/m/Y') }}</td>
+                                    <td class="px-3 py-2.5 text-slate-500" x-text="formatDate(p.tanggal_pengukuran)"></td>
                                 </tr>
-                            @empty
+                            </template>
+                            <template x-if="!patientsData.data || patientsData.data.length === 0">
                                 <tr>
                                     <td colspan="14" class="px-5 py-10 text-center text-slate-400">
                                         <svg class="w-8 h-8 mx-auto mb-2 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                                         </svg>
-                                        Belum ada data. Silakan import file Excel.
+                                        Tidak ada data yang cocok dengan filter yang dipilih.
                                     </td>
                                 </tr>
-                            @endforelse
+                            </template>
                         </tbody>
                     </table>
+                </div>
+
+                <!-- PAGINATION CONTROLS -->
+                <div class="px-5 py-3.5 bg-slate-50 border-t border-slate-200/80 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-600">
+                    <div>
+                        <span x-text="'Menampilkan data ' + (patientsData.from || 0) + ' - ' + (patientsData.to || 0) + ' dari ' + (patientsData.total || 0) + ' total data balita'"></span>
+                        <span class="mx-2 text-slate-300">|</span>
+                        <span x-text="'Halaman ' + (patientsData.current_page || 1) + ' dari ' + (patientsData.last_page || 1)"></span>
+                    </div>
+                    <div class="flex items-center gap-1.5">
+                        <button :disabled="(patientsData.current_page || 1) <= 1 || isTableLoading"
+                            @click="changePage(1)"
+                            title="Halaman Pertama"
+                            class="px-2.5 py-1.5 rounded-lg border border-slate-300 bg-white hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer font-medium">
+                            «
+                        </button>
+                        <button :disabled="(patientsData.current_page || 1) <= 1 || isTableLoading"
+                            @click="changePage((patientsData.current_page || 1) - 1)"
+                            class="px-3 py-1.5 rounded-lg border border-slate-300 bg-white hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer font-medium flex items-center gap-1">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                            <span>Sebelumnya</span>
+                        </button>
+
+                        <div class="px-3 py-1.5 bg-emerald-50 text-emerald-700 font-bold rounded-lg border border-emerald-200"
+                            x-text="patientsData.current_page || 1"></div>
+
+                        <button :disabled="(patientsData.current_page || 1) >= (patientsData.last_page || 1) || isTableLoading"
+                            @click="changePage((patientsData.current_page || 1) + 1)"
+                            class="px-3 py-1.5 rounded-lg border border-slate-300 bg-white hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer font-medium flex items-center gap-1">
+                            <span>Berikutnya</span>
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                        </button>
+                        <button :disabled="(patientsData.current_page || 1) >= (patientsData.last_page || 1) || isTableLoading"
+                            @click="changePage(patientsData.last_page || 1)"
+                            title="Halaman Terakhir"
+                            class="px-2.5 py-1.5 rounded-lg border border-slate-300 bg-white hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer font-medium">
+                            »
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -367,6 +417,98 @@
             </div>
         </div>
 
+        {{-- ============================================================
+             CLEAR MASSIVE MODAL
+             ============================================================ --}}
+        <div x-show="showClearMassiveModal" x-cloak
+            class="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4" style="display:none">
+            <div @click.outside="if(!isClearingMassive) showClearMassiveModal = false"
+                class="bg-white rounded-3xl shadow-2xl w-full max-w-lg p-6 space-y-4 border border-rose-100">
+                <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-2xl bg-rose-100 text-rose-600 flex items-center justify-center font-bold shrink-0">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                                </path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="text-base font-bold text-slate-800">Kosongkan Semua Data Balita Stunting</h3>
+                            <p class="text-xs text-slate-500">Tindakan pembersihan data masal (Clear Massive)</p>
+                        </div>
+                    </div>
+                    <button @click="if(!isClearingMassive) showClearMassiveModal = false"
+                        class="p-2 text-slate-400 hover:text-slate-600 rounded-xl hover:bg-slate-100 cursor-pointer transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="space-y-4 text-xs">
+                    <div class="p-4 bg-rose-50/80 border border-rose-200 rounded-2xl text-rose-800 space-y-2">
+                        <div class="flex items-center gap-2 font-bold text-sm text-rose-900">
+                            <svg class="w-4 h-4 text-rose-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z">
+                                </path>
+                            </svg>
+                            <span>Peringatan Keamanan Kritis!</span>
+                        </div>
+                        <p class="leading-relaxed">
+                            Anda akan menghapus <strong>seluruh data rekam balita stunting</strong> dari database.
+                            Tindakan ini bersifat <strong>permanen</strong> dan data yang telah dihapus tidak dapat dikembalikan lagi.
+                        </p>
+                        <div class="pt-2 border-t border-rose-200/60 text-[11px] text-rose-700 flex items-center justify-between font-semibold">
+                            <span>Total data balita saat ini:</span>
+                            <span class="px-2 py-0.5 bg-rose-200 text-rose-900 rounded-md font-bold"
+                                x-text="(stats.total ?? '{{ $total }}') + ' Data Balita'"></span>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block font-semibold text-slate-700 mb-1.5">
+                            Ketik kata <span class="font-bold text-rose-600 tracking-wider">HAPUS</span> di bawah ini untuk mengonfirmasi:
+                        </label>
+                        <input type="text" x-model="clearMassiveKeyword" placeholder="Ketik HAPUS"
+                            class="w-full px-3.5 py-2.5 text-xs bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-rose-500 focus:border-rose-500 font-semibold tracking-wider transition-colors">
+                    </div>
+
+                    <div x-show="clearMassiveError" class="bg-red-50 border border-red-200 rounded-xl p-3">
+                        <p class="text-xs text-red-600" x-text="clearMassiveError"></p>
+                    </div>
+                </div>
+
+                <!-- Modal Actions -->
+                <div class="pt-4 border-t border-slate-100 flex items-center justify-end gap-2">
+                    <button @click="if(!isClearingMassive) showClearMassiveModal = false" type="button"
+                        :disabled="isClearingMassive"
+                        class="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl transition-colors cursor-pointer disabled:opacity-50">
+                        Batal
+                    </button>
+                    <button :disabled="clearMassiveKeyword.trim() !== 'HAPUS' || isClearingMassive"
+                        @click="executeClearMassive()" type="button"
+                        class="px-4 py-2 bg-rose-600 hover:bg-rose-700 active:bg-rose-800 text-white text-xs font-bold rounded-xl shadow-xs hover:shadow transition-all flex items-center gap-1.5 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer">
+                        <svg x-show="!isClearingMassive" class="w-3.5 h-3.5 shrink-0" fill="none"
+                            stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                            </path>
+                        </svg>
+                        <span x-show="!isClearingMassive">Ya, Kosongkan Semua Data</span>
+                        <span x-show="isClearingMassive" class="flex items-center gap-2">
+                            <svg class="animate-spin h-3.5 w-3.5" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                            <span>Sedang Menghapus...</span>
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     @push('scripts')
@@ -391,6 +533,17 @@
             importSuccessMsg: '',
             importError: '',
 
+            // Clear massive modal
+            showClearMassiveModal: false,
+            clearMassiveKeyword: '',
+            isClearingMassive: false,
+            clearMassiveError: '',
+
+            // Paginated patient data
+            patientsData: @json($patients),
+            perPage: 15,
+            isTableLoading: false,
+
             // Charts
             tbuChart: null,
             bbuChart: null,
@@ -401,19 +554,69 @@
                 this.renderCharts();
             },
 
-            applyFilters() {
+            formatDate(val) {
+                if (!val) return '-';
+                const s = String(val).split('T')[0].split('-');
+                if (s.length === 3) return s[2] + '/' + s[1] + '/' + s[0];
+                return val;
+            },
+
+            getTbuBadgeClass(val) {
+                if (val === 'Sangat Pendek') return 'bg-red-100 text-red-700 border border-red-200';
+                if (val === 'Pendek') return 'bg-amber-100 text-amber-700 border border-amber-200';
+                if (val === 'Normal') return 'bg-green-100 text-green-700 border border-green-200';
+                if (val === 'Tinggi') return 'bg-blue-100 text-blue-700 border border-blue-200';
+                return 'bg-slate-100 text-slate-600 border border-slate-200';
+            },
+
+            getBbuBadgeClass(val) {
+                if (['Sangat Kurang'].includes(val)) return 'bg-red-100 text-red-700 border border-red-200';
+                if (['Kurang'].includes(val)) return 'bg-amber-100 text-amber-700 border border-amber-200';
+                if (['Normal', 'Gizi Baik'].includes(val)) return 'bg-green-100 text-green-700 border border-green-200';
+                if (['Risiko Lebih', 'Risiko Gizi Lebih'].includes(val)) return 'bg-yellow-100 text-yellow-700 border border-yellow-200';
+                if (['Lebih', 'Gizi Lebih', 'Obesitas'].includes(val)) return 'bg-purple-100 text-purple-700 border border-purple-200';
+                return 'bg-slate-100 text-slate-600 border border-slate-200';
+            },
+
+            getBbtbBadgeClass(val) {
+                if (['Gizi Kurang', 'Kurang'].includes(val)) return 'bg-amber-100 text-amber-700 border border-amber-200';
+                if (['Gizi Baik', 'Normal'].includes(val)) return 'bg-green-100 text-green-700 border border-green-200';
+                if (['Risiko Gizi Lebih'].includes(val)) return 'bg-yellow-100 text-yellow-700 border border-yellow-200';
+                if (['Gizi Lebih', 'Obesitas'].includes(val)) return 'bg-purple-100 text-purple-700 border border-purple-200';
+                return 'bg-slate-100 text-slate-600 border border-slate-200';
+            },
+
+            applyFilters(page = 1) {
+                this.isTableLoading = true;
                 const params = new URLSearchParams({
-                    desa:   this.selectedDesa,
-                    bulan:  this.selectedBulan,
-                    tahun:  this.selectedTahun,
-                    search: this.searchQuery,
+                    desa:     this.selectedDesa,
+                    bulan:    this.selectedBulan,
+                    tahun:    this.selectedTahun,
+                    search:   this.searchQuery,
+                    page:     page,
+                    per_page: this.perPage,
                 });
                 fetch(`{{ route('stunting.stats.json') }}?${params}`)
                     .then(r => r.json())
                     .then(data => {
                         this.stats = data;
+                        if (data.patients) {
+                            this.patientsData = data.patients;
+                        }
                         this.updateCharts(data);
+                    })
+                    .finally(() => {
+                        this.isTableLoading = false;
                     });
+            },
+
+            changePage(page) {
+                if (page < 1 || (this.patientsData && page > this.patientsData.last_page)) return;
+                this.applyFilters(page);
+            },
+
+            changePerPage() {
+                this.applyFilters(1);
             },
 
             clearFilters() {
@@ -421,7 +624,7 @@
                 this.selectedBulan = '';
                 this.selectedTahun = '';
                 this.searchQuery   = '';
-                this.applyFilters();
+                this.applyFilters(1);
             },
 
             renderCharts() {
@@ -587,6 +790,40 @@
                     this.importError = 'Terjadi kesalahan: ' + e.message;
                 } finally {
                     this.importLoading = false;
+                }
+            },
+
+            // ── Clear Massive helpers ──────────────────────────────────────────
+            openClearMassiveModal() {
+                this.clearMassiveKeyword = '';
+                this.clearMassiveError = '';
+                this.showClearMassiveModal = true;
+            },
+
+            async executeClearMassive() {
+                if (this.clearMassiveKeyword.trim() !== 'HAPUS' || this.isClearingMassive) return;
+                this.isClearingMassive = true;
+                this.clearMassiveError = '';
+                try {
+                    const token = document.querySelector('meta[name="csrf-token"]').content;
+                    const res = await fetch('{{ route("stunting.clear-massive") }}', {
+                        method: 'DELETE',
+                        headers: {
+                            'X-CSRF-TOKEN': token,
+                            'Accept': 'application/json'
+                        }
+                    });
+                    const data = await res.json();
+                    if (data.success) {
+                        this.showClearMassiveModal = false;
+                        location.reload();
+                    } else {
+                        this.clearMassiveError = data.message || 'Gagal mengosongkan data.';
+                    }
+                } catch(e) {
+                    this.clearMassiveError = 'Terjadi kesalahan sistem: ' + e.message;
+                } finally {
+                    this.isClearingMassive = false;
                 }
             },
         };

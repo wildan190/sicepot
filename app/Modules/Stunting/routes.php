@@ -18,4 +18,7 @@ Route::prefix('stunting')->name('stunting.')->group(function () {
     // Import Excel
     Route::post('/import/preview', [ImportController::class, 'preview'])->name('import.preview');
     Route::post('/import/commit', [ImportController::class, 'commit'])->name('import.commit');
+
+    // Clear Data Masif
+    Route::delete('/clear-massive', [DashboardController::class, 'clearMassive'])->name('clear-massive');
 });
