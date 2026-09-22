@@ -468,6 +468,12 @@
                                             @change="saveTbMapCfg(); updateMap()" class="rounded accent-purple-600">
                                         <span class="font-medium text-slate-700">Tandai Ko-infeksi HIV</span>
                                     </label>
+                                    <label
+                                        class="inline-flex items-center gap-1.5 px-2.5 py-1.5 bg-white border border-slate-300 rounded-lg cursor-pointer text-xs select-none hover:bg-slate-50">
+                                        <input type="checkbox" x-model="tbMapCfg.showInvestigasi"
+                                            @change="saveTbMapCfg(); updateMap()" class="rounded accent-emerald-600">
+                                        <span class="font-medium text-slate-700">Investigasi Kontak</span>
+                                    </label>
                                 </div>
                             </div>
 
@@ -522,6 +528,8 @@
                                     class="inline-flex items-center gap-1 px-2 py-0.5 bg-rose-100 text-rose-700 text-[11px] font-semibold rounded-lg">RO</span>
                                 <span x-show="tbMapCfg.showHIV"
                                     class="inline-flex items-center gap-1 px-2 py-0.5 bg-purple-100 text-purple-700 text-[11px] font-semibold rounded-lg">HIV</span>
+                                <span x-show="tbMapCfg.showInvestigasi"
+                                    class="inline-flex items-center gap-1 px-2 py-0.5 bg-emerald-100 text-emerald-700 text-[11px] font-semibold rounded-lg">Investigasi Kontak</span>
                                 <span x-show="tbMapLoading"
                                     class="inline-flex items-center gap-1 text-[11px] text-slate-500">
                                     <svg class="animate-spin w-3 h-3" viewBox="0 0 24 24">
@@ -548,6 +556,10 @@
                                 <div class="flex items-center gap-1.5">
                                     <span class="w-3 h-3 rounded-full bg-indigo-400 shrink-0"></span>
                                     <span class="text-slate-500">1–3 Kasus</span>
+                                </div>
+                                <div x-show="tbMapCfg.showInvestigasi" class="flex items-center gap-1.5">
+                                    <span class="w-3 h-3 rounded-full bg-emerald-500 shrink-0" style="border:2px solid #059669;"></span>
+                                    <span class="text-slate-500">Investigasi Kontak (OAT aktif)</span>
                                 </div>
                             </div>
                         </div>
@@ -2261,6 +2273,7 @@
                     showFasyankes: true,
                     showRO: false,
                     showHIV: false,
+                    showInvestigasi: true,
                 },
 
                 // Legacy (kept for updateMap compatibility)
@@ -2563,7 +2576,7 @@
                 },
 
                 resetTbMapCfg() {
-                    this.tbMapCfg = { kecamatan: '', viewMode: 'markers', height: 460, showFasyankes: true, showRO: false, showHIV: false };
+                    this.tbMapCfg = { kecamatan: '', viewMode: 'markers', height: 460, showFasyankes: true, showRO: false, showHIV: false, showInvestigasi: true };
                     try { localStorage.removeItem('tb_map_cfg'); } catch (e) { }
                     this.tbMapCfgSaved = true;
                     setTimeout(() => { this.tbMapCfgSaved = false; }, 1800);
@@ -2703,6 +2716,14 @@
                             }));
                         }
 
+                        // ── Investigasi Kontak (Pasien OAT aktif) badge overlay ── green ──
+                        if (this.tbMapCfg.showInvestigasi && item.total_active > 0) {
+                            tbCharts.markersLayer.addLayer(L.circle([item.lat, item.lng], {
+                                radius: 350, color: '#059669', fillColor: '#34d399',
+                                fillOpacity: 0.28, weight: 2, dashArray: '5 5',
+                            }));
+                        }
+
                         // ── Main marker ──
                         const circle = L.circleMarker([item.lat, item.lng], {
                             color, fillColor: color, fillOpacity: 0.85,
@@ -2756,6 +2777,9 @@
                                         <div style="display:flex;justify-content:space-between;font-size:11px;color:#475569;">
                                             <span>Aktif OAT</span><span style="font-weight:600;color:#0284c7;">${item.total_active || 0}</span>
                                         </div>
+                                        <div style="display:flex;justify-content:space-between;font-size:11px;color:#475569;margin-top:2px;padding:3px 5px;background:#f0fdf4;border-radius:5px;">
+                                            <span style="color:#065f46;font-weight:600;">🔎 Investigasi Kontak</span><span style="font-weight:700;color:#059669;">${item.total_active || 0} pasien</span>
+                                        </div>
                                         ${roInfo}${hivInfo}
                                         <div style="margin-top:5px;font-size:10px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.04em;">Fasyankes (${item.fasyankes.length})</div>
                                         ${fasRows}
@@ -2773,6 +2797,10 @@
                                         <div style="display:flex;justify-content:space-between;font-size:11px;color:#475569;margin-top:2px;">
                                             <span>Kasus Aktif OAT:</span>
                                             <span style="font-weight:bold;color:#e11d48;">${item.total_active || 0}</span>
+                                        </div>
+                                        <div style="display:flex;justify-content:space-between;font-size:11px;margin-top:3px;padding:3px 5px;background:#f0fdf4;border-radius:5px;">
+                                            <span style="color:#065f46;font-weight:600;">🔎 Investigasi Kontak</span>
+                                            <span style="font-weight:700;color:#059669;">${item.total_active || 0} pasien</span>
                                         </div>
                                         ${viewMode === 'geofence' ? '<div style="margin-top:6px;padding:4px 6px;background:#fff1f2;border-radius:6px;font-size:10px;color:#be123c;font-weight:600;">[Geofence] Zona Kontak Erat 500m</div>' : ''}
                                     </div>

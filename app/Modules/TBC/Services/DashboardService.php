@@ -120,7 +120,7 @@ class DashboardService
                 DB::raw('count(*) as total'),
                 DB::raw("sum(case when report_type = 'tb_03' then 1 else 0 end) as total_terkonfirmasi"),
                 DB::raw("sum(case when report_type = 'tb_06' and batuk_2_minggu is null and bb_turun is null and keringat_malam is null and kontak_tb is null then 1 else 0 end) as total_terduga"),
-                DB::raw("sum(case when (status_pengobatan like '%pengobatan%' or status_pengobatan like '%aktif%') and hasil_akhir_pengobatan is null then 1 else 0 end) as total_active"),
+                DB::raw("sum(case when report_type = 'tb_03' and (hasil_akhir_pengobatan is null or hasil_akhir_pengobatan = '') then 1 else 0 end) as total_active"),
                 DB::raw("sum(case when hasil_tcm like '%rr%' or hasil_tcm like '%ro%' or hasil_diagnosis like '%ro%' then 1 else 0 end) as total_ro"),
                 DB::raw("sum(case when status_hiv like '%positif%' then 1 else 0 end) as total_hiv")
             )
@@ -287,7 +287,7 @@ class DashboardService
         // Legacy map_data for backward-compat (used by initial page load)
         $kelurahanAll = (clone $baseQuery)
             ->select('kelurahan', 'kabupaten', DB::raw('count(*) as total'),
-                DB::raw("sum(case when status_pengobatan like '%pengobatan%' or status_pengobatan like '%aktif%' then 1 else 0 end) as total_active"),
+                DB::raw("sum(case when report_type = 'tb_03' and (hasil_akhir_pengobatan is null or hasil_akhir_pengobatan = '') then 1 else 0 end) as total_active"),
                 DB::raw("sum(case when hasil_tcm like '%rr%' or hasil_tcm like '%ro%' or hasil_diagnosis like '%ro%' then 1 else 0 end) as total_ro"))
             ->whereNotNull('kelurahan')->where('kelurahan', '!=', '')
             ->groupBy('kelurahan', 'kabupaten')->orderByDesc('total')->get();
