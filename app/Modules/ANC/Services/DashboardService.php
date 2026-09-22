@@ -338,51 +338,29 @@ class DashboardService
         $kelurahanLabels = $kelurahanDist->pluck('kelurahan')->all();
         $risikoValues = array_map(fn($kel) => (int)($kelurahanRisiko->get($kel)?->risiko ?? 0), $kelurahanLabels);
 
-        $monthOrder = [
-            'Januari' => 1, 'Februari' => 2, 'Maret' => 3, 'April' => 4,
-            'Mei' => 5, 'Juni' => 6, 'Juli' => 7, 'Agustus' => 8,
-            'September' => 9, 'Oktober' => 10, 'November' => 11, 'Desember' => 12,
-        ];
-        // Ambil distribusi bulan dari bulan_kunjungan (primer) atau bulan (fallback)
-        // Gunakan COALESCE agar record tanpa bulan_kunjungan tetap terhitung via kolom bulan
-        $monthlyRaw = (clone $base)
-            ->selectRaw("CASE WHEN bulan_kunjungan IS NOT NULL AND bulan_kunjungan != '' THEN bulan_kunjungan ELSE bulan END as bulan_efektif, count(*) as total")
-            ->whereRaw("(bulan_kunjungan IS NOT NULL AND bulan_kunjungan != '') OR (bulan IS NOT NULL AND bulan != '')")
-            ->groupByRaw("bulan_efektif")
-            ->pluck('total', 'bulan_efektif')
+        // ── Tren Tafsiran Persalinan (HPL) per bulan — 12 bulan ke depan ──
+        $hplRaw = AncPatient::whereNotNull('hpl')
+            ->whereNull('tanggal_bersalin')
+            ->whereDate('hpl', '>=', now()->startOfMonth()->toDateString())
+            ->whereDate('hpl', '<=', now()->addMonths(11)->endOfMonth()->toDateString())
+            ->selectRaw("strftime('%Y-%m', hpl) as bulan_hpl, count(*) as total")
+            ->groupByRaw("bulan_hpl")
+            ->orderBy('bulan_hpl')
+            ->pluck('total', 'bulan_hpl')
             ->all();
 
-        if (empty($monthlyRaw)) {
-            $dateRecords = (clone $base)->select('bulan_kunjungan', 'tanggal_kunjungan', 'created_at')->get();
-            $indonesianMonthMap = [
-                1 => 'Januari', 2 => 'Februari', 3 => 'Maret', 4 => 'April',
-                5 => 'Mei', 6 => 'Juni', 7 => 'Juli', 8 => 'Agustus',
-                9 => 'September', 10 => 'Oktober', 11 => 'November', 12 => 'Desember'
-            ];
-            foreach ($dateRecords as $rec) {
-                $mName = null;
-                if (!empty($rec->bulan_kunjungan)) {
-                    // Prioritas utama: bulan kunjungan dari kolom Excel
-                    $mName = $rec->bulan_kunjungan;
-                } elseif (!empty($rec->tanggal_kunjungan)) {
-                    $mNum  = (int) \Carbon\Carbon::parse($rec->tanggal_kunjungan)->format('n');
-                    $mName = $indonesianMonthMap[$mNum] ?? null;
-                } elseif (!empty($rec->created_at)) {
-                    $mNum  = (int) $rec->created_at->format('n');
-                    $mName = $indonesianMonthMap[$mNum] ?? null;
-                }
-                if ($mName) {
-                    $monthlyRaw[$mName] = ($monthlyRaw[$mName] ?? 0) + 1;
-                }
-            }
-        }
-
-        $allMonths = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+        $indonesianMonths = [
+            1 => 'Jan', 2 => 'Feb', 3 => 'Mar', 4 => 'Apr',
+            5 => 'Mei', 6 => 'Jun', 7 => 'Jul', 8 => 'Ags',
+            9 => 'Sep', 10 => 'Okt', 11 => 'Nov', 12 => 'Des',
+        ];
         $monthlyLabels = [];
         $monthlyValues = [];
-        foreach ($allMonths as $m) {
-            $monthlyLabels[] = $m;
-            $monthlyValues[] = (int) ($monthlyRaw[$m] ?? 0);
+        for ($i = 0; $i < 12; $i++) {
+            $dt  = now()->addMonths($i);
+            $key = $dt->format('Y-m');
+            $monthlyLabels[] = $indonesianMonths[(int)$dt->format('n')] . ' ' . $dt->format('Y');
+            $monthlyValues[] = (int) ($hplRaw[$key] ?? 0);
         }
 
         $kunjunganDist = (clone $base)
