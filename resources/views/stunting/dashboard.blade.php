@@ -337,13 +337,29 @@
 
             {{-- Monthly Trend Chart (Full Width) --}}
             <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs p-5">
-                <div class="flex items-center justify-between mb-4">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
                     <div>
-                        <h3 class="text-sm font-bold text-slate-700">Tren Kasus Stunting Bulanan</h3>
-                        <p class="text-xs text-slate-400">Perkembangan total pengukuran dan kasus balita stunting per bulan</p>
+                        <div class="flex items-center gap-2">
+                            <h3 class="text-sm font-bold text-slate-700">Tren Kasus Stunting Bulanan</h3>
+                            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200/70">
+                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                                Candlestick / OHLC
+                            </span>
+                        </div>
+                        <p class="text-xs text-slate-400 mt-0.5">Dinamika volume total pengukuran (High) hingga sebaran kasus stunting (Low/Close) per bulan</p>
+                    </div>
+                    <div class="flex items-center gap-3 text-xs text-slate-500">
+                        <div class="flex items-center gap-1.5">
+                            <span class="w-3 h-3 rounded bg-emerald-500 inline-block border border-emerald-600"></span>
+                            <span>Tren Terkendali (Stunting Rendah)</span>
+                        </div>
+                        <div class="flex items-center gap-1.5">
+                            <span class="w-3 h-3 rounded bg-rose-500 inline-block border border-rose-600"></span>
+                            <span>Waspada (Stunting Tinggi)</span>
+                        </div>
                     </div>
                 </div>
-                <div class="relative h-72">
+                <div class="relative h-80">
                     <canvas id="monthlyChart"></canvas>
                 </div>
             </div>
@@ -1671,7 +1687,7 @@
                             }
                         });
 
-                        // Monthly Trend Line/Bar Chart
+                        // Monthly Trend Candlestick Chart
                         const monthlyData = @json($monthlyTrend ?? []);
                         const monthLabels = monthlyData.map(m => {
                             if (!m.bulan_label) return '-';
@@ -1683,34 +1699,101 @@
                             return m.bulan_label;
                         });
 
+                        // Candle builder helper
+                        const buildCandleDataset = (dataList) => {
+                            return dataList.map(m => {
+                                const total = Number(m.total) || 0;
+                                const stunting = Number(m.stunting) || 0;
+                                const nonStunting = Math.max(0, total - stunting);
+
+                                // High: Total Pengukuran balita
+                                // Low: Kasus Stunting
+                                // Open: Total pengukuran
+                                // Close: Balita normal/non-stunting
+                                const isBullish = nonStunting >= stunting; // Mayoritas terkendali/sehat
+                                const bodyMin = Math.min(stunting, nonStunting);
+                                const bodyMax = Math.max(stunting, nonStunting);
+
+                                return {
+                                    total: total,
+                                    stunting: stunting,
+                                    nonStunting: nonStunting,
+                                    high: total,
+                                    low: stunting,
+                                    open: total,
+                                    close: nonStunting,
+                                    isBullish: isBullish,
+                                    // floating bar range for candle body [min, max]
+                                    barRange: [bodyMin, bodyMax]
+                                };
+                            });
+                        };
+
+                        const candleDataset = buildCandleDataset(monthlyData);
+
+                        // Custom Plugin to draw candlestick wicks (sumbu lilin atas dan bawah)
+                        const candleWickPlugin = {
+                            id: 'candleWickPlugin',
+                            afterDatasetsDraw(chart) {
+                                const ctx = chart.ctx;
+                                const meta = chart.getDatasetMeta(0);
+                                if (!meta || !meta.data) return;
+
+                                const yScale = chart.scales.y;
+                                const candleMeta = chart._candleMeta || [];
+
+                                ctx.save();
+                                meta.data.forEach((bar, index) => {
+                                    const item = candleMeta[index];
+                                    if (!item) return;
+
+                                    const x = bar.x;
+                                    const yHigh = yScale.getPixelForValue(item.high);
+                                    const yLow = yScale.getPixelForValue(item.low);
+                                    const color = item.isBullish ? '#10b981' : '#f43f5e';
+
+                                    ctx.strokeStyle = color;
+                                    ctx.lineWidth = 2;
+                                    ctx.beginPath();
+                                    // Sumbu vertikal dari High (Total Pengukuran) ke Low (Stunting)
+                                    ctx.moveTo(x, yHigh);
+                                    ctx.lineTo(x, yLow);
+                                    ctx.stroke();
+
+                                    // Top whisker cap
+                                    ctx.beginPath();
+                                    ctx.moveTo(x - 5, yHigh);
+                                    ctx.lineTo(x + 5, yHigh);
+                                    ctx.stroke();
+
+                                    // Bottom whisker cap
+                                    ctx.beginPath();
+                                    ctx.moveTo(x - 5, yLow);
+                                    ctx.lineTo(x + 5, yLow);
+                                    ctx.stroke();
+                                });
+                                ctx.restore();
+                            }
+                        };
+
                         const ctxMonthly = document.getElementById('monthlyChart');
                         if (ctxMonthly) {
                             this.monthlyChart = new Chart(ctxMonthly, {
-                                type: 'line',
+                                type: 'bar',
+                                plugins: [candleWickPlugin],
                                 data: {
                                     labels: monthLabels,
                                     datasets: [
                                         {
-                                            label: 'Total Pengukuran',
-                                            data: monthlyData.map(m => m.total),
-                                            borderColor: '#3b82f6',
-                                            backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                                            borderWidth: 2,
-                                            tension: 0.3,
-                                            fill: true,
-                                            pointBackgroundColor: '#3b82f6',
-                                            pointRadius: 4,
-                                        },
-                                        {
-                                            label: 'Kasus Stunting',
-                                            data: monthlyData.map(m => m.stunting),
-                                            borderColor: '#ef4444',
-                                            backgroundColor: 'rgba(239, 68, 68, 0.15)',
-                                            borderWidth: 2,
-                                            tension: 0.3,
-                                            fill: true,
-                                            pointBackgroundColor: '#ef4444',
-                                            pointRadius: 4,
+                                            label: 'Rentang Lilin (Body)',
+                                            data: candleDataset.map(c => c.barRange),
+                                            backgroundColor: candleDataset.map(c => c.isBullish ? 'rgba(16, 185, 129, 0.85)' : 'rgba(244, 63, 94, 0.85)'),
+                                            borderColor: candleDataset.map(c => c.isBullish ? '#059669' : '#e11d48'),
+                                            borderWidth: 1.5,
+                                            borderRadius: 4,
+                                            borderSkipped: false,
+                                            barPercentage: 0.45,
+                                            categoryPercentage: 0.6,
                                         }
                                     ]
                                 },
@@ -1722,14 +1805,46 @@
                                         intersect: false,
                                     },
                                     scales: {
-                                        x: { grid: { display: false } },
-                                        y: { beginAtZero: true, ticks: { stepSize: 1 } }
+                                        x: {
+                                            grid: { display: false },
+                                            ticks: { font: { size: 11 } }
+                                        },
+                                        y: {
+                                            beginAtZero: true,
+                                            ticks: { stepSize: 1, font: { size: 11 } },
+                                            title: { display: true, text: 'Jumlah Balita', font: { size: 11, weight: 'bold' } }
+                                        }
                                     },
                                     plugins: {
-                                        legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11 } } }
+                                        legend: { display: false },
+                                        tooltip: {
+                                            backgroundColor: 'rgba(15, 23, 42, 0.95)',
+                                            titleFont: { size: 12, weight: 'bold' },
+                                            bodyFont: { size: 11 },
+                                            padding: 12,
+                                            cornerRadius: 10,
+                                            callbacks: {
+                                                title: (items) => {
+                                                    return 'Bulan: ' + (items[0]?.label || '');
+                                                },
+                                                label: (item) => {
+                                                    const candle = (chartMonthlyChart._candleMeta || [])[item.dataIndex];
+                                                    if (!candle) return '';
+                                                    return [
+                                                        `📊 Total Pengukuran (High) : ${candle.total} balita`,
+                                                        `🟢 Balita Sehat / Normal (Open): ${candle.nonStunting} balita`,
+                                                        `🔴 Kasus Stunting (Low/Close): ${candle.stunting} balita`,
+                                                        `📈 Status Tren: ${candle.isBullish ? 'Terkendali / Positif' : 'Perhatian Khusus'}`
+                                                    ];
+                                                }
+                                            }
+                                        }
                                     }
                                 }
                             });
+                            const chartMonthlyChart = this.monthlyChart;
+                            chartMonthlyChart._candleMeta = candleDataset;
+                            this._buildCandleDataset = buildCandleDataset;
                         }
                     },
 
@@ -1768,9 +1883,13 @@
                                 }
                                 return m.bulan_label;
                             });
+
+                            const newCandleData = this._buildCandleDataset ? this._buildCandleDataset(data.monthlyTrend) : [];
+                            this.monthlyChart._candleMeta = newCandleData;
                             this.monthlyChart.data.labels = newMonthLabels;
-                            this.monthlyChart.data.datasets[0].data = data.monthlyTrend.map(m => m.total);
-                            this.monthlyChart.data.datasets[1].data = data.monthlyTrend.map(m => m.stunting);
+                            this.monthlyChart.data.datasets[0].data = newCandleData.map(c => c.barRange);
+                            this.monthlyChart.data.datasets[0].backgroundColor = newCandleData.map(c => c.isBullish ? 'rgba(16, 185, 129, 0.85)' : 'rgba(244, 63, 94, 0.85)');
+                            this.monthlyChart.data.datasets[0].borderColor = newCandleData.map(c => c.isBullish ? '#059669' : '#e11d48');
                             this.monthlyChart.update();
                         }
                     },
