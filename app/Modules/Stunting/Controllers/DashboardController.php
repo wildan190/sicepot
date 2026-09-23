@@ -19,12 +19,14 @@ class DashboardController extends Controller
         $desaList = $this->service->getDesaList();
         $yearList = $this->service->getYearList();
 
+        $defaultTahun = !empty($yearList) ? (string) $yearList[0] : (string) date('Y');
+
         return view('stunting.dashboard', array_merge($stats, [
-            'desaList'    => $desaList,
-            'yearList'    => $yearList,
+            'desaList'      => $desaList,
+            'yearList'      => $yearList,
             'selectedDesa'  => $request->input('desa', ''),
-            'selectedBulan' => $request->input('bulan', ''),
-            'selectedTahun' => $request->input('tahun', ''),
+            'selectedBulan' => $request->input('bulan', '01'),
+            'selectedTahun' => $request->input('tahun', $defaultTahun),
         ]));
     }
 
