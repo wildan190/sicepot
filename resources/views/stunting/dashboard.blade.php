@@ -160,9 +160,9 @@
                     <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs p-4 col-span-1 relative group">
                         <div class="flex items-center justify-between">
                             <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide">Total Balita</p>
-                            <span class="p-1 rounded-full text-slate-400 hover:text-slate-600 cursor-help" title="Total balita unik (berdasarkan NIK) yang tercatat dalam sistem. Angka bertambah jika ada data baru (Create).">
-                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                            </span>
+                            <button type="button" @click="showGuideModal = true" class="p-1 rounded-full text-slate-400 hover:text-emerald-600 hover:bg-slate-100 transition cursor-pointer" title="Klik untuk penjelasan detail indikator">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            </button>
                         </div>
                         <p class="text-3xl font-bold text-slate-800 mt-1"
                             x-text="stats.totalBalita ?? '{{ $totalBalita }}'"></p>
@@ -174,9 +174,9 @@
                         class="bg-gradient-to-br from-red-50 to-rose-50 rounded-2xl border border-red-100 shadow-xs p-4 col-span-1 relative group">
                         <div class="flex items-center justify-between">
                             <p class="text-xs font-semibold text-red-500 uppercase tracking-wide">Kasus Stunting</p>
-                            <span class="p-1 rounded-full text-red-400 hover:text-red-600 cursor-help" title="Total balita dengan kategori TB/U Pendek + Sangat Pendek. Otomatis bertambah saat ada kasus baru, atau berkurang saat status balita di-update menjadi Normal.">
-                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                            </span>
+                            <button type="button" @click="showGuideModal = true" class="p-1 rounded-full text-red-400 hover:text-red-700 hover:bg-red-100/50 transition cursor-pointer" title="Klik untuk penjelasan detail indikator">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            </button>
                         </div>
                         <p class="text-3xl font-bold text-red-600 mt-1"
                             x-text="stats.stuntingTotal ?? '{{ $stuntingTotal }}'"></p>
@@ -186,9 +186,9 @@
                     <div class="bg-gradient-to-br from-red-50 to-red-100 rounded-2xl border border-red-200 shadow-xs p-4 relative group">
                         <div class="flex items-center justify-between">
                             <p class="text-xs font-semibold text-red-600 uppercase tracking-wide">Sangat Pendek</p>
-                            <span class="p-1 rounded-full text-red-400 hover:text-red-600 cursor-help" title="Balita dengan Z-Score TB/U < -3 SD (Severely Stunted). Otomatis ter-update jika data balita diperbarui.">
-                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                            </span>
+                            <button type="button" @click="showGuideModal = true" class="p-1 rounded-full text-red-500 hover:text-red-800 hover:bg-red-200/50 transition cursor-pointer" title="Klik untuk penjelasan detail indikator">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            </button>
                         </div>
                         <p class="text-3xl font-bold text-red-700 mt-1"
                             x-text="stats.sangatPendekCount ?? '{{ $sangatPendekCount }}'"></p>
@@ -199,9 +199,9 @@
                         class="bg-gradient-to-br from-orange-50 to-amber-50 rounded-2xl border border-orange-100 shadow-xs p-4 relative group">
                         <div class="flex items-center justify-between">
                             <p class="text-xs font-semibold text-orange-500 uppercase tracking-wide">Pendek</p>
-                            <span class="p-1 rounded-full text-orange-400 hover:text-orange-600 cursor-help" title="Balita dengan Z-Score TB/U antara -3 SD s/d < -2 SD (Stunted). Otomatis ter-update secara realtime.">
-                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                            </span>
+                            <button type="button" @click="showGuideModal = true" class="p-1 rounded-full text-orange-400 hover:text-orange-700 hover:bg-orange-100/50 transition cursor-pointer" title="Klik untuk penjelasan detail indikator">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            </button>
                         </div>
                         <p class="text-3xl font-bold text-orange-600 mt-1"
                             x-text="stats.pendekCount ?? '{{ $pendekCount }}'"></p>
@@ -225,9 +225,9 @@
                         class="bg-white rounded-2xl border border-rose-100/90 shadow-xs p-3.5 relative overflow-hidden group hover:border-rose-300 transition-colors">
                         <div class="flex items-center justify-between">
                             <p class="text-[11px] font-bold text-rose-700 uppercase tracking-wide">Test Hemoglobin</p>
-                            <span class="p-0.5 rounded-full text-rose-400 hover:text-rose-600 cursor-help" title="Skrining Anemia defisiensi besi pada balita stunting. Otomatis bertambah/terupdate saat rekam balita stunting ditandai Test Hb: Ya.">
-                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                            </span>
+                            <button type="button" @click="showGuideModal = true" class="p-1 rounded-full text-rose-400 hover:text-rose-700 hover:bg-rose-50 transition cursor-pointer" title="Klik untuk penjelasan detail">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            </button>
                         </div>
                         <p class="text-2xl font-black text-rose-800 mt-1.5"
                             x-text="stats.hemoglobinCount ?? '{{ $hemoglobinCount }}'"></p>
@@ -243,9 +243,9 @@
                         class="bg-white rounded-2xl border border-sky-100/90 shadow-xs p-3.5 relative overflow-hidden group hover:border-sky-300 transition-colors">
                         <div class="flex items-center justify-between">
                             <p class="text-[11px] font-bold text-sky-700 uppercase tracking-wide">Test Mantoux</p>
-                            <span class="p-0.5 rounded-full text-sky-400 hover:text-sky-600 cursor-help" title="Skrining TBC pada balita stunting via uji tuberkulin Mantoux. Nilai otomatis sinkron saat data balita stunting tersimpan atau diubah.">
-                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                            </span>
+                            <button type="button" @click="showGuideModal = true" class="p-1 rounded-full text-sky-400 hover:text-sky-700 hover:bg-sky-50 transition cursor-pointer" title="Klik untuk penjelasan detail">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            </button>
                         </div>
                         <p class="text-2xl font-black text-sky-800 mt-1.5"
                             x-text="stats.mantouxCount ?? '{{ $mantouxCount }}'"></p>
@@ -261,9 +261,9 @@
                         class="bg-white rounded-2xl border border-indigo-100/90 shadow-xs p-3.5 relative overflow-hidden group hover:border-indigo-300 transition-colors">
                         <div class="flex items-center justify-between">
                             <p class="text-[11px] font-bold text-indigo-700 uppercase tracking-wide">Konsul Sp.A</p>
-                            <span class="p-0.5 rounded-full text-indigo-400 hover:text-indigo-600 cursor-help" title="Rujukan konsultasi ke Dokter Spesialis Anak untuk mencari red flags atau penyakit penyerta. Realtime ter-update saat data balita diperbarui.">
-                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                            </span>
+                            <button type="button" @click="showGuideModal = true" class="p-1 rounded-full text-indigo-400 hover:text-indigo-700 hover:bg-indigo-50 transition cursor-pointer" title="Klik untuk penjelasan detail">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            </button>
                         </div>
                         <p class="text-2xl font-black text-indigo-800 mt-1.5"
                             x-text="stats.konsulSpaCount ?? '{{ $konsulSpaCount }}'"></p>
@@ -279,9 +279,9 @@
                         class="bg-white rounded-2xl border border-emerald-100/90 shadow-xs p-3.5 relative overflow-hidden group hover:border-emerald-300 transition-colors">
                         <div class="flex items-center justify-between">
                             <p class="text-[11px] font-bold text-emerald-700 uppercase tracking-wide">Lolos (N)</p>
-                            <span class="p-0.5 rounded-full text-emerald-400 hover:text-emerald-600 cursor-help" title="Balita stunting yang berat badannya Naik (N) pada penimbangan terakhir (tren positif perbaikan gizi).">
-                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                            </span>
+                            <button type="button" @click="showGuideModal = true" class="p-1 rounded-full text-emerald-400 hover:text-emerald-700 hover:bg-emerald-50 transition cursor-pointer" title="Klik untuk penjelasan detail">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            </button>
                         </div>
                         <p class="text-2xl font-black text-emerald-800 mt-1.5"
                             x-text="stats.naikBBYCount ?? '{{ $naikBBYCount }}'"></p>
@@ -1467,6 +1467,15 @@
                     <h4 class="text-sm font-bold tracking-tight" x-text="toast.title"></h4>
                     <p class="text-xs text-slate-300 mt-0.5 leading-relaxed" x-text="toast.message"></p>
                 </div>
+                <button @click="toast.show = false"
+                    class="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-white/10 transition-colors cursor-pointer">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
         <!-- ================= MODAL PANDUAN INDIKATOR & UPSET ================= -->
         <div x-show="showGuideModal" x-cloak
             class="fixed inset-0 z-50 overflow-y-auto flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs"
