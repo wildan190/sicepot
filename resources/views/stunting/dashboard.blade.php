@@ -19,6 +19,16 @@
                             Intervensi Stunting</p>
                     </div>
                     <div class="flex items-center flex-wrap gap-2">
+                        <!-- Panduan Indikator & Sistem Upsert -->
+                        <button @click="showGuideModal = true" type="button" title="Petunjuk Indikator & Mekanisme Realtime"
+                            class="inline-flex items-center gap-1.5 px-3 py-2 bg-amber-50 hover:bg-amber-100 active:bg-amber-200 text-amber-800 border border-amber-200/80 text-xs font-semibold rounded-xl shadow-xs transition-all duration-150 cursor-pointer">
+                            <svg class="w-3.5 h-3.5 text-amber-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <span>Panduan Indikator</span>
+                        </button>
+
                         <!-- Ekspor Excel -->
                         <a :href="'{{ route('stunting.export.excel') }}?desa=' + encodeURIComponent(selectedDesa || '') + '&bulan=' + encodeURIComponent(selectedBulan || '') + '&tahun=' + encodeURIComponent(selectedTahun || '') + '&search=' + encodeURIComponent(searchQuery || '')"
                             class="inline-flex items-center gap-1.5 px-3 py-2 bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 text-xs font-semibold rounded-xl shadow-xs transition-all duration-150 cursor-pointer"
@@ -131,135 +141,155 @@
             </div>
 
             {{-- KPI CARDS: STATUS PERTUMBUHAN & STUNTING --}}
-            <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                {{-- Total Balita Terdaftar --}}
-                <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs p-4 col-span-1">
-                    <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide">Total Balita</p>
-                    <p class="text-3xl font-bold text-slate-800 mt-1"
-                        x-text="stats.totalBalita ?? '{{ $totalBalita }}'"></p>
-                    <p class="text-xs text-slate-400 mt-1" x-text="'(' + (stats.total ?? '{{ $total }}') + ' rekaman)'">
-                    </p>
+            <div>
+                <div class="flex items-center justify-between mb-2.5">
+                    <div class="flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                        <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider">Status Stunting & Pertumbuhan</h3>
+                        <span class="text-[11px] text-slate-400 font-normal">(Sinkronisasi Realtime & Create/Update)</span>
+                    </div>
+                    <button @click="showGuideModal = true" type="button" class="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-600 hover:text-emerald-700 cursor-pointer">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span>Penjelasan Indikator</span>
+                    </button>
                 </div>
-                {{-- Kasus Stunting Aktif (Pendek + Sangat Pendek) --}}
-                <div
-                    class="bg-gradient-to-br from-red-50 to-rose-50 rounded-2xl border border-red-100 shadow-xs p-4 col-span-1">
-                    <p class="text-xs font-semibold text-red-500 uppercase tracking-wide">Kasus Stunting</p>
-                    <p class="text-3xl font-bold text-red-600 mt-1"
-                        x-text="stats.stuntingTotal ?? '{{ $stuntingTotal }}'"></p>
-                    <p class="text-xs text-red-400 mt-1">Pendek + Sangat Pendek</p>
-                </div>
-                {{-- Sangat Pendek --}}
-                <div class="bg-gradient-to-br from-red-50 to-red-100 rounded-2xl border border-red-200 shadow-xs p-4">
-                    <p class="text-xs font-semibold text-red-600 uppercase tracking-wide">Sangat Pendek</p>
-                    <p class="text-3xl font-bold text-red-700 mt-1"
-                        x-text="stats.sangatPendekCount ?? '{{ $sangatPendekCount }}'"></p>
-                    <p class="text-xs text-red-500 mt-1">TB/U: Sangat Pendek</p>
-                </div>
-                {{-- Pendek --}}
-                <div
-                    class="bg-gradient-to-br from-orange-50 to-amber-50 rounded-2xl border border-orange-100 shadow-xs p-4">
-                    <p class="text-xs font-semibold text-orange-500 uppercase tracking-wide">Pendek</p>
-                    <p class="text-3xl font-bold text-orange-600 mt-1"
-                        x-text="stats.pendekCount ?? '{{ $pendekCount }}'"></p>
-                    <p class="text-xs text-orange-400 mt-1">TB/U: Pendek</p>
+                <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    {{-- Total Balita Terdaftar --}}
+                    <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs p-4 col-span-1 relative group">
+                        <div class="flex items-center justify-between">
+                            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide">Total Balita</p>
+                            <span class="p-1 rounded-full text-slate-400 hover:text-slate-600 cursor-help" title="Total balita unik (berdasarkan NIK) yang tercatat dalam sistem. Angka bertambah jika ada data baru (Create).">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            </span>
+                        </div>
+                        <p class="text-3xl font-bold text-slate-800 mt-1"
+                            x-text="stats.totalBalita ?? '{{ $totalBalita }}'"></p>
+                        <p class="text-xs text-slate-400 mt-1" x-text="'(' + (stats.total ?? '{{ $total }}') + ' rekaman pengukuran)'">
+                        </p>
+                    </div>
+                    {{-- Kasus Stunting Aktif (Pendek + Sangat Pendek) --}}
+                    <div
+                        class="bg-gradient-to-br from-red-50 to-rose-50 rounded-2xl border border-red-100 shadow-xs p-4 col-span-1 relative group">
+                        <div class="flex items-center justify-between">
+                            <p class="text-xs font-semibold text-red-500 uppercase tracking-wide">Kasus Stunting</p>
+                            <span class="p-1 rounded-full text-red-400 hover:text-red-600 cursor-help" title="Total balita dengan kategori TB/U Pendek + Sangat Pendek. Otomatis bertambah saat ada kasus baru, atau berkurang saat status balita di-update menjadi Normal.">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            </span>
+                        </div>
+                        <p class="text-3xl font-bold text-red-600 mt-1"
+                            x-text="stats.stuntingTotal ?? '{{ $stuntingTotal }}'"></p>
+                        <p class="text-xs text-red-400 mt-1">Pendek + Sangat Pendek</p>
+                    </div>
+                    {{-- Sangat Pendek --}}
+                    <div class="bg-gradient-to-br from-red-50 to-red-100 rounded-2xl border border-red-200 shadow-xs p-4 relative group">
+                        <div class="flex items-center justify-between">
+                            <p class="text-xs font-semibold text-red-600 uppercase tracking-wide">Sangat Pendek</p>
+                            <span class="p-1 rounded-full text-red-400 hover:text-red-600 cursor-help" title="Balita dengan Z-Score TB/U < -3 SD (Severely Stunted). Otomatis ter-update jika data balita diperbarui.">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            </span>
+                        </div>
+                        <p class="text-3xl font-bold text-red-700 mt-1"
+                            x-text="stats.sangatPendekCount ?? '{{ $sangatPendekCount }}'"></p>
+                        <p class="text-xs text-red-500 mt-1">TB/U: Sangat Pendek</p>
+                    </div>
+                    {{-- Pendek --}}
+                    <div
+                        class="bg-gradient-to-br from-orange-50 to-amber-50 rounded-2xl border border-orange-100 shadow-xs p-4 relative group">
+                        <div class="flex items-center justify-between">
+                            <p class="text-xs font-semibold text-orange-500 uppercase tracking-wide">Pendek</p>
+                            <span class="p-1 rounded-full text-orange-400 hover:text-orange-600 cursor-help" title="Balita dengan Z-Score TB/U antara -3 SD s/d < -2 SD (Stunted). Otomatis ter-update secara realtime.">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            </span>
+                        </div>
+                        <p class="text-3xl font-bold text-orange-600 mt-1"
+                            x-text="stats.pendekCount ?? '{{ $pendekCount }}'"></p>
+                        <p class="text-xs text-orange-400 mt-1">TB/U: Pendek</p>
+                    </div>
                 </div>
             </div>
 
             {{-- SECONDARY KPI: INTERVENSI KLINIS & LAYANAN SPESIFIK (subset dari kasus stunting) --}}
-            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3.5">
-                {{-- Hemoglobin Test --}}
-                <div
-                    class="bg-white rounded-2xl border border-rose-100/90 shadow-xs p-3.5 relative overflow-hidden group hover:border-rose-300 transition-colors">
-                    <div class="flex items-center justify-between">
-                        <p class="text-[11px] font-bold text-rose-700 uppercase tracking-wide">Test Hemoglobin</p>
-                        <span class="w-2 h-2 rounded-full bg-rose-500"></span>
-                    </div>
-                    <p class="text-2xl font-black text-rose-800 mt-1.5"
-                        x-text="stats.hemoglobinCount ?? '{{ $hemoglobinCount }}'"></p>
-                    <div class="flex items-center justify-between text-[10px] text-slate-500 mt-1">
-                        <span>Skrining Anemia</span>
-                        <span class="font-semibold text-rose-600"
-                            x-text="((stats.stuntingTotal || {{ $stuntingTotal }}) > 0 ? Math.round(((stats.hemoglobinCount ?? {{ $hemoglobinCount }}) / (stats.stuntingTotal || {{ $stuntingTotal }})) * 100) : 0) + '%'"></span>
-                    </div>
-                </div>
-
-                {{-- Mantoux Test --}}
-                <div
-                    class="bg-white rounded-2xl border border-sky-100/90 shadow-xs p-3.5 relative overflow-hidden group hover:border-sky-300 transition-colors">
-                    <div class="flex items-center justify-between">
-                        <p class="text-[11px] font-bold text-sky-700 uppercase tracking-wide">Test Mantoux</p>
-                        <span class="w-2 h-2 rounded-full bg-sky-500"></span>
-                    </div>
-                    <p class="text-2xl font-black text-sky-800 mt-1.5"
-                        x-text="stats.mantouxCount ?? '{{ $mantouxCount }}'"></p>
-                    <div class="flex items-center justify-between text-[10px] text-slate-500 mt-1">
-                        <span>Skrining TBC Anak</span>
-                        <span class="font-semibold text-sky-600"
-                            x-text="((stats.stuntingTotal || {{ $stuntingTotal }}) > 0 ? Math.round(((stats.mantouxCount ?? {{ $mantouxCount }}) / (stats.stuntingTotal || {{ $stuntingTotal }})) * 100) : 0) + '%'"></span>
-                    </div>
-                </div>
-
-                {{-- Konsul Spesialis Anak --}}
-                <div
-                    class="bg-white rounded-2xl border border-indigo-100/90 shadow-xs p-3.5 relative overflow-hidden group hover:border-indigo-300 transition-colors">
-                    <div class="flex items-center justify-between">
-                        <p class="text-[11px] font-bold text-indigo-700 uppercase tracking-wide">Konsul Sp.A</p>
+            <div>
+                <div class="flex items-center justify-between mb-2.5">
+                    <div class="flex items-center gap-2">
                         <span class="w-2 h-2 rounded-full bg-indigo-500"></span>
-                    </div>
-                    <p class="text-2xl font-black text-indigo-800 mt-1.5"
-                        x-text="stats.konsulSpaCount ?? '{{ $konsulSpaCount }}'"></p>
-                    <div class="flex items-center justify-between text-[10px] text-slate-500 mt-1">
-                        <span>Spesialis Anak</span>
-                        <span class="font-semibold text-indigo-600"
-                            x-text="((stats.stuntingTotal || {{ $stuntingTotal }}) > 0 ? Math.round(((stats.konsulSpaCount ?? {{ $konsulSpaCount }}) / (stats.stuntingTotal || {{ $stuntingTotal }})) * 100) : 0) + '%'"></span>
+                        <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider">Intervensi Klinis & Evaluasi Balita Stunting</h3>
+                        <span class="text-[11px] text-slate-400 font-normal">(Target 100% Skrining Kasus Stunting)</span>
                     </div>
                 </div>
+                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3.5">
+                    {{-- Hemoglobin Test --}}
+                    <div
+                        class="bg-white rounded-2xl border border-rose-100/90 shadow-xs p-3.5 relative overflow-hidden group hover:border-rose-300 transition-colors">
+                        <div class="flex items-center justify-between">
+                            <p class="text-[11px] font-bold text-rose-700 uppercase tracking-wide">Test Hemoglobin</p>
+                            <span class="p-0.5 rounded-full text-rose-400 hover:text-rose-600 cursor-help" title="Skrining Anemia defisiensi besi pada balita stunting. Otomatis bertambah/terupdate saat rekam balita stunting ditandai Test Hb: Ya.">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            </span>
+                        </div>
+                        <p class="text-2xl font-black text-rose-800 mt-1.5"
+                            x-text="stats.hemoglobinCount ?? '{{ $hemoglobinCount }}'"></p>
+                        <div class="flex items-center justify-between text-[10px] text-slate-500 mt-1">
+                            <span>Skrining Anemia</span>
+                            <span class="font-semibold text-rose-600"
+                                x-text="((stats.stuntingTotal || {{ $stuntingTotal }}) > 0 ? Math.round(((stats.hemoglobinCount ?? {{ $hemoglobinCount }}) / (stats.stuntingTotal || {{ $stuntingTotal }})) * 100) : 0) + '%'"></span>
+                        </div>
+                    </div>
 
-                {{-- Vitamin A --}}
-                <!-- <div
-                    class="bg-white rounded-2xl border border-amber-100/90 shadow-xs p-3.5 relative overflow-hidden group hover:border-amber-300 transition-colors">
-                    <div class="flex items-center justify-between">
-                        <p class="text-[11px] font-bold text-amber-700 uppercase tracking-wide">Suplementasi Vit A</p>
-                        <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+                    {{-- Mantoux Test --}}
+                    <div
+                        class="bg-white rounded-2xl border border-sky-100/90 shadow-xs p-3.5 relative overflow-hidden group hover:border-sky-300 transition-colors">
+                        <div class="flex items-center justify-between">
+                            <p class="text-[11px] font-bold text-sky-700 uppercase tracking-wide">Test Mantoux</p>
+                            <span class="p-0.5 rounded-full text-sky-400 hover:text-sky-600 cursor-help" title="Skrining TBC pada balita stunting via uji tuberkulin Mantoux. Nilai otomatis sinkron saat data balita stunting tersimpan atau diubah.">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            </span>
+                        </div>
+                        <p class="text-2xl font-black text-sky-800 mt-1.5"
+                            x-text="stats.mantouxCount ?? '{{ $mantouxCount }}'"></p>
+                        <div class="flex items-center justify-between text-[10px] text-slate-500 mt-1">
+                            <span>Skrining TBC Anak</span>
+                            <span class="font-semibold text-sky-600"
+                                x-text="((stats.stuntingTotal || {{ $stuntingTotal }}) > 0 ? Math.round(((stats.mantouxCount ?? {{ $mantouxCount }}) / (stats.stuntingTotal || {{ $stuntingTotal }})) * 100) : 0) + '%'"></span>
+                        </div>
                     </div>
-                    <p class="text-2xl font-black text-amber-800 mt-1.5" x-text="stats.vitACount ?? '{{ $vitACount }}'">
-                    </p>
-                    <div class="flex items-center justify-between text-[10px] text-slate-500 mt-1">
-                        <span>Kapsul Vitamin A</span>
-                        <span class="font-semibold text-amber-600"
-                            x-text="((stats.total || {{ $total }}) > 0 ? Math.round(((stats.vitACount ?? {{ $vitACount }}) / (stats.total || {{ $total }})) * 100) : 0) + '%'"></span>
-                    </div>
-                </div> -->
 
-                {{-- Kelas Ibu Balita --}}
-                <!-- <div
-                    class="bg-white rounded-2xl border border-purple-100/90 shadow-xs p-3.5 relative overflow-hidden group hover:border-purple-300 transition-colors">
-                    <div class="flex items-center justify-between">
-                        <p class="text-[11px] font-bold text-purple-700 uppercase tracking-wide">Kelas Ibu Balita</p>
-                        <span class="w-2 h-2 rounded-full bg-purple-500"></span>
+                    {{-- Konsul Spesialis Anak --}}
+                    <div
+                        class="bg-white rounded-2xl border border-indigo-100/90 shadow-xs p-3.5 relative overflow-hidden group hover:border-indigo-300 transition-colors">
+                        <div class="flex items-center justify-between">
+                            <p class="text-[11px] font-bold text-indigo-700 uppercase tracking-wide">Konsul Sp.A</p>
+                            <span class="p-0.5 rounded-full text-indigo-400 hover:text-indigo-600 cursor-help" title="Rujukan konsultasi ke Dokter Spesialis Anak untuk mencari red flags atau penyakit penyerta. Realtime ter-update saat data balita diperbarui.">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            </span>
+                        </div>
+                        <p class="text-2xl font-black text-indigo-800 mt-1.5"
+                            x-text="stats.konsulSpaCount ?? '{{ $konsulSpaCount }}'"></p>
+                        <div class="flex items-center justify-between text-[10px] text-slate-500 mt-1">
+                            <span>Spesialis Anak</span>
+                            <span class="font-semibold text-indigo-600"
+                                x-text="((stats.stuntingTotal || {{ $stuntingTotal }}) > 0 ? Math.round(((stats.konsulSpaCount ?? {{ $konsulSpaCount }}) / (stats.stuntingTotal || {{ $stuntingTotal }})) * 100) : 0) + '%'"></span>
+                        </div>
                     </div>
-                    <p class="text-2xl font-black text-purple-800 mt-1.5"
-                        x-text="stats.kelasIbuCount ?? '{{ $kelasIbuCount }}'"></p>
-                    <div class="flex items-center justify-between text-[10px] text-slate-500 mt-1">
-                        <span>Edukasi Gizi</span>
-                        <span class="font-semibold text-purple-600"
-                            x-text="((stats.total || {{ $total }}) > 0 ? Math.round(((stats.kelasIbuCount ?? {{ $kelasIbuCount }}) / (stats.total || {{ $total }})) * 100) : 0) + '%'"></span>
-                    </div>
-                </div> -->
 
-                {{-- Naik Berat Badan (N) - dari stunting --}}
-                <div
-                    class="bg-white rounded-2xl border border-emerald-100/90 shadow-xs p-3.5 relative overflow-hidden group hover:border-emerald-300 transition-colors">
-                    <div class="flex items-center justify-between">
-                        <p class="text-[11px] font-bold text-emerald-700 uppercase tracking-wide">Lolos (N)</p>
-                        <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-                    </div>
-                    <p class="text-2xl font-black text-emerald-800 mt-1.5"
-                        x-text="stats.naikBBYCount ?? '{{ $naikBBYCount }}'"></p>
-                    <div class="flex items-center justify-between text-[10px] text-slate-500 mt-1">
-                        <span>Tren Positif</span>
-                        <span class="font-semibold text-emerald-600"
-                            x-text="((stats.stuntingTotal || {{ $stuntingTotal }}) > 0 ? Math.round(((stats.naikBBYCount ?? {{ $naikBBYCount }}) / (stats.stuntingTotal || {{ $stuntingTotal }})) * 100) : 0) + '%'"></span>
+                    {{-- Naik Berat Badan (N) - dari stunting --}}
+                    <div
+                        class="bg-white rounded-2xl border border-emerald-100/90 shadow-xs p-3.5 relative overflow-hidden group hover:border-emerald-300 transition-colors">
+                        <div class="flex items-center justify-between">
+                            <p class="text-[11px] font-bold text-emerald-700 uppercase tracking-wide">Lolos (N)</p>
+                            <span class="p-0.5 rounded-full text-emerald-400 hover:text-emerald-600 cursor-help" title="Balita stunting yang berat badannya Naik (N) pada penimbangan terakhir (tren positif perbaikan gizi).">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            </span>
+                        </div>
+                        <p class="text-2xl font-black text-emerald-800 mt-1.5"
+                            x-text="stats.naikBBYCount ?? '{{ $naikBBYCount }}'"></p>
+                        <div class="flex items-center justify-between text-[10px] text-slate-500 mt-1">
+                            <span>Tren Positif</span>
+                            <span class="font-semibold text-emerald-600"
+                                x-text="((stats.stuntingTotal || {{ $stuntingTotal }}) > 0 ? Math.round(((stats.naikBBYCount ?? {{ $naikBBYCount }}) / (stats.stuntingTotal || {{ $stuntingTotal }})) * 100) : 0) + '%'"></span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1437,13 +1467,122 @@
                     <h4 class="text-sm font-bold tracking-tight" x-text="toast.title"></h4>
                     <p class="text-xs text-slate-300 mt-0.5 leading-relaxed" x-text="toast.message"></p>
                 </div>
-                <button @click="toast.show = false"
-                    class="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-white/10 transition-colors cursor-pointer">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
-                        </path>
-                    </svg>
-                </button>
+        <!-- ================= MODAL PANDUAN INDIKATOR & UPSET ================= -->
+        <div x-show="showGuideModal" x-cloak
+            class="fixed inset-0 z-50 overflow-y-auto flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs"
+            x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0"
+            x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-150"
+            x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
+            <div @click.away="showGuideModal = false"
+                class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full border border-slate-100 overflow-hidden transform transition-all my-8">
+                {{-- Header --}}
+                <div class="px-6 py-4.5 bg-gradient-to-r from-emerald-600 via-teal-600 to-indigo-700 text-white flex items-center justify-between">
+                    <div class="flex items-center gap-2.5">
+                        <span class="p-2 bg-white/10 rounded-xl">
+                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </span>
+                        <div>
+                            <h3 class="font-bold text-base tracking-tight">Panduan Indikator & Sistem Real-Time</h3>
+                            <p class="text-xs text-emerald-100">Penjelasan kartu data dan mekanisme Create or Update (Upsert)</p>
+                        </div>
+                    </div>
+                    <button @click="showGuideModal = false" class="p-1 rounded-lg text-white/80 hover:text-white hover:bg-white/10 transition cursor-pointer">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                    </button>
+                </div>
+
+                {{-- Body content --}}
+                <div class="p-6 max-h-[75vh] overflow-y-auto space-y-5 text-xs text-slate-600 leading-relaxed">
+                    {{-- Alert Real-time info --}}
+                    <div class="p-4 bg-emerald-50/80 border border-emerald-200/80 rounded-xl flex items-start gap-3">
+                        <span class="p-1.5 rounded-lg bg-emerald-100 text-emerald-700 shrink-0 mt-0.5">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                        </span>
+                        <div>
+                            <h4 class="font-bold text-emerald-900 text-xs">Mekanisme Real-Time (Create or Update)</h4>
+                            <p class="text-emerald-800 mt-0.5">
+                                Semua kartu angka di atas <strong>langsung sinkron otomatis</strong> saat Anda menambah data balita baru (<em>Create</em>) maupun mengedit data lama (<em>Update</em>). Sistem mencocokkan data melalui <strong>NIK</strong> atau kombinasi <strong>Nama + Desa</strong> sehingga tidak terjadi data duplikat.
+                            </p>
+                        </div>
+                    </div>
+
+                    {{-- Seksi 1: Status Stunting --}}
+                    <div>
+                        <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wider mb-2.5 flex items-center gap-1.5">
+                            <span class="w-2 h-2 rounded-full bg-rose-500"></span>
+                            1. Kartu Status Pertumbuhan & Stunting
+                        </h4>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                            <div class="p-3 bg-slate-50 border border-slate-200/70 rounded-xl">
+                                <span class="font-bold text-slate-800 block text-[11px]">Total Balita</span>
+                                <p class="text-slate-500 mt-0.5">Jumlah balita unik (berdasarkan NIK) yang tercatat dalam cakupan wilayah puskesmas.</p>
+                            </div>
+                            <div class="p-3 bg-rose-50/70 border border-rose-200/60 rounded-xl">
+                                <span class="font-bold text-rose-800 block text-[11px]">Kasus Stunting (Total)</span>
+                                <p class="text-rose-700/80 mt-0.5">Akumulasi balita kategori <strong>Pendek</strong> + <strong>Sangat Pendek</strong>. Angka berkurang otomatis saat balita di-update menjadi <em>Normal</em>.</p>
+                            </div>
+                            <div class="p-3 bg-red-50/70 border border-red-200/60 rounded-xl">
+                                <span class="font-bold text-red-800 block text-[11px]">Sangat Pendek</span>
+                                <p class="text-red-700/80 mt-0.5">Balita dengan nilai Z-Score TB/U &lt; -3 SD (<em>Severely Stunted</em>).</p>
+                            </div>
+                            <div class="p-3 bg-amber-50/70 border border-amber-200/60 rounded-xl">
+                                <span class="font-bold text-amber-800 block text-[11px]">Pendek</span>
+                                <p class="text-amber-700/80 mt-0.5">Balita dengan Z-Score TB/U antara -3 SD hingga &lt; -2 SD (<em>Stunted</em>).</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- Seksi 2: Intervensi Klinis --}}
+                    <div>
+                        <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wider mb-2.5 flex items-center gap-1.5">
+                            <span class="w-2 h-2 rounded-full bg-indigo-500"></span>
+                            2. Kartu Intervensi & Skrining Klinis (Balita Stunting)
+                        </h4>
+                        <p class="text-[11px] text-slate-500 mb-2">Persentase (%) dihitung dari: <em>(Balita stunting terintervensi / Total kasus stunting) &times; 100%</em>.</p>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                            <div class="p-3 bg-slate-50 border border-slate-200/70 rounded-xl">
+                                <span class="font-bold text-slate-800 block text-[11px]">Test Hemoglobin</span>
+                                <p class="text-slate-500 mt-0.5">Skrining laboratorium untuk mendeteksi anemia defisiensi besi pada balita stunting.</p>
+                            </div>
+                            <div class="p-3 bg-slate-50 border border-slate-200/70 rounded-xl">
+                                <span class="font-bold text-slate-800 block text-[11px]">Test Mantoux</span>
+                                <p class="text-slate-500 mt-0.5">Skrining infeksi Tuberkulosis (TBC) anak melalui uji tuberkulin.</p>
+                            </div>
+                            <div class="p-3 bg-slate-50 border border-slate-200/70 rounded-xl">
+                                <span class="font-bold text-slate-800 block text-[11px]">Konsul Sp.A</span>
+                                <p class="text-slate-500 mt-0.5">Rujukan konsultasi ke Dokter Spesialis Anak untuk identifikasi penyakit penyerta (<em>red flags</em>).</p>
+                            </div>
+                            <div class="p-3 bg-emerald-50/70 border border-emerald-200/60 rounded-xl">
+                                <span class="font-bold text-emerald-800 block text-[11px]">Lolos (N) / Tren Positif</span>
+                                <p class="text-emerald-700/80 mt-0.5">Balita stunting yang berat badannya <strong>Naik (N)</strong> pada penimbangan terakhir, menandakan respons positif terapi gizi.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- Seksi 3: Grafik Candle --}}
+                    <div>
+                        <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wider mb-2.5 flex items-center gap-1.5">
+                            <span class="w-2 h-2 rounded-full bg-teal-500"></span>
+                            3. Grafik Lilin (Candlestick Bulanan)
+                        </h4>
+                        <div class="p-3.5 bg-slate-50 border border-slate-200/80 rounded-xl space-y-1.5 text-[11px]">
+                            <p><strong>Puncak Lilin (High):</strong> Total seluruh pengukuran balita pada bulan tersebut.</p>
+                            <p><strong>Dasar Lilin (Low):</strong> Jumlah kasus stunting (Pendek + Sangat Pendek).</p>
+                            <p><strong>Warna Hijau:</strong> Menandakan tren terkendali (balita sehat lebih dominan dibanding stunting).</p>
+                            <p><strong>Warna Merah:</strong> Menandakan status waspada (kasus stunting meningkat signifikan).</p>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Footer --}}
+                <div class="px-6 py-3.5 bg-slate-50 border-t border-slate-100 flex items-center justify-end">
+                    <button @click="showGuideModal = false" type="button"
+                        class="px-5 py-2 bg-slate-800 hover:bg-slate-900 text-white rounded-xl text-xs font-semibold cursor-pointer transition-colors shadow-xs">
+                        Mengerti &amp; Tutup
+                    </button>
+                </div>
             </div>
         </div>
 
@@ -1454,6 +1593,7 @@
         <script>
             function stuntingDashboard() {
                 return {
+                    showGuideModal: false,
                     selectedDesa: '{{ $selectedDesa }}',
                     selectedBulan: '{{ $selectedBulan }}',
                     selectedTahun: '{{ $selectedTahun }}',
