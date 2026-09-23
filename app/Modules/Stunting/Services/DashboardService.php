@@ -37,10 +37,27 @@ class DashboardService
 
         return $q;
     }
-
     /**
-     * Return all KPI stats and chart data.
+     * Build query for monthly trend chart: filter desa + tahun ONLY (no bulan filter),
+     * so the candlestick chart always shows all months in the selected year.
      */
+    private function trendQuery(Request $request): Builder
+    {
+        $q = StuntingPatient::query();
+
+        if ($desa = $request->input('desa')) {
+            $q->where('desa', $desa);
+        }
+
+        // Sengaja TIDAK filter bulan — agar grafik tren selalu tampilkan semua bulan
+        if ($tahun = $request->input('tahun')) {
+            $q->whereYear('tanggal_pengukuran', $tahun);
+        }
+
+        return $q;
+    }
+
+
     public function getStatsData(Request $request): array
     {
         $q = $this->baseQuery($request);
