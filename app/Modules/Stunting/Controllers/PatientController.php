@@ -42,11 +42,38 @@ class PatientController extends Controller
             'naik_berat_badan'    => 'nullable|in:N,T,Y',
         ]);
 
-        $patient = StuntingPatient::create($validated);
+        // Upsert strategy: jika NIK ada, cocokkan dengan NIK. Jika tidak, gunakan nama + desa.
+        // Jika tanggal_pengukuran terisi, pertimbangkan juga agar data pengukuran ter-update sesuai tanggal.
+        $query = StuntingPatient::query();
+        if (!empty($validated['nik'])) {
+            $query->where('nik', $validated['nik']);
+        } else {
+            $query->where('nama', $validated['nama']);
+            if (!empty($validated['desa'])) {
+                $query->where('desa', $validated['desa']);
+            }
+        }
+
+        if (!empty($validated['tanggal_pengukuran'])) {
+            $query->where('tanggal_pengukuran', $validated['tanggal_pengukuran']);
+        }
+
+        $patient = $query->first();
+
+        if ($patient) {
+            $patient->update($validated);
+            $action = 'updated';
+            $message = 'Data balita berhasil diperbarui (data sudah ada sebelumnya).';
+        } else {
+            $patient = StuntingPatient::create($validated);
+            $action = 'created';
+            $message = 'Data balita baru berhasil ditambahkan.';
+        }
 
         return response()->json([
             'success'  => true,
-            'message'  => 'Data balita berhasil ditambahkan.',
+            'action'   => $action,
+            'message'  => $message,
             'patient'  => $patient,
         ]);
     }
