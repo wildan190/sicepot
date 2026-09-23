@@ -111,7 +111,6 @@
                         <label class="block text-xs font-semibold text-slate-500 mb-1.5">Bulan</label>
                         <select x-model="selectedBulan" @change="applyFilters()"
                             class="w-full text-sm border border-slate-200 rounded-lg px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition">
-                            <option value="">Semua Bulan</option>
                             @foreach(['01' => 'Januari', '02' => 'Februari', '03' => 'Maret', '04' => 'April', '05' => 'Mei', '06' => 'Juni', '07' => 'Juli', '08' => 'Agustus', '09' => 'September', '10' => 'Oktober', '11' => 'November', '12' => 'Desember'] as $num => $name)
                                 <option value="{{ $num }}" @selected($selectedBulan === $num)>{{ $name }}</option>
                             @endforeach
@@ -121,7 +120,6 @@
                         <label class="block text-xs font-semibold text-slate-500 mb-1.5">Tahun</label>
                         <select x-model="selectedTahun" @change="applyFilters()"
                             class="w-full text-sm border border-slate-200 rounded-lg px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition">
-                            <option value="">Semua Tahun</option>
                             @foreach ($yearList as $yr)
                                 <option value="{{ $yr }}" @selected($selectedTahun == $yr)>{{ $yr }}</option>
                             @endforeach
@@ -1777,8 +1775,8 @@
 
                     clearFilters() {
                         this.selectedDesa = '';
-                        this.selectedBulan = '';
-                        this.selectedTahun = '';
+                        this.selectedBulan = '01';
+                        this.selectedTahun = '{{ $selectedTahun ?: (!empty($yearList) ? $yearList[0] : date('Y')) }}';
                         this.searchQuery = '';
                         this.applyFilters(1);
                     },
