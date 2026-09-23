@@ -161,7 +161,7 @@
                 </div>
                 <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                     {{-- Total Balita (Bulan 1 s/d 12 - Tanpa Filter Bulan) --}}
-                    <div
+                    <!-- <div
                         class="bg-white rounded-2xl border border-slate-200/80 shadow-xs p-4 col-span-1 relative group">
                         <div class="flex items-center justify-between">
                             <div>
@@ -182,7 +182,7 @@
                         <p class="text-xs text-slate-400 mt-1"
                             x-text="'(' + (stats.totalPengukuranAllMonths ?? '{{ $totalPengukuranAllMonths }}') + ' total rekaman)'">
                         </p>
-                    </div>
+                    </div> -->
                     {{-- Kasus Stunting Aktif (Pendek + Sangat Pendek) --}}
                     <div
                         class="bg-gradient-to-br from-red-50 to-rose-50 rounded-2xl border border-red-100 shadow-xs p-4 col-span-1 relative group">
@@ -322,7 +322,7 @@
                     </div>
 
                     {{-- Naik Berat Badan (N) - dari stunting --}}
-                    <div
+                    <!-- <div
                         class="bg-white rounded-2xl border border-emerald-100/90 shadow-xs p-3.5 relative overflow-hidden group hover:border-emerald-300 transition-colors">
                         <div class="flex items-center justify-between">
                             <p class="text-[11px] font-bold text-emerald-700 uppercase tracking-wide">Lolos (N)</p>
@@ -342,7 +342,7 @@
                             <span class="font-semibold text-emerald-600"
                                 x-text="((stats.stuntingTotal || {{ $stuntingTotal }}) > 0 ? Math.round(((stats.naikBBYCount ?? {{ $naikBBYCount }}) / (stats.stuntingTotal || {{ $stuntingTotal }})) * 100) : 0) + '%'"></span>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
             </div>
 
@@ -541,24 +541,21 @@
                                         x-text="p.tinggi ? Number(p.tinggi).toFixed(1) + ' cm' : '-'"></td>
                                     <td class="px-3 py-2.5">
                                         <template x-if="p.tbu_kategori">
-                                            <span
-                                                class="inline-block px-2 py-0.5 rounded-md text-[10px] font-semibold"
+                                            <span class="inline-block px-2 py-0.5 rounded-md text-[10px] font-semibold"
                                                 :class="getTbuBadgeClass(p.tbu_kategori)"
                                                 x-text="p.tbu_kategori"></span>
                                         </template>
                                     </td>
                                     <td class="px-3 py-2.5">
                                         <template x-if="p.bbu_kategori">
-                                            <span
-                                                class="inline-block px-2 py-0.5 rounded-md text-[10px] font-semibold"
+                                            <span class="inline-block px-2 py-0.5 rounded-md text-[10px] font-semibold"
                                                 :class="getBbuBadgeClass(p.bbu_kategori)"
                                                 x-text="p.bbu_kategori"></span>
                                         </template>
                                     </td>
                                     <td class="px-3 py-2.5">
                                         <template x-if="p.bbtb_kategori">
-                                            <span
-                                                class="inline-block px-2 py-0.5 rounded-md text-[10px] font-semibold"
+                                            <span class="inline-block px-2 py-0.5 rounded-md text-[10px] font-semibold"
                                                 :class="getBbtbBadgeClass(p.bbtb_kategori)"
                                                 x-text="p.bbtb_kategori"></span>
                                         </template>
@@ -767,10 +764,12 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
                                     d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
                             </svg>
-                            <span class="text-sm font-semibold text-slate-600 group-hover:text-emerald-700 transition-colors">
+                            <span
+                                class="text-sm font-semibold text-slate-600 group-hover:text-emerald-700 transition-colors">
                                 Klik atau seret file Excel ke sini
                             </span>
-                            <span class="text-xs text-slate-400 mt-1">Format: .xlsx / .xls — Maks. 20 file, 20MB/file</span>
+                            <span class="text-xs text-slate-400 mt-1">Format: .xlsx / .xls — Maks. 20 file,
+                                20MB/file</span>
                             <input id="stunting-bulk-file" type="file" accept=".xlsx,.xls" multiple class="hidden"
                                 @change="handleBulkFileSelect($event)">
                         </label>
@@ -780,19 +779,22 @@
                             <div class="flex items-center justify-between mb-1.5">
                                 <span class="text-xs font-semibold text-slate-600"
                                     x-text="bulkFiles.length + ' file dipilih'"></span>
-                                <button @click="bulkFiles = []; document.getElementById('stunting-bulk-file').value = ''"
+                                <button
+                                    @click="bulkFiles = []; document.getElementById('stunting-bulk-file').value = ''"
                                     class="text-[11px] text-red-500 hover:text-red-700 font-semibold cursor-pointer transition">
                                     Hapus Semua
                                 </button>
                             </div>
                             <template x-for="(f, i) in bulkFiles" :key="i">
-                                <div class="flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-lg px-3 py-2">
+                                <div
+                                    class="flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-lg px-3 py-2">
                                     <svg class="w-4 h-4 text-emerald-600 shrink-0" fill="none" stroke="currentColor"
                                         viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                                     </svg>
-                                    <span class="flex-1 text-xs text-slate-700 font-medium truncate" x-text="f.name"></span>
+                                    <span class="flex-1 text-xs text-slate-700 font-medium truncate"
+                                        x-text="f.name"></span>
                                     <span class="text-[10px] text-slate-400"
                                         x-text="(f.size / 1024 / 1024).toFixed(1) + ' MB'"></span>
                                     <button @click="bulkFiles.splice(i, 1)"
@@ -812,14 +814,16 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
                             </svg>
-                            <span x-text="bulkFiles.length > 1 ? 'Import ' + bulkFiles.length + ' File Sekaligus' : 'Import File'"></span>
+                            <span
+                                x-text="bulkFiles.length > 1 ? 'Import ' + bulkFiles.length + ' File Sekaligus' : 'Import File'"></span>
                         </button>
                     </div>
 
                     {{-- Step: Processing --}}
                     <div x-show="importStep === 'processing'" class="space-y-3">
                         <div class="text-center py-3">
-                            <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-emerald-100 mb-3">
+                            <div
+                                class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-emerald-100 mb-3">
                                 <svg class="w-6 h-6 text-emerald-600 animate-spin" fill="none" stroke="currentColor"
                                     viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -2309,12 +2313,12 @@
                             const json = await res.json();
                             clearInterval(progressInterval);
                             this.bulkProgress = 100;
-                            this.bulkResults   = json.results || [];
+                            this.bulkResults = json.results || [];
                             this.importSuccessMsg = json.message || 'Import selesai.';
                             this.bulkSummary = {
                                 inserted: json.inserted ?? 0,
-                                updated:  json.updated  ?? 0,
-                                failed:   json.failed   ?? 0,
+                                updated: json.updated ?? 0,
+                                failed: json.failed ?? 0,
                             };
                             this.importStep = 'done';
                         } catch (e) {
