@@ -25,9 +25,10 @@ Route::prefix('stunting')->name('stunting.')->group(function () {
     // AI Parse Free Text
     Route::post('/ai/parse', [DashboardController::class, 'aiParsePatient'])->name('ai.parse');
 
-    // Import Excel
+    // Import Excel (single + bulk)
     Route::post('/import/preview', [ImportController::class, 'preview'])->name('import.preview');
     Route::post('/import/commit', [ImportController::class, 'commit'])->name('import.commit');
+    Route::post('/import/bulk', [ImportController::class, 'bulkImport'])->name('import.bulk');
 
     // Clear Data Masif
     Route::delete('/clear-massive', [DashboardController::class, 'clearMassive'])->name('clear-massive');

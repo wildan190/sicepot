@@ -721,106 +721,193 @@
         </div>
 
         {{-- ============================================================
-        IMPORT MODAL
+        BULK IMPORT MODAL
         ============================================================ --}}
         <div x-show="showImportModal" x-transition.opacity
-            class="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4" style="display:none">
-            <div @click.outside="showImportModal = false"
-                class="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 space-y-4">
-                <div class="flex items-center justify-between">
-                    <h3 class="text-base font-bold text-slate-800">Import Data Excel Stunting</h3>
-                    <button @click="showImportModal = false" class="text-slate-400 hover:text-slate-600 transition"><svg
-                            class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            class="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4"
+            style="display:none">
+            <div @click.outside="if(!importLoading) showImportModal = false"
+                class="bg-white rounded-2xl shadow-2xl w-full max-w-xl border border-slate-100 overflow-hidden">
+
+                {{-- Header --}}
+                <div class="px-5 py-4 bg-gradient-to-r from-emerald-600 to-teal-600 flex items-center justify-between">
+                    <div class="flex items-center gap-2.5">
+                        <span class="p-1.5 bg-white/15 rounded-xl">
+                            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                            </svg>
+                        </span>
+                        <div>
+                            <h3 class="text-sm font-bold text-white">Bulk Import Data Excel Stunting</h3>
+                            <p class="text-[11px] text-emerald-100">Pilih 1 atau beberapa file Excel sekaligus</p>
+                        </div>
+                    </div>
+                    <button @click="if(!importLoading) { showImportModal = false }"
+                        class="p-1 rounded-lg text-white/80 hover:text-white hover:bg-white/10 transition cursor-pointer">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M6 18L18 6M6 6l12 12" />
-                        </svg></button>
-                </div>
-                <p class="text-xs text-slate-500">Upload file Excel format BALITA STUNTING (*.xlsx). Data akan
-                    di-preview sebelum disimpan.</p>
-
-                {{-- File Picker --}}
-                <div x-show="importStep === 'pick'" class="space-y-3">
-                    <label
-                        class="flex flex-col items-center justify-center border-2 border-dashed border-slate-200 rounded-xl p-8 cursor-pointer hover:border-green-400 transition-colors group">
-                        <svg class="w-8 h-8 text-slate-300 group-hover:text-green-400 transition-colors mb-2"
-                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                                d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
                         </svg>
-                        <span class="text-sm text-slate-500 group-hover:text-green-600 transition-colors"
-                            x-text="importFileName || 'Pilih file Excel (.xlsx)'"></span>
-                        <input id="stunting-import-file" type="file" accept=".xlsx,.xls" class="hidden"
-                            @change="handleFileSelect($event)">
-                    </label>
-                    <button @click="previewImport()" :disabled="!importFile || importLoading"
-                        class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold rounded-xl transition disabled:opacity-50 disabled:cursor-not-allowed">
-                        <span x-show="!importLoading">Preview Data</span>
-                        <span x-show="importLoading">Membaca file...</span>
                     </button>
                 </div>
 
-                {{-- Preview --}}
-                <div x-show="importStep === 'preview'" class="space-y-3">
-                    <div class="bg-green-50 border border-green-200 rounded-xl p-3 flex items-start gap-2.5">
-                        <div
-                            class="w-6 h-6 rounded-full bg-green-100 flex items-center justify-center shrink-0 mt-0.5 text-green-700">
-                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
-                                    d="M5 13l4 4L19 7" />
+                <div class="p-5 space-y-4">
+
+                    {{-- Step: Pick --}}
+                    <div x-show="importStep === 'pick'" class="space-y-3.5">
+                        {{-- Drop zone --}}
+                        <label for="stunting-bulk-file"
+                            class="flex flex-col items-center justify-center border-2 border-dashed border-slate-200 rounded-xl p-8 cursor-pointer hover:border-emerald-400 hover:bg-emerald-50/40 transition-all group">
+                            <svg class="w-10 h-10 text-slate-300 group-hover:text-emerald-400 transition-colors mb-2.5"
+                                fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                    d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
                             </svg>
-                        </div>
-                        <div>
-                            <p class="text-sm font-semibold text-green-700">File berhasil dibaca</p>
-                            <p class="text-xs text-green-600 mt-0.5">Total <strong
-                                    x-text="importPreview.total_rows"></strong> data ditemukan</p>
-                        </div>
-                    </div>
-                    <div class="bg-slate-50 rounded-xl p-3 max-h-48 overflow-y-auto text-xs space-y-1">
-                        <template x-for="(row, idx) in (importPreview.preview_samples || [])" :key="idx">
-                            <div class="flex gap-2 text-slate-600">
-                                <span class="font-semibold" x-text="idx+1 + '.'"></span>
-                                <span x-text="row.nama"></span>
-                                <span class="text-slate-400" x-text="row.desa"></span>
-                                <span class="ml-auto text-xs px-1.5 py-0.5 rounded-full"
-                                    :class="['Pendek','Sangat Pendek'].includes(row.tbu_kategori) ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-600'"
-                                    x-text="row.tbu_kategori || '-'"></span>
+                            <span class="text-sm font-semibold text-slate-600 group-hover:text-emerald-700 transition-colors">
+                                Klik atau seret file Excel ke sini
+                            </span>
+                            <span class="text-xs text-slate-400 mt-1">Format: .xlsx / .xls — Maks. 20 file, 20MB/file</span>
+                            <input id="stunting-bulk-file" type="file" accept=".xlsx,.xls" multiple class="hidden"
+                                @change="handleBulkFileSelect($event)">
+                        </label>
+
+                        {{-- File list preview --}}
+                        <div x-show="bulkFiles.length > 0" class="space-y-1.5 max-h-48 overflow-y-auto">
+                            <div class="flex items-center justify-between mb-1.5">
+                                <span class="text-xs font-semibold text-slate-600"
+                                    x-text="bulkFiles.length + ' file dipilih'"></span>
+                                <button @click="bulkFiles = []; document.getElementById('stunting-bulk-file').value = ''"
+                                    class="text-[11px] text-red-500 hover:text-red-700 font-semibold cursor-pointer transition">
+                                    Hapus Semua
+                                </button>
                             </div>
-                        </template>
-                    </div>
-                    <div class="flex gap-2">
-                        <button @click="importStep = 'pick'; importFile = null; importFileName = ''"
-                            class="flex-1 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-semibold rounded-xl transition flex items-center justify-center gap-1.5">
+                            <template x-for="(f, i) in bulkFiles" :key="i">
+                                <div class="flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-lg px-3 py-2">
+                                    <svg class="w-4 h-4 text-emerald-600 shrink-0" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                    </svg>
+                                    <span class="flex-1 text-xs text-slate-700 font-medium truncate" x-text="f.name"></span>
+                                    <span class="text-[10px] text-slate-400"
+                                        x-text="(f.size / 1024 / 1024).toFixed(1) + ' MB'"></span>
+                                    <button @click="bulkFiles.splice(i, 1)"
+                                        class="text-slate-400 hover:text-red-500 transition cursor-pointer ml-1">
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M6 18L18 6M6 6l12 12" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </template>
+                        </div>
+
+                        <button @click="startBulkImport()" :disabled="bulkFiles.length === 0 || importLoading"
+                            class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white text-sm font-bold rounded-xl transition disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
                             </svg>
-                            <span>Ganti File</span>
-                        </button>
-                        <button @click="commitImport()" :disabled="importLoading"
-                            class="flex-1 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold rounded-xl transition disabled:opacity-50">
-                            <span x-show="!importLoading">Simpan Semua</span>
-                            <span x-show="importLoading">Menyimpan...</span>
+                            <span x-text="bulkFiles.length > 1 ? 'Import ' + bulkFiles.length + ' File Sekaligus' : 'Import File'"></span>
                         </button>
                     </div>
-                </div>
 
-                {{-- Success --}}
-                <div x-show="importStep === 'done'" class="text-center space-y-3 py-4">
-                    <div class="w-14 h-14 bg-green-100 rounded-full flex items-center justify-center mx-auto">
-                        <svg class="w-7 h-7 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                        </svg>
+                    {{-- Step: Processing --}}
+                    <div x-show="importStep === 'processing'" class="space-y-3">
+                        <div class="text-center py-3">
+                            <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-emerald-100 mb-3">
+                                <svg class="w-6 h-6 text-emerald-600 animate-spin" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                </svg>
+                            </div>
+                            <p class="text-sm font-bold text-slate-800">Memproses file...</p>
+                            <p class="text-xs text-slate-500 mt-0.5"
+                                x-text="'Sedang mengimpor ' + bulkFiles.length + ' file. Mohon tunggu.'"></p>
+                        </div>
+                        <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+                            <div class="bg-emerald-500 h-2 rounded-full transition-all duration-500 ease-out"
+                                :style="'width:' + bulkProgress + '%'"></div>
+                        </div>
+                        <p class="text-[11px] text-center text-slate-500" x-text="bulkProgressLabel"></p>
                     </div>
-                    <p class="text-sm font-bold text-slate-800" x-text="importSuccessMsg"></p>
-                    <button @click="showImportModal = false; location.reload()"
-                        class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold rounded-xl transition">
-                        Tutup & Refresh
-                    </button>
-                </div>
 
-                {{-- Error --}}
-                <div x-show="importError" class="bg-red-50 border border-red-200 rounded-xl p-3">
-                    <p class="text-xs text-red-600" x-text="importError"></p>
+                    {{-- Step: Done --}}
+                    <div x-show="importStep === 'done'" class="space-y-3.5">
+                        {{-- Summary banner --}}
+                        <div class="p-3.5 rounded-xl flex items-start gap-3"
+                            :class="bulkResults.some(r => !r.success) ? 'bg-amber-50 border border-amber-200' : 'bg-emerald-50 border border-emerald-200'">
+                            <div class="w-8 h-8 rounded-full flex items-center justify-center shrink-0"
+                                :class="bulkResults.some(r => !r.success) ? 'bg-amber-100 text-amber-700' : 'bg-emerald-100 text-emerald-700'">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                        d="M5 13l4 4L19 7" />
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="text-sm font-bold text-slate-800" x-text="importSuccessMsg"></p>
+                                <div class="flex items-center gap-3 mt-1.5 text-[11px] font-semibold">
+                                    <span class="text-emerald-700 flex items-center gap-1">
+                                        <span x-text="bulkSummary.inserted"></span> data baru
+                                    </span>
+                                    <span class="text-blue-700 flex items-center gap-1">
+                                        <span x-text="bulkSummary.updated"></span> diperbarui
+                                    </span>
+                                    <template x-if="bulkSummary.failed > 0">
+                                        <span class="text-red-600 flex items-center gap-1">
+                                            <span x-text="bulkSummary.failed"></span> gagal
+                                        </span>
+                                    </template>
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- Per-file result list --}}
+                        <div class="max-h-48 overflow-y-auto space-y-1.5">
+                            <template x-for="(r, i) in bulkResults" :key="i">
+                                <div class="flex items-start gap-2.5 px-3 py-2 rounded-lg text-xs"
+                                    :class="r.success ? 'bg-slate-50 border border-slate-200' : 'bg-red-50 border border-red-200'">
+                                    <div class="w-4 h-4 rounded-full flex items-center justify-center shrink-0 mt-0.5"
+                                        :class="r.success ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-600'">
+                                        <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
+                                                :d="r.success ? 'M5 13l4 4L19 7' : 'M6 18L18 6M6 6l12 12'" />
+                                        </svg>
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <p class="font-semibold text-slate-800 truncate" x-text="r.file"></p>
+                                        <p class="text-slate-500 mt-0.5" x-text="r.message"></p>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+
+                        <div class="flex gap-2">
+                            <button @click="resetBulkImport()"
+                                class="flex-1 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-semibold rounded-xl transition flex items-center justify-center gap-1.5">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+                                </svg>
+                                Import Lagi
+                            </button>
+                            <button @click="showImportModal = false; applyFilters(1)"
+                                class="flex-1 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold rounded-xl transition flex items-center justify-center gap-1.5">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                </svg>
+                                Selesai & Refresh
+                            </button>
+                        </div>
+                    </div>
+
+                    {{-- Error global --}}
+                    <div x-show="importError" class="bg-red-50 border border-red-200 rounded-xl p-3">
+                        <p class="text-xs text-red-600 font-semibold" x-text="importError"></p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1736,16 +1823,23 @@
                     searchQuery: '',
                     stats: {},
 
-                    // Import modal
+                    // Import / Bulk Import modal
                     showImportModal: false,
-                    importStep: 'pick',
-                    importFile: null,
-                    importFileName: '',
+                    importStep: 'pick',         // pick | processing | done
                     importLoading: false,
-                    importPreview: {},
-                    importTempToken: '',
                     importSuccessMsg: '',
                     importError: '',
+                    // bulk upload state
+                    bulkFiles: [],
+                    bulkResults: [],
+                    bulkProgress: 0,
+                    bulkProgressLabel: '',
+                    bulkSummary: { inserted: 0, updated: 0, failed: 0 },
+                    // legacy single-file (kept for compatibility)
+                    importFile: null,
+                    importFileName: '',
+                    importPreview: {},
+                    importTempToken: '',
 
                     // Clear massive modal
                     showClearMassiveModal: false,
@@ -2170,7 +2264,79 @@
                         }
                     },
 
-                    // ── Import helpers ────────────────────────────────────────────────
+                    // ── Bulk Import helpers ────────────────────────────────────────────
+
+                    handleBulkFileSelect(event) {
+                        const files = Array.from(event.target.files);
+                        // Merge dengan yang sudah ada, deduplicate by name
+                        const existing = new Set(this.bulkFiles.map(f => f.name));
+                        files.forEach(f => {
+                            if (!existing.has(f.name)) {
+                                this.bulkFiles.push(f);
+                                existing.add(f.name);
+                            }
+                        });
+                        this.importError = '';
+                        // Reset input agar bisa pilih file yang sama lagi nanti
+                        event.target.value = '';
+                    },
+
+                    async startBulkImport() {
+                        if (this.bulkFiles.length === 0 || this.importLoading) return;
+                        this.importLoading = true;
+                        this.importError = '';
+                        this.importStep = 'processing';
+                        this.bulkProgress = 5;
+                        this.bulkProgressLabel = 'Mengunggah dan memproses file...';
+
+                        const fd = new FormData();
+                        fd.append('_token', document.querySelector('meta[name="csrf-token"]').content);
+                        this.bulkFiles.forEach(f => fd.append('files[]', f));
+
+                        // Simulate progress while waiting
+                        const progressInterval = setInterval(() => {
+                            if (this.bulkProgress < 85) this.bulkProgress += 3;
+                        }, 400);
+
+                        try {
+                            const res = await fetch('{{ route("stunting.import.bulk") }}', {
+                                method: 'POST',
+                                body: fd,
+                            });
+                            const json = await res.json();
+                            clearInterval(progressInterval);
+                            this.bulkProgress = 100;
+                            this.bulkResults   = json.results || [];
+                            this.importSuccessMsg = json.message || 'Import selesai.';
+                            this.bulkSummary = {
+                                inserted: json.inserted ?? 0,
+                                updated:  json.updated  ?? 0,
+                                failed:   json.failed   ?? 0,
+                            };
+                            this.importStep = 'done';
+                        } catch (e) {
+                            clearInterval(progressInterval);
+                            this.importError = 'Terjadi kesalahan jaringan: ' + e.message;
+                            this.importStep = 'pick';
+                        } finally {
+                            this.importLoading = false;
+                        }
+                    },
+
+                    resetBulkImport() {
+                        this.importStep = 'pick';
+                        this.bulkFiles = [];
+                        this.bulkResults = [];
+                        this.bulkProgress = 0;
+                        this.bulkProgressLabel = '';
+                        this.bulkSummary = { inserted: 0, updated: 0, failed: 0 };
+                        this.importSuccessMsg = '';
+                        this.importError = '';
+                        const inp = document.getElementById('stunting-bulk-file');
+                        if (inp) inp.value = '';
+                    },
+
+                    // ── Legacy single-file helpers (kept for compatibility) ─────────────
                     handleFileSelect(event) {
                         const file = event.target.files[0];
                         if (!file) return;
@@ -2225,7 +2391,7 @@
                         }
                     },
 
-                    // ── Clear Massive helpers ──────────────────────────────────────────
+
                     openClearMassiveModal() {
                         this.clearMassiveKeyword = '';
                         this.clearMassiveError = '';
