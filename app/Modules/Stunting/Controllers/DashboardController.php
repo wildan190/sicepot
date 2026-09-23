@@ -15,18 +15,28 @@ class DashboardController extends Controller
      */
     public function index(Request $request)
     {
-        $stats    = $this->service->getStatsData($request);
         $desaList = $this->service->getDesaList();
         $yearList = $this->service->getYearList();
 
         $defaultTahun = !empty($yearList) ? (string) $yearList[0] : (string) date('Y');
 
+        // Terapkan default bulan (01 = Januari) dan tahun ke request SEBELUM getStatsData,
+        // agar baseQuery ikut terfilter saat reload tanpa query string.
+        if (!$request->has('bulan')) {
+            $request->merge(['bulan' => '01']);
+        }
+        if (!$request->has('tahun')) {
+            $request->merge(['tahun' => $defaultTahun]);
+        }
+
+        $stats = $this->service->getStatsData($request);
+
         return view('stunting.dashboard', array_merge($stats, [
             'desaList'      => $desaList,
             'yearList'      => $yearList,
             'selectedDesa'  => $request->input('desa', ''),
-            'selectedBulan' => $request->input('bulan', '01'),
-            'selectedTahun' => $request->input('tahun', $defaultTahun),
+            'selectedBulan' => $request->input('bulan'),
+            'selectedTahun' => $request->input('tahun'),
         ]));
     }
 
