@@ -130,7 +130,8 @@ class DashboardService
             $monthExpr   = "strftime('%Y-%m', tanggal_pengukuran)";
         }
 
-        $monthlyTrend = (clone $q)->selectRaw("
+        // Grafik tren pakai trendQuery (tidak filter bulan) agar semua bulan dalam tahun tampil
+        $monthlyTrend = $this->trendQuery($request)->selectRaw("
                 {$monthExpr} as bulan_label,
                 COUNT(*) as total,
                 SUM(CASE WHEN tbu_kategori IN ('Pendek','Sangat Pendek') THEN 1 ELSE 0 END) as stunting
