@@ -64,8 +64,25 @@ class DashboardService
 
         $total = (clone $q)->count();
 
-        // Total balita unik (distinct NIK)
+        // Total balita unik (distinct NIK) terfilter
         $totalBalita = (clone $q)->whereNotNull('nik')->distinct()->count('nik');
+
+        // Total balita unik dari bulan 1 sampai 12 (tanpa filter bulan)
+        $qAllMonths = StuntingPatient::query();
+        if ($desa = $request->input('desa')) {
+            $qAllMonths->where('desa', $desa);
+        }
+        if ($tahun = $request->input('tahun')) {
+            $qAllMonths->whereYear('tanggal_pengukuran', $tahun);
+        }
+        if ($search = $request->input('search')) {
+            $qAllMonths->where(function ($sub) use ($search) {
+                $sub->where('nama', 'like', "%{$search}%")
+                    ->orWhere('nik', 'like', "%{$search}%");
+            });
+        }
+        $totalBalitaAllMonths = (clone $qAllMonths)->whereNotNull('nik')->distinct()->count('nik');
+        $totalPengukuranAllMonths = (clone $qAllMonths)->count();
 
         // TB/U (stunting status)
         $normalCount = (clone $q)->where('tbu_kategori', 'Normal')->count();
@@ -156,6 +173,8 @@ class DashboardService
         return compact(
             'total',
             'totalBalita',
+            'totalBalitaAllMonths',
+            'totalPengukuranAllMonths',
             'stuntingTotal',
             'normalCount',
             'pendekCount',

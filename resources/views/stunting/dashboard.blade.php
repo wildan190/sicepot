@@ -160,11 +160,14 @@
                     </button>
                 </div>
                 <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                    {{-- Total Balita Terdaftar --}}
-                    <!-- <div
+                    {{-- Total Balita (Bulan 1 s/d 12 - Tanpa Filter Bulan) --}}
+                    <div
                         class="bg-white rounded-2xl border border-slate-200/80 shadow-xs p-4 col-span-1 relative group">
                         <div class="flex items-center justify-between">
-                            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide">Total Balita</p>
+                            <div>
+                                <p class="text-xs font-semibold text-slate-700 uppercase tracking-wide">Total Balita</p>
+                                <span class="text-[10px] text-emerald-600 font-medium">(Bulan 1 - 12)</span>
+                            </div>
                             <button type="button" @click="showGuideModal = true"
                                 class="p-1 rounded-full text-slate-400 hover:text-emerald-600 hover:bg-slate-100 transition cursor-pointer"
                                 title="Klik untuk penjelasan detail indikator">
@@ -175,11 +178,11 @@
                             </button>
                         </div>
                         <p class="text-3xl font-bold text-slate-800 mt-1"
-                            x-text="stats.totalBalita ?? '{{ $totalBalita }}'"></p>
+                            x-text="stats.totalBalitaAllMonths ?? '{{ $totalBalitaAllMonths }}'"></p>
                         <p class="text-xs text-slate-400 mt-1"
-                            x-text="'(' + (stats.total ?? '{{ $total }}') + ' rekaman pengukuran)'">
+                            x-text="'(' + (stats.totalPengukuranAllMonths ?? '{{ $totalPengukuranAllMonths }}') + ' total rekaman)'">
                         </p>
-                    </div> -->
+                    </div>
                     {{-- Kasus Stunting Aktif (Pendek + Sangat Pendek) --}}
                     <div
                         class="bg-gradient-to-br from-red-50 to-rose-50 rounded-2xl border border-red-100 shadow-xs p-4 col-span-1 relative group">
@@ -539,7 +542,7 @@
                                     <td class="px-3 py-2.5">
                                         <template x-if="p.tbu_kategori">
                                             <span
-                                                class="inline-block px-2 py-0.5 rounded-full text-[10px] font-semibold"
+                                                class="inline-block px-2 py-0.5 rounded-md text-[10px] font-semibold"
                                                 :class="getTbuBadgeClass(p.tbu_kategori)"
                                                 x-text="p.tbu_kategori"></span>
                                         </template>
@@ -547,7 +550,7 @@
                                     <td class="px-3 py-2.5">
                                         <template x-if="p.bbu_kategori">
                                             <span
-                                                class="inline-block px-2 py-0.5 rounded-full text-[10px] font-semibold"
+                                                class="inline-block px-2 py-0.5 rounded-md text-[10px] font-semibold"
                                                 :class="getBbuBadgeClass(p.bbu_kategori)"
                                                 x-text="p.bbu_kategori"></span>
                                         </template>
@@ -555,7 +558,7 @@
                                     <td class="px-3 py-2.5">
                                         <template x-if="p.bbtb_kategori">
                                             <span
-                                                class="inline-block px-2 py-0.5 rounded-full text-[10px] font-semibold"
+                                                class="inline-block px-2 py-0.5 rounded-md text-[10px] font-semibold"
                                                 :class="getBbtbBadgeClass(p.bbtb_kategori)"
                                                 x-text="p.bbtb_kategori"></span>
                                         </template>
@@ -563,7 +566,7 @@
                                     <td class="px-3 py-2.5 text-center">
                                         <template x-if="p.naik_berat_badan === 'N'">
                                             <span
-                                                class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-emerald-100 text-emerald-700"
+                                                class="inline-flex items-center justify-center w-5 h-5 rounded-md bg-emerald-100 text-emerald-700"
                                                 title="Naik">
                                                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor"
                                                     viewBox="0 0 24 24">
@@ -574,7 +577,7 @@
                                         </template>
                                         <template x-if="p.naik_berat_badan === 'T'">
                                             <span
-                                                class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-red-100 text-red-600"
+                                                class="inline-flex items-center justify-center w-5 h-5 rounded-md bg-red-100 text-red-600"
                                                 title="Turun">
                                                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor"
                                                     viewBox="0 0 24 24">
@@ -588,17 +591,17 @@
                                         </template>
                                     </td>
                                     <td class="px-3 py-2.5 text-center">
-                                        <span class="inline-block px-2 py-0.5 rounded-full text-[10px] font-bold"
+                                        <span class="inline-block px-2 py-0.5 rounded-md text-[10px] font-bold"
                                             :class="p.test_hemoglobin === 'Ya' ? 'bg-rose-50 text-rose-700 border border-rose-200' : 'text-slate-400'"
                                             x-text="p.test_hemoglobin || '-'"></span>
                                     </td>
                                     <td class="px-3 py-2.5 text-center">
-                                        <span class="inline-block px-2 py-0.5 rounded-full text-[10px] font-bold"
+                                        <span class="inline-block px-2 py-0.5 rounded-md text-[10px] font-bold"
                                             :class="p.test_mantoux === 'Ya' ? 'bg-sky-50 text-sky-700 border border-sky-200' : 'text-slate-400'"
                                             x-text="p.test_mantoux || '-'"></span>
                                     </td>
                                     <td class="px-3 py-2.5 text-center">
-                                        <span class="inline-block px-2 py-0.5 rounded-full text-[10px] font-bold"
+                                        <span class="inline-block px-2 py-0.5 rounded-md text-[10px] font-bold"
                                             :class="p.konsul_spa === 'Ya' ? 'bg-indigo-50 text-indigo-700 border border-indigo-200' : 'text-slate-400'"
                                             x-text="p.konsul_spa || '-'"></span>
                                     </td>
