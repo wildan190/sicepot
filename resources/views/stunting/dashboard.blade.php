@@ -1931,7 +1931,9 @@
                             if (data.success) {
                                 this.showAddModal = false;
                                 this.applyFilters(1);
-                                this.notify('success', 'Balita Ditambahkan', 'Data balita baru berhasil tersimpan.');
+                                const title = data.action === 'updated' ? 'Data Diperbarui' : 'Balita Ditambahkan';
+                                const msg = data.message || (data.action === 'updated' ? 'Data balita berhasil diperbarui.' : 'Data balita baru berhasil tersimpan.');
+                                this.notify('success', title, msg);
                             } else {
                                 this.aiAddError = data.message || 'Gagal menyimpan data.';
                             }
