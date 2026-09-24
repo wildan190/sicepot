@@ -57,6 +57,7 @@
                             <span>Laporan SPM</span>
                         </a>
 
+                        @can('clear-data')
                         <!-- Clear Data Massive -->
                         <button @click="openClearMassiveModal()" type="button"
                             title="Kosongkan Semua Data Balita Stunting"
@@ -69,7 +70,9 @@
                             </svg>
                             <span>Clear Data</span>
                         </button>
+                        @endcan
 
+                        @can('import-data')
                         <!-- Import Excel / CSV -->
                         <button @click="showImportModal = true" type="button" title="Import Data Excel e-PPGBM"
                             class="inline-flex items-center gap-1.5 px-3 py-2 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white text-xs font-semibold rounded-xl shadow-xs hover:shadow transition-all duration-150 cursor-pointer">
@@ -79,7 +82,9 @@
                             </svg>
                             <span>Import</span>
                         </button>
+                        @endcan
 
+                        @can('create-data')
                         <!-- Tambah Data -->
                         <button @click="openAddModal()" type="button" title="Tambah Data Balita Baru"
                             class="inline-flex items-center gap-1.5 px-3.5 py-2 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white text-xs font-bold rounded-xl shadow-sm hover:shadow transition-all duration-150 cursor-pointer">
@@ -89,6 +94,7 @@
                             </svg>
                             <span>Tambah Data</span>
                         </button>
+                        @endcan
                     </div>
                 </div>
             </div>
@@ -620,6 +626,7 @@
                                                     </path>
                                                 </svg>
                                             </button>
+                                            @can('edit-data')
                                             <!-- Edit Balita -->
                                             <button @click="openEditModal(p)" type="button"
                                                 class="p-1.5 text-indigo-600 hover:text-indigo-900 hover:bg-indigo-50 rounded-lg transition-colors cursor-pointer"
@@ -632,6 +639,8 @@
                                                     </path>
                                                 </svg>
                                             </button>
+                                            @endcan
+                                            @can('delete-data')
                                             <!-- Hapus Balita -->
                                             <button @click="deletePatient(p)" type="button"
                                                 class="p-1.5 text-rose-500 hover:text-rose-700 hover:bg-rose-50 rounded-lg transition-colors cursor-pointer"
@@ -644,6 +653,7 @@
                                                     </path>
                                                 </svg>
                                             </button>
+                                            @endcan
                                         </div>
                                     </td>
                                 </tr>
@@ -1604,6 +1614,7 @@
                     </div>
 
                     <div class="mt-6 pt-3 border-t border-slate-100 flex items-center justify-between shrink-0">
+                        @can('edit-data')
                         <button @click="showViewModal = false; openEditModal(viewingPatient)"
                             class="px-3.5 py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 rounded-xl text-xs font-semibold cursor-pointer flex items-center gap-1.5 transition-colors">
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1613,6 +1624,9 @@
                             </svg>
                             Edit Data
                         </button>
+                        @else
+                        <div></div>
+                        @endcan
                         <button @click="showViewModal = false"
                             class="px-4 py-2 bg-slate-800 hover:bg-slate-900 text-white rounded-xl text-xs font-semibold cursor-pointer transition-colors">Tutup</button>
                     </div>

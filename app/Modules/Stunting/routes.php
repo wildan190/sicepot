@@ -22,20 +22,16 @@ Route::prefix('stunting')->name('stunting.')->group(function () {
     // Laporan Eksekutif
     Route::get('/report/executive', [DashboardController::class, 'executiveReport'])->name('report.executive');
 
-    // AI Parse Free Text
-    Route::post('/ai/parse', [DashboardController::class, 'aiParsePatient'])->name('ai.parse');
-
-    // Import Excel (single + bulk)
-    Route::post('/import/preview', [ImportController::class, 'preview'])->name('import.preview');
-    Route::post('/import/commit', [ImportController::class, 'commit'])->name('import.commit');
-    Route::post('/import/bulk', [ImportController::class, 'bulkImport'])->name('import.bulk');
-
-    // Clear Data Masif
-    Route::delete('/clear-massive', [DashboardController::class, 'clearMassive'])->name('clear-massive');
-
-    // Patients CRUD
-    Route::post('/patients', [PatientController::class, 'store'])->name('patients.store');
-    Route::put('/patients/{patient}', [PatientController::class, 'update'])->name('patients.update');
-    Route::delete('/patients/{patient}', [PatientController::class, 'destroy'])->name('patients.destroy');
+    // Actions restricted to Admin (Create, Update, Delete, Import, Clear, AI Parse)
+    Route::middleware('role:Admin')->group(function () {
+        Route::post('/ai/parse', [DashboardController::class, 'aiParsePatient'])->name('ai.parse');
+        Route::post('/import/preview', [ImportController::class, 'preview'])->name('import.preview');
+        Route::post('/import/commit', [ImportController::class, 'commit'])->name('import.commit');
+        Route::post('/import/bulk', [ImportController::class, 'bulkImport'])->name('import.bulk');
+        Route::delete('/clear-massive', [DashboardController::class, 'clearMassive'])->name('clear-massive');
+        Route::post('/patients', [PatientController::class, 'store'])->name('patients.store');
+        Route::put('/patients/{patient}', [PatientController::class, 'update'])->name('patients.update');
+        Route::delete('/patients/{patient}', [PatientController::class, 'destroy'])->name('patients.destroy');
+    });
 });
 

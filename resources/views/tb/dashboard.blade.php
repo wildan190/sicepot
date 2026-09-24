@@ -47,7 +47,7 @@
                             <span>Laporan SPM</span>
                         </a>
 
-                        <!-- Clear Data Massive -->
+                        @can('clear-data')
                         <!-- Clear Data Massive -->
                         <button @click="openClearMassiveModal()" type="button" title="Kosongkan Semua Data Pasien TBC"
                             class="inline-flex items-center gap-1.5 px-3 py-2 bg-rose-50 hover:bg-rose-100 active:bg-rose-200 text-rose-700 border border-rose-200 text-xs font-semibold rounded-xl shadow-xs transition-all duration-150 cursor-pointer">
@@ -59,7 +59,9 @@
                             </svg>
                             <span>Clear Data</span>
                         </button>
+                        @endcan
 
+                        @can('import-data')
                         <!-- Import Excel / CSV -->
                         <button @click="showImportModal = true" type="button" title="Import Data Excel atau CSV"
                             class="inline-flex items-center gap-1.5 px-3 py-2 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white text-xs font-semibold rounded-xl shadow-xs hover:shadow transition-all duration-150 cursor-pointer">
@@ -70,7 +72,9 @@
                             </svg>
                             <span>Import</span>
                         </button>
+                        @endcan
 
+                        @can('create-data')
                         <!-- Tambah Data -->
                         <button @click="openAddModal()" type="button" title="Tambah Data Pasien Baru"
                             class="inline-flex items-center gap-1.5 px-3.5 py-2 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white text-xs font-bold rounded-xl shadow-sm hover:shadow transition-all duration-150 cursor-pointer">
@@ -80,6 +84,7 @@
                             </svg>
                             <span>Tambah Data</span>
                         </button>
+                        @endcan
                     </div>
                 </div>
             </div>
@@ -838,6 +843,7 @@
                                                         class="text-xs font-black px-1 py-0.5 bg-purple-100 text-purple-700 rounded">AI</span>
                                                 </button>
 
+                                                @can('edit-data')
                                                 <!-- Edit Pasien -->
                                                 <button @click="openEditModal(p)" type="button"
                                                     class="p-1.5 text-indigo-600 hover:text-indigo-900 hover:bg-indigo-50 rounded-lg transition-colors cursor-pointer"
@@ -850,6 +856,8 @@
                                                         </path>
                                                     </svg>
                                                 </button>
+                                                @endcan
+                                                @can('delete-data')
                                                 <button @click="deletePatient(p)" type="button"
                                                     class="p-1.5 text-rose-500 hover:text-rose-700 hover:bg-rose-50 rounded-lg transition-colors cursor-pointer"
                                                     title="Hapus Data">
@@ -861,6 +869,7 @@
                                                         </path>
                                                     </svg>
                                                 </button>
+                                                @endcan
                                             </div>
                                         </td>
                                     </tr>
@@ -2292,6 +2301,7 @@
                         <!-- Footer Modal -->
                         <div class="mt-6 pt-3 border-t border-slate-100 flex items-center justify-between shrink-0">
                             <div class="flex items-center gap-2">
+                                @can('edit-data')
                                 <button @click="showViewModal = false; openEditModal(viewingPatient)"
                                     class="px-3.5 py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded-xl text-xs font-semibold cursor-pointer flex items-center gap-1.5 transition-colors">
                                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -2301,6 +2311,7 @@
                                     </svg>
                                     Edit Data
                                 </button>
+                                @endcan
                                 <button @click="showViewModal = false; openAiTriage(viewingPatient)"
                                     class="px-3.5 py-2 bg-purple-50 hover:bg-purple-100 text-purple-700 rounded-xl text-xs font-semibold cursor-pointer flex items-center gap-1.5 transition-colors">
                                     <span

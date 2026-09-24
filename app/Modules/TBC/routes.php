@@ -23,19 +23,19 @@ Route::get('/tb/map-data', [DashboardController::class, 'mapData'])->name('tb.ma
 Route::get('/tb/export/excel', [DashboardController::class, 'exportExcel'])->name('tb.export.excel');
 Route::get('/tb/report/executive', [DashboardController::class, 'executiveReport'])->name('tb.report.executive');
 
-// AI Triage, Timeline & Duplicates
-Route::post('/tb/ai-parse', [DashboardController::class, 'aiParsePatient'])->name('tb.ai.parse');
+// AI Triage, Timeline & Duplicates (Read/Analysis)
 Route::get('/tb/patients/{patient}/ai-triage', [DashboardController::class, 'aiTriage'])->name('tb.patients.ai-triage');
 Route::get('/tb/patients/{patient}/timeline', [DashboardController::class, 'patientTimeline'])->name('tb.patients.timeline');
 Route::get('/tb/patients/{patient}/duplicates', [DashboardController::class, 'checkDuplicates'])->name('tb.patients.duplicates');
-
-// Import
-Route::post('/tb/import/preview', [ImportController::class, 'preview'])->name('tb.import.preview');
-Route::post('/tb/import/commit', [ImportController::class, 'commit'])->name('tb.import.commit');
-
-// Patients CRUD
-Route::delete('/tb/patients/clear-massive', [PatientController::class, 'clearMassive'])->name('tb.patients.clear-massive');
 Route::get('/tb/patients/{patient}', [PatientController::class, 'show'])->name('tb.patients.show');
-Route::post('/tb/patients', [PatientController::class, 'store'])->name('tb.patients.store');
-Route::put('/tb/patients/{patient}', [PatientController::class, 'update'])->name('tb.patients.update');
-Route::delete('/tb/patients/{patient}', [PatientController::class, 'destroy'])->name('tb.patients.destroy');
+
+// Actions restricted to Admin (Create, Update, Delete, Import, Clear, AI Parse)
+Route::middleware('role:Admin')->group(function () {
+    Route::post('/tb/ai-parse', [DashboardController::class, 'aiParsePatient'])->name('tb.ai.parse');
+    Route::post('/tb/import/preview', [ImportController::class, 'preview'])->name('tb.import.preview');
+    Route::post('/tb/import/commit', [ImportController::class, 'commit'])->name('tb.import.commit');
+    Route::delete('/tb/patients/clear-massive', [PatientController::class, 'clearMassive'])->name('tb.patients.clear-massive');
+    Route::post('/tb/patients', [PatientController::class, 'store'])->name('tb.patients.store');
+    Route::put('/tb/patients/{patient}', [PatientController::class, 'update'])->name('tb.patients.update');
+    Route::delete('/tb/patients/{patient}', [PatientController::class, 'destroy'])->name('tb.patients.destroy');
+});

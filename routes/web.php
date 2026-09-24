@@ -36,8 +36,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    // ── Application Settings ────────────────────────────────────────────────
-    Route::get('/settings', [\App\Http\Controllers\SettingController::class, 'index'])->name('settings.index');
+    // ── Application Settings (Khusus Admin) ─────────────────────────────────
+    Route::get('/settings', [\App\Http\Controllers\SettingController::class, 'index'])
+        ->middleware('role:Admin')
+        ->name('settings.index');
 });
 
 require __DIR__ . '/auth.php';
