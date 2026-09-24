@@ -62,6 +62,7 @@
                             <span>Tes Sirine</span>
                         </button>
 
+                        @can('manage-settings')
                         <!-- Tombol Uji Coba Alert Kelahiran (PieSocket WebSocket) -->
                         <button @click="triggerTestBirthAlert()" :disabled="isTestingBirthAlert" type="button"
                             title="Kirim Sinyal Uji Coba WebSocket Alert Kelahiran ke HP & Desktop"
@@ -70,7 +71,9 @@
                             <span x-show="!isTestingBirthAlert">Tes Alert Kelahiran</span>
                             <span x-show="isTestingBirthAlert">Mengirim...</span>
                         </button>
+                        @endcan
 
+                        @can('import-data')
                         <!-- Import Excel / CSV -->
                         <button @click="showImportModal = true" type="button" title="Import Data Excel atau CSV"
                             class="inline-flex items-center gap-1.5 px-3 py-2 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white text-xs font-semibold rounded-xl shadow-xs hover:shadow transition-all duration-150 cursor-pointer">
@@ -81,7 +84,9 @@
                             </svg>
                             <span>Import</span>
                         </button>
+                        @endcan
 
+                        @can('create-data')
                         <!-- Tambah Data -->
                         <button @click="openAddModal()" type="button" title="Tambah Data Baru"
                             class="inline-flex items-center gap-1.5 px-3.5 py-2 bg-pink-600 hover:bg-pink-700 active:bg-pink-800 text-white text-xs font-bold rounded-xl shadow-sm hover:shadow transition-all duration-150 cursor-pointer">
@@ -91,6 +96,7 @@
                             </svg>
                             <span>Tambah Data</span>
                         </button>
+                        @endcan
                     </div>
                 </div>
             </div>
@@ -994,6 +1000,7 @@
                                                         class="text-xs font-black px-1 py-0.5 bg-purple-100 text-purple-700 rounded">AI</span>
                                                 </button>
 
+                                                @can('edit-data')
                                                 <!-- Edit Pasien -->
                                                 <button @click="openEditModal(p)" type="button"
                                                     class="p-1.5 text-pink-600 hover:text-pink-900 hover:bg-pink-50 rounded-lg transition-colors cursor-pointer"
@@ -1013,7 +1020,9 @@
                                                     title="Catat Kelahiran & Kirim Alert Realtime">
                                                     <span class="text-sm leading-none">Birth Report</span>
                                                 </button>
+                                                @endcan
 
+                                                @can('delete-data')
                                                 <!-- Hapus Pasien -->
                                                 <button @click="deletePatient(p)" type="button"
                                                     class="p-1.5 text-rose-500 hover:text-rose-700 hover:bg-rose-50 rounded-lg transition-colors cursor-pointer"
@@ -1026,6 +1035,7 @@
                                                         </path>
                                                     </svg>
                                                 </button>
+                                                @endcan
                                             </div>
                                         </td>
                                     </tr>
@@ -2272,6 +2282,7 @@
                         <!-- Footer Modal -->
                         <div class="mt-6 pt-3 border-t border-slate-100 flex items-center justify-between shrink-0">
                             <div class="flex items-center gap-2">
+                                @can('edit-data')
                                 <button @click="showViewModal = false; openEditModal(viewingPatient)"
                                     class="px-3.5 py-2 bg-pink-50 hover:bg-pink-100 text-pink-700 rounded-xl text-xs font-semibold cursor-pointer flex items-center gap-1.5 transition-colors">
                                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -2281,6 +2292,7 @@
                                     </svg>
                                     Edit Data
                                 </button>
+                                @endcan
                                 <button @click="showViewModal = false; openWhatsAppModal(viewingPatient)"
                                     class="px-3.5 py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 rounded-xl text-xs font-semibold cursor-pointer flex items-center gap-1.5 transition-colors">
                                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

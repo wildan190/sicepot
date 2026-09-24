@@ -22,23 +22,21 @@ Route::prefix('anc')->name('anc.')->group(function () {
     Route::get('/export/excel', [DashboardController::class, 'exportExcel'])->name('export.excel');
     Route::get('/report/executive', [DashboardController::class, 'executiveReport'])->name('report.executive');
 
-    // AI Triage, Timeline & Duplicates
-    Route::post('/ai-parse', [DashboardController::class, 'aiParsePatient'])->name('ai.parse');
+    // AI Triage, Timeline & Duplicates (Read/Analysis)
     Route::get('/patients/{patient}/ai-triage', [DashboardController::class, 'aiTriage'])->name('patients.ai-triage');
     Route::get('/patients/{patient}/timeline', [DashboardController::class, 'patientTimeline'])->name('patients.timeline');
     Route::get('/patients/{patient}/duplicates', [DashboardController::class, 'checkDuplicates'])->name('patients.duplicates');
-
-    // Import Universal
-    Route::post('/import/preview', [ImportController::class, 'preview'])->name('import.preview');
-    Route::post('/import/commit', [ImportController::class, 'commit'])->name('import.commit');
-
-    // CRUD Pasien Ibu Hamil
-    Route::post('/patients', [PatientController::class, 'store'])->name('patients.store');
     Route::get('/patients/{patient}', [PatientController::class, 'show'])->name('patients.show');
-    Route::put('/patients/{patient}', [PatientController::class, 'update'])->name('patients.update');
-    Route::delete('/patients/{patient}', [PatientController::class, 'destroy'])->name('patients.destroy');
 
-    // Realtime Birth Alert (PieSocket WebSocket)
-    Route::post('/patients/{patient}/record-birth', [PatientController::class, 'recordBirth'])->name('patients.record-birth');
-    Route::post('/test-birth-alert', [PatientController::class, 'testBirthAlert'])->name('test-birth-alert');
+    // Actions restricted to Admin (Create, Update, Delete, Import, AI Parse, Record Birth, Test Alert)
+    Route::middleware('role:Admin')->group(function () {
+        Route::post('/ai-parse', [DashboardController::class, 'aiParsePatient'])->name('ai.parse');
+        Route::post('/import/preview', [ImportController::class, 'preview'])->name('import.preview');
+        Route::post('/import/commit', [ImportController::class, 'commit'])->name('import.commit');
+        Route::post('/patients', [PatientController::class, 'store'])->name('patients.store');
+        Route::put('/patients/{patient}', [PatientController::class, 'update'])->name('patients.update');
+        Route::delete('/patients/{patient}', [PatientController::class, 'destroy'])->name('patients.destroy');
+        Route::post('/patients/{patient}/record-birth', [PatientController::class, 'recordBirth'])->name('patients.record-birth');
+        Route::post('/test-birth-alert', [PatientController::class, 'testBirthAlert'])->name('test-birth-alert');
+    });
 });

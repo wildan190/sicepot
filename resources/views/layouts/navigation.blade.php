@@ -34,9 +34,11 @@
                             <span class="px-1.5 py-0.5 bg-indigo-100 text-indigo-600 text-[10px] font-black rounded-md leading-none">✨ AI</span>
                         </span>
                     </x-nav-link>
+                    @role('Admin')
                     <x-nav-link :href="route('settings.index')" :active="request()->routeIs('settings.*')">
                         {{ __('Pengaturan') }}
                     </x-nav-link>
+                    @endrole
                 </div>
             </div>
 
@@ -45,8 +47,15 @@
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
                         <button
-                            class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
-                            <div>{{ Auth::user()->name }}</div>
+                            class="inline-flex items-center gap-2 px-3 py-2 border border-slate-200 text-sm leading-4 font-medium rounded-xl text-gray-700 bg-white hover:text-gray-900 hover:bg-slate-50 focus:outline-none transition ease-in-out duration-150 shadow-2xs">
+                            <div class="flex items-center gap-2">
+                                <span class="font-bold">{{ Auth::user()->name }}</span>
+                                @if(Auth::user()->hasRole('Admin'))
+                                    <span class="px-2 py-0.5 bg-indigo-100 text-indigo-700 text-[10px] font-black rounded-full border border-indigo-200">Admin</span>
+                                @elseif(Auth::user()->hasRole('Guest'))
+                                    <span class="px-2 py-0.5 bg-slate-100 text-slate-600 text-[10px] font-black rounded-full border border-slate-200">Guest (Lihat Saja)</span>
+                                @endif
+                            </div>
 
                             <div class="ms-1">
                                 <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg"
@@ -60,9 +69,11 @@
                     </x-slot>
 
                     <x-slot name="content">
+                        @role('Admin')
                         <x-dropdown-link :href="route('settings.index')">
                             {{ __('Pengaturan Sistem') }}
                         </x-dropdown-link>
+                        @endrole
 
                         <x-dropdown-link :href="route('profile.edit')">
                             {{ __('Profile') }}
@@ -115,22 +126,33 @@
                     <span class="px-1.5 py-0.5 bg-indigo-100 text-indigo-600 text-[10px] font-black rounded-md">✨ AI</span>
                 </span>
             </x-responsive-nav-link>
+            @role('Admin')
             <x-responsive-nav-link :href="route('settings.index')" :active="request()->routeIs('settings.*')">
                 {{ __('Pengaturan') }}
             </x-responsive-nav-link>
+            @endrole
         </div>
 
         <!-- Responsive Settings Options -->
         <div class="pt-4 pb-1 border-t border-gray-200">
             <div class="px-4">
-                <div class="font-medium text-base text-gray-800">{{ Auth::user()->name }}</div>
+                <div class="font-medium text-base text-gray-800 flex items-center gap-2">
+                    <span>{{ Auth::user()->name }}</span>
+                    @if(Auth::user()->hasRole('Admin'))
+                        <span class="px-2 py-0.5 bg-indigo-100 text-indigo-700 text-[10px] font-black rounded-full border border-indigo-200">Admin</span>
+                    @elseif(Auth::user()->hasRole('Guest'))
+                        <span class="px-2 py-0.5 bg-slate-100 text-slate-600 text-[10px] font-black rounded-full border border-slate-200">Guest</span>
+                    @endif
+                </div>
                 <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
             </div>
 
             <div class="mt-3 space-y-1">
+                @role('Admin')
                 <x-responsive-nav-link :href="route('settings.index')">
                     {{ __('Pengaturan Sistem') }}
                 </x-responsive-nav-link>
+                @endrole
 
                 <x-responsive-nav-link :href="route('profile.edit')">
                     {{ __('Profile') }}

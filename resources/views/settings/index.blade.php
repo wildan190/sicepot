@@ -142,7 +142,62 @@
 
             </div>
 
-            <!-- CARD 3: INFORMASI SISTEM & KREDENSIAL FASYANKES -->
+            <!-- CARD 3: MANAJEMEN PENGGUNA & ROLE AKSES -->
+            <div class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-xs">
+                <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+                    <div class="flex items-center gap-3">
+                        <div class="w-11 h-11 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="text-base font-bold text-slate-800">Manajemen Hak Akses &amp; Role (Spatie Permissions)</h3>
+                            <p class="text-xs text-slate-500">Daftar akun dan hak akses pada sistem SICEPOT</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-4 overflow-x-auto">
+                    <table class="w-full text-left text-xs text-slate-600 border border-slate-200 rounded-xl overflow-hidden">
+                        <thead class="bg-slate-50 text-slate-700 font-semibold border-b border-slate-200">
+                            <tr>
+                                <th class="px-4 py-3">Nama</th>
+                                <th class="px-4 py-3">Email</th>
+                                <th class="px-4 py-3">Role</th>
+                                <th class="px-4 py-3">Hak Akses</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100">
+                            @foreach(\App\Models\User::with('roles')->get() as $u)
+                                <tr class="hover:bg-slate-50/50">
+                                    <td class="px-4 py-3 font-semibold text-slate-800">{{ $u->name }}</td>
+                                    <td class="px-4 py-3 text-slate-600">{{ $u->email }}</td>
+                                    <td class="px-4 py-3">
+                                        @foreach($u->roles as $r)
+                                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold {{ $r->name === 'Admin' ? 'bg-indigo-100 text-indigo-700 border border-indigo-200' : 'bg-slate-100 text-slate-700 border border-slate-200' }}">
+                                                {{ $r->name }}
+                                            </span>
+                                        @endforeach
+                                    </td>
+                                    <td class="px-4 py-3">
+                                        @if($u->hasRole('Admin'))
+                                            <span class="text-emerald-600 font-semibold">Akses Penuh (Create, Edit, Delete, Import, Clear Data, Settings)</span>
+                                        @elseif($u->hasRole('Guest'))
+                                            <span class="text-slate-500 font-medium">Hanya Melihat (Read-Only) / Tanpa Aksi</span>
+                                        @else
+                                            <span class="text-slate-400">Belum memiliki role</span>
+                                        @endif
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- CARD 4: INFORMASI SISTEM & KREDENSIAL FASYANKES -->
             <div class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-xs">
                 <h3 class="text-base font-bold text-slate-800 mb-4 pb-2 border-b border-slate-100 flex items-center gap-2">
                     <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
