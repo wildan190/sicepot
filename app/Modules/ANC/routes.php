@@ -38,5 +38,6 @@ Route::prefix('anc')->name('anc.')->group(function () {
         Route::delete('/patients/{patient}', [PatientController::class, 'destroy'])->name('patients.destroy');
         Route::post('/patients/{patient}/record-birth', [PatientController::class, 'recordBirth'])->name('patients.record-birth');
         Route::post('/test-birth-alert', [PatientController::class, 'testBirthAlert'])->name('test-birth-alert');
+        Route::delete('/clear-all', [PatientController::class, 'clearAllData'])->name('clear-all');
     });
 });
