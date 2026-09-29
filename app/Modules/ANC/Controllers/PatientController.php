@@ -85,7 +85,7 @@ class PatientController extends Controller
      */
     public function clearAllData(\Illuminate\Http\Request $request)
     {
-        $this->authorize('clear-data');
+        abort_unless(auth()->user()?->can('clear-data'), 403, 'Anda tidak memiliki izin untuk menghapus semua data.');
 
         $count = AncPatient::count();
         AncPatient::truncate();
