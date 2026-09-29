@@ -81,6 +81,24 @@ class PatientController extends Controller
     }
 
     /**
+     * Clear ALL ANC patient data (Admin only with clear-data permission).
+     */
+    public function clearAllData(\Illuminate\Http\Request $request)
+    {
+        $this->authorize('clear-data');
+
+        $count = AncPatient::count();
+        AncPatient::truncate();
+
+        return response()->json([
+            'success' => true,
+            'message' => "Seluruh {$count} data ibu hamil ANC berhasil dihapus.",
+            'deleted_count' => $count,
+        ]);
+    }
+
+
+    /**
      * Record a birth delivery and immediately broadcast birth alert via PieSocket WebSocket.
      */
     public function recordBirth(\Illuminate\Http\Request $request, AncPatient $patient)
