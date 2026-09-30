@@ -240,7 +240,9 @@
                         };
 
                         this.ws.onerror = (err) => {
-                            console.error('PieSocket WebSocket error:', err);
+                            // Don't flood console if disconnected due to navigating back/forward (BFCache)
+                            if (document.visibilityState === 'hidden') return;
+                            console.warn('PieSocket WebSocket disconnected or error:', err);
                             this.updateBadge('disconnected');
                         };
                     }
