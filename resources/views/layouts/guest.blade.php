@@ -13,24 +13,24 @@
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600,700,800&display=swap" rel="stylesheet" />
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="font-sans text-gray-900 antialiased">
-        <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100">
-            <div class="text-center">
-                <a href="/" class="flex flex-col items-center gap-2 group">
-                    <img src="{{ asset('images/logo.png') }}" alt="SICEPOT Logo" class="w-20 h-20 rounded-2xl object-cover shadow-md group-hover:scale-105 transition-transform">
-                    <span class="font-black text-2xl text-slate-800 tracking-tight">SICEPOT</span>
-                    <span class="text-xs text-slate-500 font-semibold tracking-wide">Sistem Cepat Post dan Tracking</span>
-                </a>
-            </div>
+    <body class="font-sans antialiased text-slate-800 bg-slate-950 selection:bg-indigo-500 selection:text-white min-h-screen relative overflow-x-hidden">
+        <!-- Ambient Background Glow & Decorative Gradients -->
+        <div class="fixed inset-0 pointer-events-none overflow-hidden z-0">
+            <div class="absolute -top-40 -left-40 w-96 h-96 bg-indigo-600/25 rounded-full blur-3xl animate-pulse" style="animation-duration: 7s;"></div>
+            <div class="absolute top-1/3 -right-32 w-80 h-80 bg-teal-500/20 rounded-full blur-3xl animate-pulse" style="animation-duration: 9s;"></div>
+            <div class="absolute -bottom-32 left-1/3 w-96 h-96 bg-pink-600/15 rounded-full blur-3xl animate-pulse" style="animation-duration: 8s;"></div>
+            
+            <!-- Subtle Grid Pattern -->
+            <div class="absolute inset-0 bg-[linear-gradient(to_right,#ffffff08_1px,transparent_1px),linear-gradient(to_bottom,#ffffff08_1px,transparent_1px)] bg-[size:32px_32px] opacity-40"></div>
+        </div>
 
-            <div class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg">
-                {{ $slot }}
-            </div>
+        <div class="relative z-10 min-h-screen flex flex-col justify-center items-center p-4 sm:p-6 lg:p-8">
+            {{ $slot }}
         </div>
     </body>
 </html>
