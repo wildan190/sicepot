@@ -1,25 +1,42 @@
 <x-guest-layout>
-    <div class="mb-4 text-sm text-gray-600">
-        {{ __('Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.') }}
+    <div class="w-full max-w-md mx-auto">
+        <div class="bg-white/95 backdrop-blur-xl rounded-3xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.5),0_0_0_1px_rgba(255,255,255,0.15)] p-8 sm:p-10 border border-white/20">
+            <!-- Header -->
+            <div class="text-center mb-6">
+                <a href="/" class="inline-flex items-center gap-2.5 mb-3 group">
+                    <img src="{{ asset('images/logo.png') }}" alt="SICEPOT" class="w-10 h-10 rounded-xl object-cover shadow-sm group-hover:scale-105 transition-transform">
+                    <span class="text-xl font-extrabold tracking-tight text-slate-800">SICEPOT</span>
+                </a>
+                <h3 class="text-xl font-black text-slate-900 tracking-tight">Lupa Kata Sandi</h3>
+                <p class="text-xs text-slate-500 mt-1">Masukkan alamat email terdaftar untuk menerima tautan pemulihan kata sandi.</p>
+            </div>
+
+            <!-- Session Status -->
+            <x-auth-session-status class="mb-4" :status="session('status')" />
+
+            <form method="POST" action="{{ route('password.email') }}" class="space-y-4 text-xs">
+                @csrf
+
+                <!-- Email Address -->
+                <div>
+                    <label for="email" class="block font-bold text-slate-700 uppercase tracking-wider mb-1">Alamat Email</label>
+                    <input id="email" class="block w-full px-3.5 py-2.5 text-xs text-slate-800 bg-slate-50/70 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 transition-all font-medium placeholder:text-slate-400" type="email" name="email" :value="old('email')" required autofocus placeholder="nama@puskesmas.go.id" />
+                    <x-input-error :messages="$errors->get('email')" class="mt-1 text-xs text-rose-600 font-semibold" />
+                </div>
+
+                <div class="pt-2">
+                    <button type="submit"
+                        class="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-indigo-600 to-teal-600 hover:from-indigo-700 hover:to-teal-700 text-white font-bold text-xs shadow-md shadow-indigo-600/25 cursor-pointer transition-all">
+                        Kirim Tautan Pemulihan
+                    </button>
+                </div>
+
+                <div class="text-center pt-2">
+                    <a class="text-xs text-slate-500 hover:text-indigo-600 transition-colors" href="{{ route('login') }}">
+                        Kembali ke <span class="font-bold text-indigo-600 underline">Halaman Masuk</span>
+                    </a>
+                </div>
+            </form>
+        </div>
     </div>
-
-    <!-- Session Status -->
-    <x-auth-session-status class="mb-4" :status="session('status')" />
-
-    <form method="POST" action="{{ route('password.email') }}">
-        @csrf
-
-        <!-- Email Address -->
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
-        </div>
-
-        <div class="flex items-center justify-end mt-4">
-            <x-primary-button>
-                {{ __('Email Password Reset Link') }}
-            </x-primary-button>
-        </div>
-    </form>
 </x-guest-layout>
