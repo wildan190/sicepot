@@ -626,6 +626,19 @@
                                                     </path>
                                                 </svg>
                                             </button>
+
+                                            <!-- WhatsApp Direct Reminder -->
+                                            <button @click="openWhatsAppModal(p)" type="button"
+                                                class="p-1.5 text-emerald-600 hover:text-emerald-800 hover:bg-emerald-50 rounded-lg transition-colors cursor-pointer"
+                                                title="Kirim Pesan WhatsApp (wa.me)">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                                    viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z">
+                                                    </path>
+                                                </svg>
+                                            </button>
                                             @can('edit-data')
                                             <!-- Edit Balita -->
                                             <button @click="openEditModal(p)" type="button"
@@ -1614,19 +1627,30 @@
                     </div>
 
                     <div class="mt-6 pt-3 border-t border-slate-100 flex items-center justify-between shrink-0">
-                        @can('edit-data')
-                        <button @click="showViewModal = false; openEditModal(viewingPatient)"
-                            class="px-3.5 py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 rounded-xl text-xs font-semibold cursor-pointer flex items-center gap-1.5 transition-colors">
-                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
-                                </path>
-                            </svg>
-                            Edit Data
-                        </button>
-                        @else
-                        <div></div>
-                        @endcan
+                        <div class="flex items-center gap-2">
+                            <!-- Tombol WhatsApp dari Modal Detail -->
+                            <button @click="showViewModal = false; openWhatsAppModal(viewingPatient)" type="button"
+                                class="px-3.5 py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 rounded-xl text-xs font-semibold cursor-pointer flex items-center gap-1.5 transition-colors">
+                                <svg class="w-3.5 h-3.5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z">
+                                    </path>
+                                </svg>
+                                <span>Kirim WhatsApp</span>
+                            </button>
+
+                            @can('edit-data')
+                            <button @click="showViewModal = false; openEditModal(viewingPatient)"
+                                class="px-3.5 py-2 bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 rounded-xl text-xs font-semibold cursor-pointer flex items-center gap-1.5 transition-colors">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                                    </path>
+                                </svg>
+                                Edit Data
+                            </button>
+                            @endcan
+                        </div>
                         <button @click="showViewModal = false"
                             class="px-4 py-2 bg-slate-800 hover:bg-slate-900 text-white rounded-xl text-xs font-semibold cursor-pointer transition-colors">Tutup</button>
                     </div>
@@ -1830,6 +1854,94 @@
             </div>
         </div>
 
+        <!-- ================= MODAL: WHATSAPP DIRECT REMINDER (wa.me) ================= -->
+        <div x-show="showWhatsAppModal" x-cloak class="fixed inset-0 z-[9999] overflow-y-auto" style="display: none;">
+            <div class="min-h-screen px-4 text-center flex items-center justify-center py-8">
+                <div @click="showWhatsAppModal = false"
+                    class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs transition-opacity"></div>
+                <div
+                    class="inline-block w-full max-w-lg p-6 my-8 text-left align-middle transition-all transform bg-white shadow-2xl rounded-3xl z-10 border border-slate-100">
+                    <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+                        <div class="flex items-center gap-2.5">
+                            <span class="p-2 rounded-xl bg-emerald-100 text-emerald-700">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z">
+                                    </path>
+                                </svg>
+                            </span>
+                            <div>
+                                <h3 class="text-base font-bold text-slate-800">Kirim Pengingat WhatsApp (wa.me)</h3>
+                                <p class="text-xs text-slate-500" x-text="targetPatient?.nama ? 'Balita: ' + targetPatient.nama : 'Kirim pesan edukasi & pengingat balita'"></p>
+                            </div>
+                        </div>
+                        <button @click="showWhatsAppModal = false"
+                            class="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100 cursor-pointer">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        </button>
+                    </div>
+
+                    <div class="mt-4 space-y-3.5 text-xs">
+                        <div>
+                            <label class="block font-semibold text-slate-700 mb-1">Penerima Pesan (Orang Tua Balita):</label>
+                            <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl">
+                                <div class="font-bold text-slate-800 flex items-center gap-1.5">
+                                    <span x-text="targetPatient?.nama || '-'"></span>
+                                    <span class="text-[11px] font-normal text-slate-500" x-text="'(Ortu: ' + (targetPatient?.nama_ortu || '-') + ')'"></span>
+                                </div>
+                                <div class="text-[11px] text-slate-500 mt-1 flex flex-wrap gap-x-3 gap-y-0.5">
+                                    <span x-text="'Desa: ' + (targetPatient?.desa || '-')"></span>
+                                    <span x-text="'Posyandu: ' + (targetPatient?.posyandu || '-')"></span>
+                                    <span x-text="'Status: ' + (targetPatient?.tbu_kategori || '-')"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block font-semibold text-slate-700 mb-1">Nomor WhatsApp Orang Tua / Wali:</label>
+                            <input type="text" x-model="waPhone" placeholder="Contoh: 08123456789 atau 628123456789"
+                                class="w-full px-3 py-2 text-xs border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 font-mono">
+                            <p class="text-[11px] text-slate-400 mt-0.5">Masukkan nomor HP aktif orang tua/kader balita untuk membuka percakapan via WhatsApp.</p>
+                        </div>
+
+                        <div>
+                            <label class="block font-semibold text-slate-700 mb-1">Pilih Template Pengingat:</label>
+                            <select x-model="waTemplateType" @change="prepareWaMessage()"
+                                class="w-full px-3 py-2 text-xs border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500">
+                                <option value="posyandu_schedule">Jadwal Penimbangan &amp; Posyandu Rutin</option>
+                                <option value="stunting_pmt">Edukasi Terapi Gizi &amp; Kepatuhan Pemberian PMT</option>
+                                <option value="weight_faltering">Peringatan Berat Badan Tidak Naik / Turun (T/Faltering)</option>
+                                <option value="referral_spa">Rujukan Pemeriksaan Spesialis Anak (Sp.A) / Puskesmas</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block font-semibold text-slate-700 mb-1">Isi Pesan (Bisa diedit langsung):</label>
+                            <textarea rows="6" x-model="waMessage"
+                                class="w-full px-3 py-2 text-xs border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 leading-relaxed font-sans"></textarea>
+                        </div>
+
+                        <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between">
+                            <button @click="showWhatsAppModal = false" type="button"
+                                class="px-4 py-2 text-slate-600 hover:bg-slate-100 rounded-xl font-semibold cursor-pointer">Batal</button>
+                            <button type="button" @click="sendWhatsAppMessage()" :disabled="!waPhone"
+                                class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white rounded-xl font-bold shadow-xs flex items-center gap-2 cursor-pointer disabled:opacity-50 transition-colors">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z">
+                                    </path>
+                                </svg>
+                                <span>Buka WhatsApp Web / App ↗</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     @push('scripts')
@@ -1843,6 +1955,13 @@
                     selectedTahun: '{{ $selectedTahun }}',
                     searchQuery: '',
                     stats: {},
+
+                    // WhatsApp Direct Reminder (wa.me)
+                    showWhatsAppModal: false,
+                    targetPatient: null,
+                    waPhone: '',
+                    waTemplateType: 'posyandu_schedule',
+                    waMessage: '',
 
                     // Import / Bulk Import modal
                     showImportModal: false,
@@ -2587,6 +2706,49 @@
                         } catch (e) {
                             this.notify('error', 'Kesalahan', 'Gagal menghapus: ' + e.message);
                         }
+                    },
+
+                    // ================= INOVASI: WHATSAPP DIRECT REMINDER (wa.me) =================
+                    openWhatsAppModal(patient) {
+                        if (!patient) return;
+                        this.targetPatient = JSON.parse(JSON.stringify(patient));
+                        this.waTemplateType = 'posyandu_schedule';
+                        this.waPhone = patient.no_telepon || '';
+                        this.showWhatsAppModal = true;
+                        this.prepareWaMessage();
+                    },
+
+                    prepareWaMessage() {
+                        if (!this.targetPatient) return;
+                        const p = this.targetPatient;
+                        const namaAnak = p.nama || 'Ananda';
+                        const namaOrtu = p.nama_ortu ? `Bpk/Ibu ${p.nama_ortu}` : 'Bpk/Ibu Orang Tua Balita';
+                        const posyanduStr = p.posyandu ? `Posyandu ${p.posyandu}` : 'Posyandu terdekat';
+                        const desaStr = p.desa ? `Desa/Kelurahan ${p.desa}` : 'Puskesmas';
+                        const bbStr = p.berat ? `${Number(p.berat).toFixed(2)} kg` : '-';
+                        const tbStr = p.tinggi ? `${Number(p.tinggi).toFixed(1)} cm` : '-';
+                        const statusTbu = p.tbu_kategori || 'Perlu Perhatian';
+
+                        if (this.waTemplateType === 'stunting_pmt') {
+                            this.waMessage = `Halo ${namaOrtu},\n\nSalam Peduli Tumbuh Kembang dari Tim Pencegahan Stunting (SICEPOT - ${desaStr}).\n\nMengingatkan perkembangan gizi ${namaAnak} (Status TB/U: ${statusTbu}, TB: ${tbStr}, BB: ${bbStr}).\n\nUntuk mengejar pertumbuhan optimal, mohon pastikan:\n1. Pemberian Makanan Tambahan (PMT) kaya protein hewani (telur, ikan, ayam, daging, susu) dihabiskan setiap hari.\n2. Pola asuh makan gizi seimbang dan menjaga kebersihan sanitasi lingkungan rumah.\n3. Pantau kenaikan berat badan secara disiplin setiap bulan.\n\nMari bersama kita dukung tumbuh kembang ${namaAnak} agar sehat, cerdas, dan ceria! Terima kasih.`;
+                        } else if (this.waTemplateType === 'weight_faltering') {
+                            this.waMessage = `PERHATIAN PERTUMBUHAN BALITA - ${desaStr} (SICEPOT)\n\nKepada Yth. ${namaOrtu} (${namaAnak}),\n\nBerdasarkan hasil penimbangan terakhir, berat badan ${namaAnak} tercatat tidak mengalami kenaikan yang adekuat / berada di bawah grafik tumbuh kembang (BB saat ini: ${bbStr}).\n\nPENTING:\nKondisi berat badan seret (Weight Faltering) perlu penanganan dini agar tidak berlanjut menjadi stunting.\n\nMohon segera membawa ${namaAnak} ke ${posyanduStr} atau Puskesmas terdekat untuk konsultasi gizi dan evaluasi kesehatan bersama petugas kami. Layanan ini bebas biaya. Terima kasih!`;
+                        } else if (this.waTemplateType === 'referral_spa') {
+                            this.waMessage = `PEMBERITAHUAN RUJUKAN & PEMERIKSAAN LANJUTAN - SICEPOT\n\nKepada Yth. ${namaOrtu},\n\nSalam sehat dari Tim Kesehatan Balita ${desaStr}.\nTerkait pemantauan indikator tumbuh kembang ${namaAnak}, petugas merekomendasikan pemeriksaan kesehatan lanjutan / konsultasi Dokter Spesialis Anak (Sp.A) di RS / Puskesmas rujukan.\n\nPemeriksaan ini bertujuan memastikan tidak adanya penyakit penyerta (seperti infeksi atau anemia) serta menentukan terapi nutrisi spesifik.\n\nSilakan menghubungi petugas gizi atau bidan desa kami di Puskesmas untuk bantuan proses administrasi rujukan. Terima kasih.`;
+                        } else {
+                            // Default: Jadwal Penimbangan & Posyandu Rutin
+                            this.waMessage = `Halo ${namaOrtu},\n\nSalam hangat dari Kader & Tim Kesehatan ${posyanduStr}, ${desaStr} (SICEPOT).\n\nMengingatkan jadwal penimbangan dan pengukuran rutin tumbuh kembang ${namaAnak} di Posyandu bulan ini.\n\nPemeriksaan rutin (BB, TB, LiLA, vitamin A, dan imunisasi) sangat penting untuk memastikan pertumbuhan anak tetap terpantau dengan baik.\n\nJangan lupa membawa Buku KIA saat datang ke Posyandu ya, Bunda/Ayah. Sampai jumpa di Posyandu!`;
+                        }
+                    },
+
+                    sendWhatsAppMessage() {
+                        let clean = String(this.waPhone || '').replace(/\D+/g, '');
+                        if (clean.startsWith('0')) clean = '62' + clean.substring(1);
+                        else if (clean.startsWith('8')) clean = '62' + clean;
+                        else if (!clean.startsWith('62')) clean = '62' + clean;
+
+                        const url = `https://wa.me/${clean}?text=${encodeURIComponent(this.waMessage)}`;
+                        window.open(url, '_blank');
                     },
                 };
             }
