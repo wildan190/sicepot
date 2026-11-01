@@ -18,7 +18,7 @@ class ImportController extends Controller
     public function preview(Request $request)
     {
         $request->validate([
-            'file' => 'required|file|mimes:xlsx,xls|max:10240',
+            'file' => 'required|file|extensions:xlsx,xls|max:51200',
         ]);
 
         $file     = $request->file('file');
@@ -84,7 +84,7 @@ class ImportController extends Controller
     {
         $request->validate([
             'files'   => 'required|array|min:1|max:20',
-            'files.*' => 'required|file|mimes:xlsx,xls|max:20480',
+            'files.*' => 'required|file|extensions:xlsx,xls|max:51200',
         ]);
 
         $results = [];
