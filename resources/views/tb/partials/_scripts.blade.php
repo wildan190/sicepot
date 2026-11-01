@@ -16,7 +16,7 @@
                 selectedKabupaten: '{{ $selectedKabupaten }}',
                 selectedKelurahan: '{{ $selectedKelurahan }}',
                 selectedType: '{{ $selectedType }}',
-                searchQuery: '',
+                searchQuery: @json($selectedSearch ?? ''),
                 kelurahanList: [],
                 kpi: @json($kpi),
                 kelurahanChartData: @json($kelurahan_chart),

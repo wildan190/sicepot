@@ -23,6 +23,7 @@ class DashboardController extends Controller
             'selectedKabupaten'  => $request->input('kabupaten', ''),
             'selectedKelurahan'  => $request->input('kelurahan', ''),
             'selectedType'       => $request->input('report_type', ''),
+            'selectedSearch'     => $request->input('search', ''),
         ]));
     }
 
