@@ -1000,11 +1000,11 @@
                 testSirineAudio() {
                     this.playSirine();
                     Swal.fire({
-                        title: 'Uji Coba Sirine Siaga',
+                        title: 'Uji Coba Sirine Siaga Persalinan',
                         html: `
                             <div class="text-left text-xs sm:text-sm space-y-2 mt-2">
                                 <p class="text-slate-600">Audio sirine siaga sedang berbunyi dari berkas: <br><code class="text-rose-600 font-bold bg-rose-50 px-2 py-0.5 rounded text-[11px] sm:text-xs break-all">public/assets/sounds/sirine.mp3</code></p>
-                                <p class="text-slate-500 text-[11px] sm:text-xs">Sirine ini akan otomatis dibunyikan bersama pop-up SweetAlert saat sistem mendeteksi ada ibu hamil yang mendekati <strong>H-14 (2 Minggu) Hari Perkiraan Lahir (HPL)</strong>.</p>
+                                <p class="text-slate-500 text-[11px] sm:text-xs">Sirine ini akan otomatis berbunyi bersama pop-up peringatan saat sistem mendeteksi ada ibu hamil yang berada pada <strong>Siaga 1 Persalinan (H-1 / Hari Ini / Lewat HPL)</strong>.</p>
                             </div>
                         `,
                         icon: 'warning',
@@ -1020,14 +1020,74 @@
                     });
                 },
 
+                getLocalDateStr(offsetDays = 0) {
+                    const d = new Date();
+                    if (offsetDays !== 0) {
+                        d.setDate(d.getDate() + offsetDays);
+                    }
+                    const year = d.getFullYear();
+                    const month = String(d.getMonth() + 1).padStart(2, '0');
+                    const day = String(d.getDate()).padStart(2, '0');
+                    return `${year}-${month}-${day}`;
+                },
+
+                getHplStatus(hpl, tglBersalin) {
+                    if (!hpl || tglBersalin) return null;
+                    const cleanHpl = hpl.substring(0, 10);
+                    const todayStr = this.getLocalDateStr(0);
+
+                    const today = new Date(todayStr + 'T00:00:00');
+                    const targetHpl = new Date(cleanHpl + 'T00:00:00');
+                    if (isNaN(targetHpl.getTime())) return null;
+
+                    const diffTime = targetHpl.getTime() - today.getTime();
+                    const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
+
+                    if (diffDays < 0) {
+                        const daysAgo = Math.abs(diffDays);
+                        return {
+                            label: `Lewat HPL (+${daysAgo} hr)`,
+                            color: 'bg-rose-600 text-white animate-pulse',
+                            isImminent: true,
+                            days: diffDays
+                        };
+                    } else if (diffDays === 0) {
+                        return {
+                            label: 'HPL HARI INI!',
+                            color: 'bg-rose-500 text-white font-black animate-bounce',
+                            isImminent: true,
+                            days: 0
+                        };
+                    } else if (diffDays === 1) {
+                        return {
+                            label: 'SIAGA H-1!',
+                            color: 'bg-rose-500 text-white font-extrabold',
+                            isImminent: true,
+                            days: 1
+                        };
+                    } else if (diffDays <= 7) {
+                        return {
+                            label: `H-${diffDays} (1 Mgg)`,
+                            color: 'bg-amber-100 text-amber-800 border border-amber-300 font-bold',
+                            isImminent: false,
+                            days: diffDays
+                        };
+                    } else if (diffDays <= 30) {
+                        return {
+                            label: `H-${diffDays}`,
+                            color: 'bg-blue-100 text-blue-800 border border-blue-300 font-medium',
+                            isImminent: false,
+                            days: diffDays
+                        };
+                    }
+                    return null;
+                },
+
                 isDueWithin14Days(dateStr) {
                     if (!dateStr) return false;
                     const cleanDate = dateStr.substring(0, 10);
-                    const today = new Date();
-                    const in14 = new Date();
-                    in14.setDate(today.getDate() + 14);
-                    const todayStr = today.toISOString().substring(0, 10);
-                    const in14Str = in14.toISOString().substring(0, 10);
+                    const todayStr = this.getLocalDateStr(0);
+                    const in14Str = this.getLocalDateStr(14);
                     return cleanDate >= todayStr && cleanDate <= in14Str;
                 },
 
@@ -1044,8 +1104,8 @@
                     const count = this.imminentDeliveries ? this.imminentDeliveries.length : 0;
                     if (count === 0) {
                         Swal.fire({
-                            title: 'Tidak Ada HPL dalam 2 Minggu',
-                            text: 'Saat ini tidak ada data ibu hamil yang perkiraan lahirnya dalam 14 hari ke depan.',
+                            title: 'Tidak Ada HPL Siaga 1 (H-1 / Lewat HPL)',
+                            text: 'Saat ini tidak ada data ibu hamil dengan HPL Hari Ini, Besok (H-1), atau yang telah lewat HPL.',
                             icon: 'info',
                             confirmButtonText: 'Tutup',
                             confirmButtonColor: '#ec4899',
@@ -1067,12 +1127,18 @@
                             ? '<span class="px-2 py-0.5 bg-rose-100 text-rose-700 text-[10px] font-bold rounded-full whitespace-nowrap">RISTI</span>'
                             : '<span class="px-2 py-0.5 bg-emerald-100 text-emerald-700 text-[10px] font-semibold rounded-full whitespace-nowrap">Normal</span>';
 
+                        const status = this.getHplStatus(p.hpl, p.tanggal_bersalin);
+                        const statusBadge = status ? `<span class="px-2 py-0.5 rounded text-[10px] ${status.color}">${status.label}</span>` : '';
+
                         patientListHtml += `
                             <div class="p-2.5 sm:p-3 bg-rose-50/80 border border-rose-200 rounded-xl sm:rounded-2xl flex items-start sm:items-center justify-between gap-2 text-xs">
                                 <div class="min-w-0 flex-1">
                                     <div class="font-bold text-slate-800 text-xs sm:text-sm break-words">${idx + 1}. ${p.nama_lengkap} (${p.umur || '-'} th)</div>
                                     <div class="text-slate-500 text-[10px] sm:text-[11px] mt-0.5 break-words">NIK: ${p.nik || '-'} | Kel: ${p.kelurahan || '-'}, ${p.kabupaten || '-'}</div>
-                                    <div class="text-rose-700 font-semibold text-[10px] sm:text-[11px] mt-0.5">HPL: ${p.hpl ? p.hpl.substring(0, 10) : '-'}</div>
+                                    <div class="text-rose-700 font-semibold text-[10px] sm:text-[11px] mt-0.5 flex items-center gap-1.5 flex-wrap">
+                                        <span>HPL: ${p.hpl ? p.hpl.substring(0, 10) : '-'}</span>
+                                        ${statusBadge}
+                                    </div>
                                 </div>
                                 <div class="text-right shrink-0 mt-0.5 sm:mt-0">
                                     ${ristiBadge}
@@ -1085,12 +1151,12 @@
                     Swal.fire({
                         title: `<span class="text-rose-600 flex items-center justify-center gap-1.5 sm:gap-2 text-base sm:text-xl font-bold leading-snug">
                             <span class="animate-ping inline-flex h-2.5 w-2.5 sm:h-3 sm:w-3 rounded-full bg-rose-500 opacity-75 shrink-0"></span>
-                            <span>PERINGATAN H-14 PERSALINAN!</span>
+                            <span>🚨 PERINGATAN SIAGA PERSALINAN (H-1)!</span>
                         </span>`,
                         html: `
                             <div class="text-xs sm:text-sm text-slate-600">
-                                <p class="font-bold text-slate-800">Ditemukan <span class="text-rose-600 font-extrabold text-sm sm:text-base">${count} Ibu Hamil</span> dengan Hari Perkiraan Lahir (HPL) dalam <u>2 MINGGU</u> ke depan!</p>
-                                <p class="text-[11px] sm:text-xs text-slate-500 mt-1">Sirine siaga diaktifkan. Klik di mana saja pada layar jika browser Anda meminta interaksi suara untuk memutar sirine.</p>
+                                <p class="font-bold text-slate-800">Ditemukan <span class="text-rose-600 font-extrabold text-sm sm:text-base">${count} Ibu Hamil</span> dengan HPL <u>Hari Ini / Besok (H-1)</u> atau <u>Lewat HPL</u>!</p>
+                                <p class="text-[11px] sm:text-xs text-slate-500 mt-1">Sirine siaga diaktifkan. Segera hubungi keluarga & bidan desa untuk persiapan persalinan.</p>
                                 ${patientListHtml}
                             </div>
                         `,

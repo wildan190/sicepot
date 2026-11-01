@@ -14,15 +14,14 @@
                             <div>
                                 <div class="flex items-center gap-2">
                                     <span
-                                        class="px-2.5 py-0.5 rounded-full bg-white text-rose-700 text-xs font-black uppercase tracking-wider">Perhatian
-                                        Khusus H-14</span>
+                                        class="px-2.5 py-0.5 rounded-full bg-white text-rose-700 text-xs font-black uppercase tracking-wider">Siaga 1 Persalinan (H-1)</span>
                                     <span class="text-xs text-rose-100 font-medium"
-                                        x-text="imminentDeliveries.length + ' Ibu Hamil HPL dalam 2 Minggu'"></span>
+                                        x-text="imminentDeliveries.length + ' Ibu Hamil Siaga Hari Ini / Besok'"></span>
                                 </div>
                                 <h3 class="text-base sm:text-lg font-extrabold mt-0.5 tracking-tight">Peringatan Hari
-                                    Perkiraan Lahir (HPL) Tinggal 2 Minggu!</h3>
-                                <p class="text-xs text-rose-100 mt-0.5">Segera lakukan persiapan pertolongan persalinan,
-                                    transportasi rujukan, dan kesiapan donor darah (P4K).</p>
+                                    Perkiraan Lahir (HPL) Hari Ini & Besok!</h3>
+                                <p class="text-xs text-rose-100 mt-0.5">Waktu persalinan sangat dekat. Segera siapkan tim penolong,
+                                    tempat persalinan, transportasi rujukan, dan kesiapan donor darah.</p>
                             </div>
                         </div>
                         <div class="flex items-center gap-2 w-full md:w-auto justify-end">

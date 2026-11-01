@@ -109,8 +109,9 @@ class DashboardService
             $query->whereRaw('LOWER(TRIM(kecamatan)) = ?', [strtolower(trim($kecamatan))]);
         }
 
-        $today    = now()->toDateString();
-        $in14Days = now()->addDays(14)->toDateString();
+        $today         = now()->toDateString();
+        $tomorrow      = now()->addDay()->toDateString();
+        $thirtyDaysAgo = now()->subDays(30)->toDateString();
 
         $rows = $query
             ->select(
@@ -126,8 +127,8 @@ class DashboardService
                 DB::raw("sum(case when tekanan_darah_sistolik is not null and tekanan_darah_sistolik >= 140 then 1 else 0 end) as total_hiper"),
                 // KRST (highest risk - rujuk RS PONEK)
                 DB::raw("sum(case when kategori_poedji_rochjati = 'KRST' then 1 else 0 end) as total_krst"),
-                // Imminent delivery: HPL within next 7 days and not yet delivered
-                DB::raw("sum(case when hpl is not null and hpl <= '{$in14Days}' and hpl >= '{$today}' and tanggal_bersalin is null then 1 else 0 end) as total_imminent"),
+                // Imminent delivery: HPL H-1 / hari H / lewat HPL dan belum bersalin
+                DB::raw("sum(case when hpl is not null and hpl <= '{$tomorrow}' and hpl >= '{$thirtyDaysAgo}' and tanggal_bersalin is null then 1 else 0 end) as total_imminent"),
                 // HIV co-infection
                 DB::raw("sum(case when hiv_status like '%positif%' then 1 else 0 end) as total_hiv")
             )
@@ -383,16 +384,19 @@ class DashboardService
 
         $patients = (clone $base)->orderByDesc('id')->paginate(15)->withQueryString();
 
-        // H-14: Ibu hamil dengan HPL dalam 14 hari ke depan (belum bersalin)
-        $today14     = now()->toDateString();
-        $in14DaysStr = now()->addDays(14)->toDateString();
+        // H-1 & Siaga Persalinan: HPL besok, hari ini, atau lewat HPL (belum bersalin)
+        $today         = now()->toDateString();
+        $tomorrow      = now()->addDay()->toDateString();
+        $thirtyDaysAgo = now()->subDays(30)->toDateString();
+
         $imminentDeliveries = AncPatient::whereNotNull('hpl')
             ->whereNull('tanggal_bersalin')
-            ->whereDate('hpl', '>=', $today14)
-            ->whereDate('hpl', '<=', $in14DaysStr)
+            ->whereDate('hpl', '<=', $tomorrow)
+            ->whereDate('hpl', '>=', $thirtyDaysAgo)
             ->orderBy('hpl')
             ->get(['id', 'nama_lengkap', 'nik', 'no_rekam_medis', 'umur', 'hpl', 'hpht',
-                   'kabupaten', 'kelurahan', 'status_risti', 'faktor_risiko', 'fasyankes_name']);
+                   'kabupaten', 'kelurahan', 'status_risti', 'faktor_risiko', 'fasyankes_name',
+                   'no_telepon', 'nama_suami']);
 
         // H-30: Ibu hamil dengan HPL dalam 2–30 hari ke depan (belum bersalin)
         $in2Days  = now()->addDays(2)->toDateString();
@@ -446,7 +450,8 @@ class DashboardService
                 'umur_muda'       => $umurMuda,
                 'umur_produktif'  => $umurProduktif,
                 'umur_risti'      => $umurRisti,
-                'total_h1'        => $upcomingDeliveries->count(),
+                'total_h1'        => $imminentDeliveries->count(),
+                'total_h30'       => $upcomingDeliveries->count(),
                 'total_krr'       => $totalKrr,
                 'total_krt'       => $totalKrt,
                 'total_krst'      => $totalKrst,
