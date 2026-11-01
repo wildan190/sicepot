@@ -32,11 +32,12 @@ class DashboardController extends Controller
         $stats = $this->service->getStatsData($request);
 
         return view('stunting.dashboard', array_merge($stats, [
-            'desaList'      => $desaList,
-            'yearList'      => $yearList,
-            'selectedDesa'  => $request->input('desa', ''),
-            'selectedBulan' => $request->input('bulan'),
-            'selectedTahun' => $request->input('tahun'),
+            'desaList'       => $desaList,
+            'yearList'       => $yearList,
+            'selectedDesa'   => $request->input('desa', ''),
+            'selectedBulan'  => $request->input('bulan'),
+            'selectedTahun'  => $request->input('tahun'),
+            'selectedSearch' => $request->input('search', ''),
         ]));
     }
 

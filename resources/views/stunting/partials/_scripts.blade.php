@@ -6,7 +6,7 @@
                     selectedDesa: '{{ $selectedDesa }}',
                     selectedBulan: '{{ $selectedBulan }}',
                     selectedTahun: '{{ $selectedTahun }}',
-                    searchQuery: '',
+                    searchQuery: @json($selectedSearch ?? ''),
                     stats: {},
 
                     // WhatsApp Direct Reminder (wa.me)
@@ -244,7 +244,7 @@
                                 maintainAspectRatio: false,
                                 scales: {
                                     x: { stacked: true, grid: { display: false } },
-                                    y: { stacked: true, ticks: { stepSize: 1 } }
+                                    y: { stacked: true, ticks: { precision: 0 } }
                                 },
                                 plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11 } } } }
                             }
@@ -374,7 +374,7 @@
                                         },
                                         y: {
                                             beginAtZero: true,
-                                            ticks: { stepSize: 1, font: { size: 11 } },
+                                            ticks: { precision: 0, font: { size: 11 } },
                                             title: { display: true, text: 'Jumlah Balita', font: { size: 11, weight: 'bold' } }
                                         }
                                     },

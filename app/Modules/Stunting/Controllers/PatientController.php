@@ -40,6 +40,17 @@ class PatientController extends Controller
             'bbtb_kategori'       => 'nullable|string|max:50',
             'bbtb_zscore'         => 'nullable|numeric',
             'naik_berat_badan'    => 'nullable|in:N,T,Y',
+            'prov'                => 'nullable|string|max:100',
+            'kab_kota'            => 'nullable|string|max:100',
+            'kec'                 => 'nullable|string|max:100',
+            'jml_vit_a'           => 'nullable|integer|min:0|max:10',
+            'kpsp'                => 'nullable|string|max:50',
+            'kia'                 => 'nullable|string|max:50',
+            'kelas_ibu'           => 'nullable|string|max:50',
+            'mbg'                 => 'nullable|string|max:50',
+            'test_mantoux'        => 'nullable|string|max:20',
+            'test_hemoglobin'     => 'nullable|string|max:20',
+            'konsul_spa'          => 'nullable|string|max:20',
         ]);
 
         // Upsert strategy: jika NIK ada, cocokkan dengan NIK. Jika tidak, gunakan nama + desa.
@@ -110,6 +121,17 @@ class PatientController extends Controller
             'bbtb_kategori'       => 'nullable|string|max:50',
             'bbtb_zscore'         => 'nullable|numeric',
             'naik_berat_badan'    => 'nullable|in:N,T,Y',
+            'prov'                => 'nullable|string|max:100',
+            'kab_kota'            => 'nullable|string|max:100',
+            'kec'                 => 'nullable|string|max:100',
+            'jml_vit_a'           => 'nullable|integer|min:0|max:10',
+            'kpsp'                => 'nullable|string|max:50',
+            'kia'                 => 'nullable|string|max:50',
+            'kelas_ibu'           => 'nullable|string|max:50',
+            'mbg'                 => 'nullable|string|max:50',
+            'test_mantoux'        => 'nullable|string|max:20',
+            'test_hemoglobin'     => 'nullable|string|max:20',
+            'konsul_spa'          => 'nullable|string|max:20',
         ]);
 
         $patient->update($validated);

@@ -15,6 +15,7 @@ class GeminiDashboardService
     protected array $allowedTables = [
         'anc_patients',
         'tb_patients',
+        'stunting_patients',
     ];
 
     protected array $tableSchemas = [
@@ -40,6 +41,14 @@ class GeminiDashboardService
             'status_hiv', 'riwayat_dm', 'hasil_tcm', 'hasil_mikroskopis',
             'hasil_diagnosis', 'hasil_akhir_pengobatan',
             'fasyankes_name', 'created_at',
+        ],
+        'stunting_patients' => [
+            'id', 'nik', 'nama', 'jenis_kelamin', 'tanggal_lahir', 'bb_lahir', 'tb_lahir',
+            'nama_ortu', 'prov', 'kab_kota', 'kec', 'puskesmas', 'desa', 'posyandu',
+            'rt', 'rw', 'alamat', 'usia_saat_ukur', 'tanggal_pengukuran', 'berat', 'tinggi',
+            'cara_ukur', 'lila', 'bbu_kategori', 'bbu_zscore', 'tbu_kategori', 'tbu_zscore',
+            'bbtb_kategori', 'bbtb_zscore', 'naik_berat_badan', 'jml_vit_a', 'kpsp', 'kia',
+            'kelas_ibu', 'mbg', 'test_mantoux', 'test_hemoglobin', 'konsul_spa', 'created_at',
         ],
     ];
 
@@ -139,6 +148,16 @@ PANDUAN NILAI KOLOM DALAM DATABASE:
    - `lokasi_anatomi`: 'TBC Paru', 'TBC Ekstra Paru'
    - `kecamatan`, `kelurahan`, `kabupaten`: Wilayah pasien
 
+3. Tabel `stunting_patients` (Data Pemantauan Balita Stunting e-PPGBM):
+   - `tbu_kategori`: 'Normal', 'Pendek', 'Sangat Pendek', 'Tinggi' (indikator utama stunting: Pendek & Sangat Pendek)
+   - `bbu_kategori`: 'Gizi Baik', 'Kurang', 'Sangat Kurang', 'Risiko Lebih'
+   - `bbtb_kategori`: 'Gizi Baik', 'Gizi Kurang', 'Gizi Buruk', 'Berisiko Gizi Lebih', 'Gizi Lebih', 'Obesitas' (indikator wasting)
+   - `jenis_kelamin`: 'L' (Laki-laki), 'P' (Perempuan)
+   - `desa`, `posyandu`, `kec`, `puskesmas`: Wilayah balita
+   - `naik_berat_badan`: 'N' (Naik), 'T' (Tidak naik / turun), 'Y' (Pertama kali ukur)
+   - `kpsp`: 'Sesuai', 'Meragukan', 'Penyimpangan'
+   - `test_mantoux`, `test_hemoglobin`, `konsul_spa`: 'Sudah', 'Belum'
+
 TUGAS:
 Berdasarkan permintaan user, hasilkan konfigurasi dashboard dalam format JSON STRICT berikut:
 {
@@ -166,7 +185,7 @@ Berdasarkan permintaan user, hasilkan konfigurasi dashboard dalam format JSON ST
 }
 
 ATURAN QUERY SQL (WAJIB DIIKUTI):
-- HANYA gunakan tabel: `anc_patients` dan/atau `tb_patients`. DILARANG menggunakan tabel `tbc_patients`!
+- HANYA gunakan tabel: `anc_patients`, `tb_patients`, dan/atau `stunting_patients`. DILARANG menggunakan tabel `tbc_patients`!
 - Hanya boleh perintah SELECT. DILARANG INSERT, UPDATE, DELETE, DROP, ALTER, CREATE, TRUNCATE.
 - Untuk KPI: query harus menghasilkan tepat 1 baris dengan kolom bernama `value` (contoh: `SELECT COUNT(*) as value FROM tb_patients WHERE hasil_diagnosis = 'Terkonfirmasi TBC'`).
 - Untuk Chart: query harus menghasilkan 2 kolom yaitu `label` dan `value` (contoh: `SELECT kelurahan as label, COUNT(*) as value FROM tb_patients WHERE kelurahan IS NOT NULL AND kelurahan != '' GROUP BY kelurahan ORDER BY value DESC LIMIT 10`).
