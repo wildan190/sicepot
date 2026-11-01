@@ -28,7 +28,7 @@
                             <tr>
                                 <th class="px-3 py-3 text-left text-slate-500 font-semibold">No</th>
                                 <th class="px-3 py-3 text-left text-slate-500 font-semibold">Nama</th>
-                                <th class="px-3 py-3 text-left text-slate-500 font-semibold">JK</th>
+                                <th class="px-3 py-3 text-center text-slate-500 font-semibold">JK</th>
                                 <th class="px-3 py-3 text-left text-slate-500 font-semibold">Tgl Lahir</th>
                                 <th class="px-3 py-3 text-left text-slate-500 font-semibold">Desa</th>
                                 <th class="px-3 py-3 text-left text-slate-500 font-semibold">Posyandu</th>
@@ -53,6 +53,13 @@
                                         x-text="((patientsData.current_page || 1) - 1) * (patientsData.per_page || 15) + i + 1">
                                     </td>
                                     <td class="px-3 py-2.5 text-slate-600 font-medium">
+                                        <div class="font-semibold text-slate-800" x-text="p.nama || '-'"></div>
+                                        <div class="text-[10px] text-slate-400" x-text="p.nik ? 'NIK: ' + p.nik : ''"></div>
+                                        <template x-if="p.nama_ortu">
+                                            <div class="text-[10px] text-slate-400" x-text="'Ortu: ' + p.nama_ortu"></div>
+                                        </template>
+                                    </td>
+                                    <td class="px-3 py-2.5 text-center">
                                         <template x-if="p.jenis_kelamin === 'L'">
                                             <span
                                                 class="inline-flex items-center px-1.5 py-0.5 rounded text-[11px] font-semibold bg-blue-50 text-blue-700 border border-blue-200"
