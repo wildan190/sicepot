@@ -78,11 +78,11 @@
                                         <td class="px-4 py-3 whitespace-nowrap">
                                             <div class="font-medium text-slate-800"
                                                 x-text="p.hpl ? p.hpl.substring(0, 10) : '-'"></div>
-                                            <template x-if="isDueWithin14Days(p.hpl)">
+                                            <template x-if="getHplStatus(p.hpl, p.tanggal_bersalin)">
                                                 <span
-                                                    class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-black bg-rose-100 text-rose-700 animate-pulse border border-rose-300 mt-0.5">
-                                                    <span class="w-1.5 h-1.5 rounded-full bg-rose-600"></span>
-                                                    H-14!
+                                                    :class="getHplStatus(p.hpl, p.tanggal_bersalin).color"
+                                                    class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-black mt-0.5"
+                                                    x-text="getHplStatus(p.hpl, p.tanggal_bersalin).label">
                                                 </span>
                                             </template>
                                         </td>
