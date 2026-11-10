@@ -384,15 +384,15 @@ class DashboardService
 
         $patients = (clone $base)->orderByDesc('id')->paginate(15)->withQueryString();
 
-        // H-1 & Siaga Persalinan: HPL besok, hari ini, atau lewat HPL (belum bersalin)
+        // H-1 & Siaga Persalinan: HPL hari ini atau besok (belum bersalin).
+        // Ibu yang sudah lewat HPL dikeluarkan dari alarm meski belum lapor bersalin.
         $today         = now()->toDateString();
         $tomorrow      = now()->addDay()->toDateString();
-        $thirtyDaysAgo = now()->subDays(30)->toDateString();
 
         $imminentDeliveries = AncPatient::whereNotNull('hpl')
             ->whereNull('tanggal_bersalin')
             ->whereDate('hpl', '<=', $tomorrow)
-            ->whereDate('hpl', '>=', $thirtyDaysAgo)
+            ->whereDate('hpl', '>=', $today)
             ->orderBy('hpl')
             ->get(['id', 'nama_lengkap', 'nik', 'no_rekam_medis', 'umur', 'hpl', 'hpht',
                    'kabupaten', 'kelurahan', 'status_risti', 'faktor_risiko', 'fasyankes_name',

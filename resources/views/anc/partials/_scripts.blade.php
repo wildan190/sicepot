@@ -1004,7 +1004,7 @@
                         html: `
                             <div class="text-left text-xs sm:text-sm space-y-2 mt-2">
                                 <p class="text-slate-600">Audio sirine siaga sedang berbunyi dari berkas: <br><code class="text-rose-600 font-bold bg-rose-50 px-2 py-0.5 rounded text-[11px] sm:text-xs break-all">public/assets/sounds/sirine.mp3</code></p>
-                                <p class="text-slate-500 text-[11px] sm:text-xs">Sirine ini akan otomatis berbunyi bersama pop-up peringatan saat sistem mendeteksi ada ibu hamil yang berada pada <strong>Siaga 1 Persalinan (H-1 / Hari Ini / Lewat HPL)</strong>.</p>
+                                <p class="text-slate-500 text-[11px] sm:text-xs">Sirine ini akan otomatis berbunyi bersama pop-up peringatan saat sistem mendeteksi ada ibu hamil yang berada pada <strong>Siaga 1 Persalinan (H-1 / Hari Ini / Besok)</strong>.</p>
                             </div>
                         `,
                         icon: 'warning',
@@ -1104,8 +1104,8 @@
                     const count = this.imminentDeliveries ? this.imminentDeliveries.length : 0;
                     if (count === 0) {
                         Swal.fire({
-                            title: 'Tidak Ada HPL Siaga 1 (H-1 / Lewat HPL)',
-                            text: 'Saat ini tidak ada data ibu hamil dengan HPL Hari Ini, Besok (H-1), atau yang telah lewat HPL.',
+                            title: 'Tidak Ada HPL Siaga 1 (H-1)',
+                            text: 'Saat ini tidak ada data ibu hamil dengan HPL Hari Ini atau Besok (H-1).',
                             icon: 'info',
                             confirmButtonText: 'Tutup',
                             confirmButtonColor: '#ec4899',
@@ -1155,7 +1155,7 @@
                         </span>`,
                         html: `
                             <div class="text-xs sm:text-sm text-slate-600">
-                                <p class="font-bold text-slate-800">Ditemukan <span class="text-rose-600 font-extrabold text-sm sm:text-base">${count} Ibu Hamil</span> dengan HPL <u>Hari Ini / Besok (H-1)</u> atau <u>Lewat HPL</u>!</p>
+                                <p class="font-bold text-slate-800">Ditemukan <span class="text-rose-600 font-extrabold text-sm sm:text-base">${count} Ibu Hamil</span> dengan HPL <u>Hari Ini / Besok (H-1)</u>!</p>
                                 <p class="text-[11px] sm:text-xs text-slate-500 mt-1">Sirine siaga diaktifkan. Segera hubungi keluarga & bidan desa untuk persiapan persalinan.</p>
                                 ${patientListHtml}
                             </div>
