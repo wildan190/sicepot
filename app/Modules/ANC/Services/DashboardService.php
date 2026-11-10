@@ -242,12 +242,14 @@ class DashboardService
         if (!empty($kelurahan)) { \App\Services\RegionHelper::filterKelurahan($base, $kelurahan); }
         if (!empty($bulan)) {
             $base->where(function ($q) use ($bulan) {
-                // Prioritas: bulan_kunjungan dari kolom Excel, fallback ke bulan umum
+                // Prioritas: bulan_kunjungan dari kolom Excel, fallback ke kolom bulan umum.
+                // Record tanpa bulan_kunjungan hanya lolos bila kolom bulan umum cocok.
                 $q->where('bulan_kunjungan', $bulan)
                   ->orWhere(function ($q2) use ($bulan) {
-                      $q2->whereNull('bulan_kunjungan')
-                         ->orWhere('bulan_kunjungan', '')
-                         ->where('bulan', $bulan);
+                      $q2->where(function ($q3) {
+                          $q3->whereNull('bulan_kunjungan')
+                             ->orWhere('bulan_kunjungan', '');
+                      })->where('bulan', $bulan);
                   });
             });
         }
