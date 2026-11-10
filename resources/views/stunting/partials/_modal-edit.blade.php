@@ -39,6 +39,11 @@
                                 <input type="text" x-model="editingPatient.nama_ortu"
                                     class="w-full px-3 py-2 text-xs border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500">
                             </div>
+                            <div class="sm:col-span-2">
+                                <label class="block font-semibold text-slate-700 mb-1">No. Telepon / WhatsApp</label>
+                                <input type="tel" x-model="editingPatient.no_telepon" placeholder="08xxxxxxxxxx"
+                                    class="w-full px-3 py-2 text-xs border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500">
+                            </div>
                         </div>
 
                         <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">

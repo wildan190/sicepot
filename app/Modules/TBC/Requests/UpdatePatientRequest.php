@@ -22,6 +22,7 @@ class UpdatePatientRequest extends FormRequest
             'kecamatan'              => 'nullable|string|max:100',
             'kelurahan'              => 'nullable|string|max:100',
             'alamat_lengkap'         => 'nullable|string',
+            'no_telepon'             => 'nullable|string|max:30',
             'status_pengobatan'      => 'nullable|string|max:100',
             'tipe_diagnosis'         => 'nullable|string|max:100',
             'lokasi_anatomi'         => 'nullable|string|max:100',

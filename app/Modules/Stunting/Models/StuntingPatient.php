@@ -12,7 +12,7 @@ class StuntingPatient extends Model
         'nik', 'nama', 'jenis_kelamin',
         'tanggal_lahir', 'bb_lahir', 'tb_lahir',
         'nama_ortu', 'prov', 'kab_kota', 'kec', 'puskesmas', 'desa', 'posyandu',
-        'rt', 'rw', 'alamat', 'usia_saat_ukur',
+        'rt', 'rw', 'alamat', 'no_telepon', 'usia_saat_ukur',
         'tanggal_pengukuran', 'berat', 'tinggi', 'cara_ukur', 'lila',
         'bbu_kategori', 'bbu_zscore',
         'tbu_kategori', 'tbu_zscore',

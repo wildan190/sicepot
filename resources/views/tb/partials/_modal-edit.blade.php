@@ -76,6 +76,12 @@
                                     class="w-full px-3 py-2 text-xs border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500"></textarea>
                             </div>
 
+                            <div>
+                                <label class="block font-semibold text-slate-700 mb-1">No. HP / WhatsApp</label>
+                                <input type="tel" x-model="editingPatient.no_telepon" placeholder="08xxxxxxxxxx"
+                                    class="w-full px-3 py-2 text-xs border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500">
+                            </div>
+
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                 <div>
                                     <label class="block font-semibold text-slate-700 mb-1">Hasil Diagnosis</label>

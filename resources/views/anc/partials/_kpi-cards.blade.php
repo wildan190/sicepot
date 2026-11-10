@@ -136,7 +136,7 @@
                             </span>
                         </div>
                         <span class="text-[11px] text-slate-400 mt-2"
-                            x-text="kpi.total_h1 > 0 ? 'HPL Besok / Hari Ini / Lewat HPL' : 'Tidak ada pasien H-1'"></span>
+                            x-text="kpi.total_h1 > 0 ? 'HPL Hari Ini / Besok' : 'Tidak ada pasien H-1'"></span>
                     </div>
 
                 </div>
