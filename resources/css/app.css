@@ -1,3 +1,279 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/*
+|--------------------------------------------------------------------------
+| Ant Design Layer
+|--------------------------------------------------------------------------
+| Kelas utilitas `.ant-*` meniru design system Ant Design v5 memakai Tailwind.
+| Dipakai bersama oleh seluruh modul (ANC, TBC, Stunting, Settings, dsb.)
+| agar tampilan seragam dan tidak bergantung pada warna dekoratif.
+*/
+
+@layer base {
+    [x-cloak] {
+        display: none !important;
+    }
+
+    html {
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+        @apply bg-ant-layout text-ant-text antialiased;
+        font-size: 14px;
+        line-height: 1.5715;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        @apply text-ant-title;
+    }
+
+    /* Scrollbar tipis bergaya Ant Design */
+    ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        @apply bg-ant-disabled rounded-full;
+    }
+
+    ::-webkit-scrollbar-track {
+        @apply bg-transparent;
+    }
+}
+
+@layer components {
+    /* ── Layout ────────────────────────────────────────────────────────── */
+    .ant-layout {
+        @apply min-h-screen bg-ant-layout;
+    }
+
+    .ant-content {
+        @apply px-4 py-6 sm:px-6 lg:px-8;
+    }
+
+    /* ── Card ──────────────────────────────────────────────────────────── */
+    .ant-card {
+        @apply bg-ant-container rounded-ant-lg border border-ant-split shadow-ant-card;
+    }
+
+    .ant-card-head {
+        @apply flex items-center justify-between gap-3 px-5 py-3.5 border-b border-ant-split;
+    }
+
+    .ant-card-title {
+        @apply text-[15px] font-semibold text-ant-title;
+    }
+
+    .ant-card-extra {
+        @apply text-xs text-ant-secondary;
+    }
+
+    .ant-card-body {
+        @apply p-5;
+    }
+
+    /* ── Typography ───────────────────────────────────────────────────── */
+    .ant-page-title {
+        @apply text-[20px] font-semibold text-ant-title leading-snug;
+    }
+
+    .ant-page-subtitle {
+        @apply text-[13px] text-ant-secondary mt-1;
+    }
+
+    .ant-section-title {
+        @apply text-[15px] font-semibold text-ant-title;
+    }
+
+    .ant-text-secondary {
+        @apply text-[13px] text-ant-secondary;
+    }
+
+    /* ── Button ───────────────────────────────────────────────────────── */
+    .ant-btn {
+        @apply inline-flex items-center justify-center gap-1.5 h-8 px-3 rounded-ant border text-[14px]
+            font-normal whitespace-nowrap transition-all duration-150 cursor-pointer select-none
+            focus:outline-none disabled:cursor-not-allowed disabled:opacity-50;
+    }
+
+    .ant-btn-primary {
+        @apply bg-primary border-primary text-white hover:bg-primary-400 hover:border-primary-400 active:bg-primary-600;
+    }
+
+    .ant-btn-default {
+        @apply bg-white border-ant-border text-ant-text hover:border-primary hover:text-primary active:border-primary-600 active:text-primary-600;
+    }
+
+    .ant-btn-dashed {
+        @apply bg-white border border-dashed border-ant-border text-ant-text hover:border-primary hover:text-primary;
+    }
+
+    .ant-btn-text {
+        @apply bg-transparent border-transparent text-ant-text hover:bg-ant-split;
+    }
+
+    .ant-btn-dangerous {
+        @apply bg-danger border-danger text-white hover:bg-danger-300 hover:border-danger-300;
+    }
+
+    .ant-btn-success {
+        @apply bg-success border-success text-white hover:bg-success-400 hover:border-success-400;
+    }
+
+    .ant-btn-sm {
+        @apply h-6 px-2 text-[12px] rounded-ant-sm;
+    }
+
+    .ant-btn-lg {
+        @apply h-10 px-4 text-[16px];
+    }
+
+    .ant-btn-block {
+        @apply w-full;
+    }
+
+    /* ── Form Control ─────────────────────────────────────────────────── */
+    .ant-input,
+    .ant-select {
+        /* Tinggi 32px dicapai dari padding + line-height, bukan `h-8`, agar teks di dalam
+           kontrol bawaan browser (terutama <select>) tidak terpotong setengah. */
+        @apply block w-full px-3 py-[5px] rounded-ant border border-ant-border bg-white text-[14px] leading-5
+            text-ant-title transition-all duration-150
+            placeholder:text-ant-disabled
+            focus:border-primary focus:ring-0 focus:shadow-ant-focus focus:outline-none;
+    }
+
+    /* Beri ruang untuk ikon chevron bawaan <select> agar caption tidak tertimpa */
+    .ant-select {
+        @apply pr-8;
+    }
+
+    .ant-input-sm {
+        @apply px-2 py-px text-[12px] leading-5;
+    }
+
+    .ant-label {
+        @apply block text-[14px] text-ant-text mb-1.5;
+    }
+
+    .ant-label-required::before {
+        content: '*';
+        @apply text-danger mr-1;
+    }
+
+    /* ── Tag / Badge ──────────────────────────────────────────────────── */
+    .ant-tag {
+        @apply inline-flex items-center gap-1 h-5 px-1.5 rounded-ant-sm border text-[12px]
+            leading-none font-normal whitespace-nowrap;
+    }
+
+    .ant-tag-gray {
+        @apply bg-ant-split border-ant-split text-ant-text;
+    }
+
+    .ant-tag-blue {
+        @apply bg-primary-50 border-primary-100 text-primary-600;
+    }
+
+    .ant-tag-green {
+        @apply bg-success-50 border-success-100 text-success-600;
+    }
+
+    .ant-tag-gold {
+        @apply bg-warning-50 border-warning-100 text-warning-600;
+    }
+
+    .ant-tag-red {
+        @apply bg-danger-50 border-danger-100 text-danger-600;
+    }
+
+    .ant-tag-purple {
+        @apply bg-[#f9f0ff] border-[#efdbff] text-[#531dab];
+    }
+
+    /* ── Table ────────────────────────────────────────────────────────── */
+    .ant-table {
+        @apply w-full text-left text-[13px] border-separate border-spacing-0;
+    }
+
+    .ant-table thead th {
+        @apply bg-[#fafafa] px-4 py-2.5 text-[13px] font-semibold text-ant-title
+            border-b border-ant-split whitespace-nowrap;
+    }
+
+    .ant-table tbody td {
+        @apply px-4 py-3 border-b border-ant-split align-top text-ant-text;
+    }
+
+    .ant-table tbody tr:hover td {
+        @apply bg-[#fafafa];
+    }
+
+    /* ── Alert ────────────────────────────────────────────────────────── */
+    .ant-alert {
+        @apply flex items-start gap-2.5 px-4 py-2.5 rounded-ant-lg border text-[13px];
+    }
+
+    .ant-alert-info {
+        @apply bg-primary-50 border-primary-100 text-ant-text;
+    }
+
+    .ant-alert-success {
+        @apply bg-success-50 border-success-100 text-ant-text;
+    }
+
+    .ant-alert-warning {
+        @apply bg-warning-50 border-warning-100 text-ant-text;
+    }
+
+    .ant-alert-error {
+        @apply bg-danger-50 border-danger-100 text-ant-text;
+    }
+
+    /* ── Statistic ────────────────────────────────────────────────────── */
+    .ant-statistic-title {
+        @apply text-[13px] text-ant-secondary;
+    }
+
+    .ant-statistic-content {
+        @apply text-[22px] font-semibold text-ant-title leading-tight;
+    }
+
+    /* ── Menu (Sider) ─────────────────────────────────────────────────── */
+    .ant-menu-item {
+        @apply flex items-center gap-2.5 h-10 px-3 rounded-ant text-[14px] text-ant-text
+            transition-colors duration-150 hover:bg-ant-split;
+    }
+
+    .ant-menu-item-selected {
+        @apply bg-primary-50 text-primary font-medium hover:bg-primary-50;
+    }
+
+    /* ── Dropdown ─────────────────────────────────────────────────────── */
+    .ant-dropdown {
+        @apply min-w-[10rem] rounded-ant-lg border border-ant-split bg-white py-1 shadow-ant-dropdown;
+    }
+
+    .ant-dropdown-item {
+        @apply flex items-center gap-2 px-3 py-1.5 text-[14px] text-ant-text
+            transition-colors duration-150 hover:bg-ant-split;
+    }
+
+    /* ── Breadcrumb ───────────────────────────────────────────────────── */
+    .ant-breadcrumb {
+        @apply flex items-center gap-2 text-[13px] text-ant-secondary;
+    }
+
+    .ant-breadcrumb a {
+        @apply transition-colors hover:text-primary;
+    }
+}

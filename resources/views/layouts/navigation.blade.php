@@ -1,173 +1,110 @@
-<nav x-data="{ open: false }" class="bg-white border-b border-gray-100">
-    <!-- Primary Navigation Menu -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between h-16">
-            <div class="flex">
-                <!-- Logo & Brand -->
-                <div class="shrink-0 flex items-center">
-                    <a href="{{ route('dashboard') }}" class="flex items-center gap-3 group">
-                        <img src="{{ asset('images/logo.png') }}" alt="SICEPOT Logo"
-                            class="w-10 h-10 rounded-xl object-cover shadow-sm group-hover:scale-105 transition-transform">
-                        <div class="flex flex-col">
-                            <span
-                                class="font-extrabold text-lg text-slate-800 tracking-tight leading-none group-hover:text-indigo-600 transition-colors">SICEPOT</span>
-                            <span class="text-[10px] text-slate-500 font-semibold tracking-wide">Sistem Cepat Post &
-                                Tracking</span>
-                        </div>
-                    </a>
-                </div>
+@php
+    use Illuminate\Support\Facades\Auth;
 
-                <!-- Navigation Links -->
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard') || request()->routeIs('tb.*')">
-                        {{ __('Dashboard TBC') }}
-                    </x-nav-link>
-                    <x-nav-link :href="route('anc.dashboard')" :active="request()->routeIs('anc.*')">
-                        {{ __('Dashboard Ibu Hamil') }}
-                    </x-nav-link>
-                    <x-nav-link :href="route('stunting.dashboard')" :active="request()->routeIs('stunting.*')">
-                        {{ __('Dashboard Stunting') }}
-                    </x-nav-link>
-                    <x-nav-link :href="route('ai.dashboard')" :active="request()->routeIs('ai.*')">
-                        <span class="flex items-center gap-1.5">
-                            <span>AI Dashboard</span>
-                            <span class="px-1.5 py-0.5 bg-indigo-100 text-indigo-600 text-[10px] font-black rounded-md leading-none">✨ AI</span>
-                        </span>
-                    </x-nav-link>
-                    @role('Admin')
-                    <x-nav-link :href="route('settings.index')" :active="request()->routeIs('settings.*')">
-                        {{ __('Pengaturan') }}
-                    </x-nav-link>
-                    @endrole
-                </div>
+    $isAdmin = Auth::user()?->hasRole('Admin');
+
+    $menu = [
+        [
+            'label' => 'Dashboard TBC',
+            'href' => route('dashboard'),
+            'active' => request()->routeIs('dashboard') || request()->routeIs('tb.*'),
+            'icon' => 'M4 5a1 1 0 011-1h5v16H5a1 1 0 01-1-1V5zm10-1h5a1 1 0 011 1v6h-6V4zm0 9h6v6a1 1 0 01-1 1h-5v-7z',
+        ],
+        [
+            'label' => 'Dashboard Ibu Hamil',
+            'href' => route('anc.dashboard'),
+            'active' => request()->routeIs('anc.*'),
+            'icon' => 'M12 20.5s-7.5-4.7-7.5-10A4.5 4.5 0 0112 7.6a4.5 4.5 0 017.5 2.9c0 5.3-7.5 10-7.5 10z',
+        ],
+        [
+            'label' => 'Dashboard Stunting',
+            'href' => route('stunting.dashboard'),
+            'active' => request()->routeIs('stunting.*'),
+            'icon' => 'M4 19h16M7 19v-5m5 5V8m5 11v-8',
+        ],
+        [
+            'label' => 'AI Dashboard',
+            'href' => route('ai.dashboard'),
+            'active' => request()->routeIs('ai.*'),
+            'icon' => 'M9 3h6v3a3 3 0 003 3v6a3 3 0 00-3 3v3H9v-3a3 3 0 00-3-3V9a3 3 0 003-3V3z',
+            'tag' => 'AI',
+        ],
+    ];
+
+    if ($isAdmin) {
+        $menu[] = [
+            'label' => 'Pengaturan',
+            'href' => route('settings.index'),
+            'active' => request()->routeIs('settings.*'),
+            'icon' => 'M10.3 3h3.4l.4 2.3 2 1.2 2.2-.8 1.7 3-1.7 1.6v2.3l1.7 1.6-1.7 3-2.2-.8-2 1.2-.4 2.3h-3.4l-.4-2.3-2-1.2-2.2.8-1.7-3 1.7-1.6V10l-1.7-1.6 1.7-3 2.2.8 2-1.2.4-2.3zM12 14.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5z',
+        ];
+    }
+@endphp
+
+<!-- ── Sider (Desktop) ──────────────────────────────────────────────── -->
+<aside class="hidden lg:flex fixed inset-y-0 left-0 z-40 w-56 flex-col border-r border-ant-split bg-white">
+    <div class="flex h-14 items-center gap-2.5 border-b border-ant-split px-4">
+        <img src="{{ asset('images/logo.png') }}" alt="SICEPOT" class="h-8 w-8 rounded-ant object-cover">
+        <div class="flex flex-col leading-tight">
+            <span class="text-[15px] font-semibold text-ant-title">SICEPOT</span>
+            <span class="text-[11px] text-ant-secondary">Post &amp; Tracking</span>
+        </div>
+    </div>
+
+    <nav class="flex-1 space-y-1 overflow-y-auto p-3">
+        @foreach ($menu as $item)
+            <a href="{{ $item['href'] }}" class="ant-menu-item {{ $item['active'] ? 'ant-menu-item-selected' : '' }}">
+                <svg class="h-4 w-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" d="{{ $item['icon'] }}"></path>
+                </svg>
+                <span class="flex-1 truncate">{{ $item['label'] }}</span>
+                @isset($item['tag'])
+                    <span class="ant-tag ant-tag-blue">{{ $item['tag'] }}</span>
+                @endisset
+            </a>
+        @endforeach
+    </nav>
+
+    <div class="border-t border-ant-split p-3">
+        <p class="text-[11px] leading-relaxed text-ant-secondary">
+            Sistem Cepat Post &amp; Tracking<br>Kohort KIA, TBC &amp; Stunting
+        </p>
+    </div>
+</aside>
+
+<!-- ── Sider (Mobile Drawer) ────────────────────────────────────────── -->
+<div x-show="sidebarOpen" x-cloak class="fixed inset-0 z-50 lg:hidden">
+    <div class="absolute inset-0 bg-black/45" @click="sidebarOpen = false"></div>
+
+    <aside x-show="sidebarOpen"
+        x-transition:enter="transition ease-out duration-200" x-transition:enter-start="-translate-x-full"
+        x-transition:enter-end="translate-x-0" x-transition:leave="transition ease-in duration-150"
+        x-transition:leave-start="translate-x-0" x-transition:leave-end="-translate-x-full"
+        class="absolute inset-y-0 left-0 flex w-64 flex-col bg-white">
+        <div class="flex h-14 items-center justify-between border-b border-ant-split px-4">
+            <div class="flex items-center gap-2.5">
+                <img src="{{ asset('images/logo.png') }}" alt="SICEPOT" class="h-8 w-8 rounded-ant object-cover">
+                <span class="text-[15px] font-semibold text-ant-title">SICEPOT</span>
             </div>
+            <button type="button" @click="sidebarOpen = false" class="ant-btn ant-btn-text ant-btn-sm" aria-label="Tutup menu">
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
 
-            <!-- Settings & Realtime WebSocket Status -->
-            <div class="hidden sm:flex sm:items-center sm:ms-6 gap-3">
-                <x-dropdown align="right" width="48">
-                    <x-slot name="trigger">
-                        <button
-                            class="inline-flex items-center gap-2 px-3 py-2 border border-slate-200 text-sm leading-4 font-medium rounded-xl text-gray-700 bg-white hover:text-gray-900 hover:bg-slate-50 focus:outline-none transition ease-in-out duration-150 shadow-2xs">
-                            <div class="flex items-center gap-2">
-                                <span class="font-bold">{{ Auth::user()->name }}</span>
-                                @if(Auth::user()->hasRole('Admin'))
-                                    <span class="px-2 py-0.5 bg-indigo-100 text-indigo-700 text-[10px] font-black rounded-full border border-indigo-200">Admin</span>
-                                @elseif(Auth::user()->hasRole('Guest'))
-                                    <span class="px-2 py-0.5 bg-slate-100 text-slate-600 text-[10px] font-black rounded-full border border-slate-200">Guest (Lihat Saja)</span>
-                                @endif
-                            </div>
-
-                            <div class="ms-1">
-                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg"
-                                    viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd"
-                                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                        clip-rule="evenodd" />
-                                </svg>
-                            </div>
-                        </button>
-                    </x-slot>
-
-                    <x-slot name="content">
-                        @role('Admin')
-                        <x-dropdown-link :href="route('settings.index')">
-                            {{ __('Pengaturan Sistem') }}
-                        </x-dropdown-link>
-                        @endrole
-
-                        <x-dropdown-link :href="route('profile.edit')">
-                            {{ __('Profile') }}
-                        </x-dropdown-link>
-
-                        <!-- Authentication -->
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-
-                            <x-dropdown-link :href="route('logout')" onclick="event.preventDefault();
-                                                this.closest('form').submit();">
-                                {{ __('Log Out') }}
-                            </x-dropdown-link>
-                        </form>
-                    </x-slot>
-                </x-dropdown>
-            </div>
-
-            <!-- Hamburger & Mobile Button -->
-            <div class="-me-2 flex items-center sm:hidden">
-                <button @click="open = ! open"
-                    class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out">
-                    <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                        <path :class="{'hidden': open, 'inline-flex': ! open }" class="inline-flex"
-                            stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M4 6h16M4 12h16M4 18h16" />
-                        <path :class="{'hidden': ! open, 'inline-flex': open }" class="hidden" stroke-linecap="round"
-                            stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        <nav class="flex-1 space-y-1 overflow-y-auto p-3">
+            @foreach ($menu as $item)
+                <a href="{{ $item['href'] }}" class="ant-menu-item {{ $item['active'] ? 'ant-menu-item-selected' : '' }}">
+                    <svg class="h-4 w-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" d="{{ $item['icon'] }}"></path>
                     </svg>
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Responsive Navigation Menu -->
-    <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
-        <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard') || request()->routeIs('tb.*')">
-                {{ __('Dashboard TBC') }}
-            </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('anc.dashboard')" :active="request()->routeIs('anc.*')">
-                {{ __('Dashboard Ibu Hamil') }}
-            </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('stunting.dashboard')" :active="request()->routeIs('stunting.*')">
-                {{ __('Dashboard Stunting') }}
-            </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('ai.dashboard')" :active="request()->routeIs('ai.*')">
-                <span class="flex items-center gap-2">
-                    <span>AI Dashboard</span>
-                    <span class="px-1.5 py-0.5 bg-indigo-100 text-indigo-600 text-[10px] font-black rounded-md">✨ AI</span>
-                </span>
-            </x-responsive-nav-link>
-            @role('Admin')
-            <x-responsive-nav-link :href="route('settings.index')" :active="request()->routeIs('settings.*')">
-                {{ __('Pengaturan') }}
-            </x-responsive-nav-link>
-            @endrole
-        </div>
-
-        <!-- Responsive Settings Options -->
-        <div class="pt-4 pb-1 border-t border-gray-200">
-            <div class="px-4">
-                <div class="font-medium text-base text-gray-800 flex items-center gap-2">
-                    <span>{{ Auth::user()->name }}</span>
-                    @if(Auth::user()->hasRole('Admin'))
-                        <span class="px-2 py-0.5 bg-indigo-100 text-indigo-700 text-[10px] font-black rounded-full border border-indigo-200">Admin</span>
-                    @elseif(Auth::user()->hasRole('Guest'))
-                        <span class="px-2 py-0.5 bg-slate-100 text-slate-600 text-[10px] font-black rounded-full border border-slate-200">Guest</span>
-                    @endif
-                </div>
-                <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
-            </div>
-
-            <div class="mt-3 space-y-1">
-                @role('Admin')
-                <x-responsive-nav-link :href="route('settings.index')">
-                    {{ __('Pengaturan Sistem') }}
-                </x-responsive-nav-link>
-                @endrole
-
-                <x-responsive-nav-link :href="route('profile.edit')">
-                    {{ __('Profile') }}
-                </x-responsive-nav-link>
-
-                <!-- Authentication -->
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-
-                    <x-responsive-nav-link :href="route('logout')" onclick="event.preventDefault();
-                                        this.closest('form').submit();">
-                        {{ __('Log Out') }}
-                    </x-responsive-nav-link>
-                </form>
-            </div>
-        </div>
-    </div>
-</nav>
+                    <span class="flex-1 truncate">{{ $item['label'] }}</span>
+                    @isset($item['tag'])
+                        <span class="ant-tag ant-tag-blue">{{ $item['tag'] }}</span>
+                    @endisset
+                </a>
+            @endforeach
+        </nav>
+    </aside>
+</div>

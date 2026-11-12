@@ -265,8 +265,8 @@
                     // Basic Markdown-like bold formatting to HTML
                     return text
                         .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                        .replace(/^### (.*$)/gim, '<h4 class="font-bold text-slate-800 text-sm mt-3 mb-1">$1</h4>')
-                        .replace(/^## (.*$)/gim, '<h3 class="font-black text-slate-900 text-base mt-4 mb-1">$1</h3>');
+                        .replace(/^### (.*$)/gim, '<h4 class="font-bold text-ant-title text-sm mt-3 mb-1">$1</h4>')
+                        .replace(/^## (.*$)/gim, '<h3 class="font-black text-ant-title text-base mt-4 mb-1">$1</h3>');
                 },
 
                 initDashboard() {
@@ -414,13 +414,13 @@
                                     {
                                         label: 'Total Ibu Hamil',
                                         data: this.kelurahanChartData.values,
-                                        backgroundColor: 'rgba(236, 72, 153, 0.80)',
+                                        backgroundColor: 'rgba(22, 119, 255, 0.80)',
                                         borderRadius: 6,
                                     },
                                     {
                                         label: 'Ibu Hamil Risiko',
                                         data: this.kelurahanChartData.risiko_values ?? [],
-                                        backgroundColor: 'rgba(239, 68, 68, 0.75)',
+                                        backgroundColor: 'rgba(255, 77, 79, 0.75)',
                                         borderRadius: 6,
                                     }
                                 ]
@@ -437,7 +437,7 @@
                                     }
                                 },
                                 scales: {
-                                    x: { grid: { color: '#f1f5f9' }, stacked: false },
+                                    x: { grid: { color: '#f0f0f0' }, stacked: false },
                                     y: { grid: { display: false }, stacked: false }
                                 }
                             }
@@ -456,7 +456,7 @@
                                 labels: this.ageChartData.labels,
                                 datasets: [{
                                     data: this.ageChartData.values,
-                                    backgroundColor: ['#f59e0b', '#10b981', '#f43f5e'],
+                                    backgroundColor: ['#faad14', '#52c41a', '#ff4d4f'],
                                 }]
                             },
                             options: {
@@ -483,8 +483,8 @@
                                 datasets: [{
                                     label: 'Tafsiran Persalinan (HPL)',
                                     data: this.monthlyChartData.values,
-                                    backgroundColor: 'rgba(99, 102, 241, 0.75)',
-                                    borderColor: '#6366f1',
+                                    backgroundColor: 'rgba(22, 119, 255, 0.75)',
+                                    borderColor: '#1677ff',
                                     borderRadius: 6,
                                 }]
                             },
@@ -500,7 +500,7 @@
                                     }
                                 },
                                 scales: {
-                                    y: { beginAtZero: true, grid: { color: '#f1f5f9' } },
+                                    y: { beginAtZero: true, grid: { color: '#f0f0f0' } },
                                     x: { grid: { display: false } }
                                 }
                             }
@@ -519,7 +519,7 @@
                                 labels: this.poedjiChartData.labels,
                                 datasets: [{
                                     data: this.poedjiChartData.values,
-                                    backgroundColor: ['#10b981', '#f59e0b', '#f43f5e'],
+                                    backgroundColor: ['#52c41a', '#faad14', '#ff4d4f'],
                                 }]
                             },
                             options: {
@@ -671,11 +671,11 @@
                         const riskLevel = item.risk_level || (item.total_risti > 0 ? 'high' : 'normal');
                         let color, radius;
                         if (riskLevel === 'critical') {
-                            color = '#f43f5e'; radius = 20;   // rose — KRST
+                            color = '#ff4d4f'; radius = 20;   // danger — KRST
                         } else if (riskLevel === 'high') {
-                            color = '#f59e0b'; radius = 15;   // amber — KRT
+                            color = '#faad14'; radius = 15;   // warning — KRT
                         } else {
-                            color = '#f472b6'; radius = 11;   // pink — KRR / normal
+                            color = '#4096ff'; radius = 11;   // primary — KRR / normal
                         }
 
                         // ── Mode: Heatmap halo ──
@@ -702,7 +702,7 @@
                         // ── Overlay: KEK zone ──
                         if (this.ancMapCfg.showKEK && item.total_kek > 0) {
                             ancCharts.markersLayer.addLayer(L.circle([item.lat, item.lng], {
-                                radius: 400, color: '#d97706', fillColor: '#fbbf24',
+                                radius: 400, color: '#d48806', fillColor: '#ffd666',
                                 fillOpacity: 0.2, weight: 1.5, dashArray: '3 5',
                             }));
                         }
@@ -710,7 +710,7 @@
                         // ── Overlay: Anemia zone ──
                         if (this.ancMapCfg.showAnemia && item.total_anemia > 0) {
                             ancCharts.markersLayer.addLayer(L.circle([item.lat, item.lng], {
-                                radius: 320, color: '#e11d48', fillColor: '#fb7185',
+                                radius: 320, color: '#d9363e', fillColor: '#ff7875',
                                 fillOpacity: 0.18, weight: 1.5, dashArray: '3 4',
                             }));
                         }
@@ -718,7 +718,7 @@
                         // ── Overlay: Hipertensi zone ──
                         if (this.ancMapCfg.showHiper && item.total_hiper > 0) {
                             ancCharts.markersLayer.addLayer(L.circle([item.lat, item.lng], {
-                                radius: 280, color: '#ea580c', fillColor: '#fb923c',
+                                radius: 280, color: '#ad6800', fillColor: '#ffc53d',
                                 fillOpacity: 0.2, weight: 1.5,
                             }));
                         }
@@ -726,7 +726,7 @@
                         // ── Overlay: Imminent delivery pulse ──
                         if (this.ancMapCfg.showImminent && item.total_imminent > 0) {
                             ancCharts.markersLayer.addLayer(L.circle([item.lat, item.lng], {
-                                radius: 200, color: '#059669', fillColor: '#34d399',
+                                radius: 200, color: '#389e0d', fillColor: '#95de64',
                                 fillOpacity: 0.35, weight: 2,
                             }));
                         }
@@ -744,35 +744,35 @@
                                 const angle = (i * 120) * (Math.PI / 180);
                                 const fm = L.circleMarker(
                                     [item.lat + 0.002 * Math.cos(angle), item.lng + 0.002 * Math.sin(angle)],
-                                    { color: '#0284c7', fillColor: '#38bdf8', fillOpacity: 0.75, radius: 6, weight: 1.5 }
+                                    { color: '#0958d9', fillColor: '#91caff', fillOpacity: 0.75, radius: 6, weight: 1.5 }
                                 );
                                 fm.bindPopup(`<div style="font-size:11px;font-weight:600;">${f.name}</div>
-                                    <div style="font-size:11px;color:#475569;">${f.total} ibu hamil · ${f.total_risti || 0} RISTI</div>`);
+                                    <div style="font-size:11px;color:#595959;">${f.total} ibu hamil · ${f.total_risti || 0} RISTI</div>`);
                                 if (ancCharts.fasyanksLayer) ancCharts.fasyanksLayer.addLayer(fm);
                             });
                         }
 
                         // ── Popup ──
                         const ristiPct = item.risti_ratio != null ? item.risti_ratio + '%' : '-';
-                        const kekBadge = item.total_kek > 0 ? `<div style="display:flex;justify-content:space-between;font-size:11px;"><span style="color:#92400e;">KEK (LiLA&lt;23.5)</span><span style="font-weight:700;color:#d97706;">${item.total_kek}</span></div>` : '';
-                        const anmBadge = item.total_anemia > 0 ? `<div style="display:flex;justify-content:space-between;font-size:11px;"><span style="color:#9f1239;">Anemia (Hb&lt;11)</span><span style="font-weight:700;color:#e11d48;">${item.total_anemia}</span></div>` : '';
-                        const hipBadge = item.total_hiper > 0 ? `<div style="display:flex;justify-content:space-between;font-size:11px;"><span style="color:#9a3412;">Hipertensi</span><span style="font-weight:700;color:#ea580c;">${item.total_hiper}</span></div>` : '';
+                        const kekBadge = item.total_kek > 0 ? `<div style="display:flex;justify-content:space-between;font-size:11px;"><span style="color:#ad6800;">KEK (LiLA&lt;23.5)</span><span style="font-weight:700;color:#d48806;">${item.total_kek}</span></div>` : '';
+                        const anmBadge = item.total_anemia > 0 ? `<div style="display:flex;justify-content:space-between;font-size:11px;"><span style="color:#a8071a;">Anemia (Hb&lt;11)</span><span style="font-weight:700;color:#d9363e;">${item.total_anemia}</span></div>` : '';
+                        const hipBadge = item.total_hiper > 0 ? `<div style="display:flex;justify-content:space-between;font-size:11px;"><span style="color:#ad6800;">Hipertensi</span><span style="font-weight:700;color:#d48806;">${item.total_hiper}</span></div>` : '';
                         const immBadge = item.total_imminent > 0
-                            ? `<div style="margin-top:4px;padding:3px 5px;background:#ecfdf5;border-radius:5px;font-size:10px;color:#065f46;font-weight:700;">🟢 HPL ≤7 Hari: ${item.total_imminent} ibu hamil</div>` : '';
+                            ? `<div style="margin-top:4px;padding:3px 5px;background:#f6ffed;border-radius:5px;font-size:10px;color:#389e0d;font-weight:700;">🟢 HPL ≤7 Hari: ${item.total_imminent} ibu hamil</div>` : '';
                         const krstBadge = item.total_krst > 0
-                            ? `<div style="margin-top:3px;padding:3px 5px;background:#fff1f2;border-radius:5px;font-size:10px;color:#9f1239;font-weight:700;">⚠ KRST (RS PONEK): ${item.total_krst}</div>` : '';
+                            ? `<div style="margin-top:3px;padding:3px 5px;background:#fff1f0;border-radius:5px;font-size:10px;color:#a8071a;font-weight:700;">⚠ KRST (RS PONEK): ${item.total_krst}</div>` : '';
 
                         circle.bindPopup(`
                             <div style="font-family:inherit;font-size:12px;min-width:200px;">
-                                <div style="font-weight:700;font-size:13px;color:#1e293b;margin-bottom:2px;">${item.kelurahan}</div>
-                                <div style="color:#64748b;font-size:11px;margin-bottom:5px;">${item.kecamatan ? 'Kec. ' + item.kecamatan + ' · ' : ''}${item.kabupaten || ''}</div>
-                                <div style="display:flex;justify-content:space-between;border-top:1px solid #f1f5f9;padding-top:5px;font-weight:700;">
+                                <div style="font-weight:700;font-size:13px;color:#262626;margin-bottom:2px;">${item.kelurahan}</div>
+                                <div style="color:#8c8c8c;font-size:11px;margin-bottom:5px;">${item.kecamatan ? 'Kec. ' + item.kecamatan + ' · ' : ''}${item.kabupaten || ''}</div>
+                                <div style="display:flex;justify-content:space-between;border-top:1px solid #f0f0f0;padding-top:5px;font-weight:700;">
                                     <span>Total Ibu Hamil</span>
                                     <span style="color:${color};">${item.total}</span>
                                 </div>
                                 <div style="display:flex;justify-content:space-between;font-size:11px;">
-                                    <span style="color:#be123c;">RISTI (KRT+KRST)</span>
-                                    <span style="font-weight:700;color:#f43f5e;">${item.total_risti || 0} <span style="font-weight:400;color:#94a3b8;">(${ristiPct})</span></span>
+                                    <span style="color:#a8071a;">RISTI (KRT+KRST)</span>
+                                    <span style="font-weight:700;color:#ff4d4f;">${item.total_risti || 0} <span style="font-weight:400;color:#bfbfbf;">(${ristiPct})</span></span>
                                 </div>
                                 ${kekBadge}${anmBadge}${hipBadge}${krstBadge}${immBadge}
                             </div>
@@ -1003,17 +1003,17 @@
                         title: 'Uji Coba Sirine Siaga Persalinan',
                         html: `
                             <div class="text-left text-xs sm:text-sm space-y-2 mt-2">
-                                <p class="text-slate-600">Audio sirine siaga sedang berbunyi dari berkas: <br><code class="text-rose-600 font-bold bg-rose-50 px-2 py-0.5 rounded text-[11px] sm:text-xs break-all">public/assets/sounds/sirine.mp3</code></p>
-                                <p class="text-slate-500 text-[11px] sm:text-xs">Sirine ini akan otomatis berbunyi bersama pop-up peringatan saat sistem mendeteksi ada ibu hamil yang berada pada <strong>Siaga 1 Persalinan (H-1 / Hari Ini / Besok)</strong>.</p>
+                                <p class="text-ant-text">Audio sirine siaga sedang berbunyi dari berkas: <br><code class="text-danger-600 font-bold bg-danger-50 px-2 py-0.5 rounded-ant-sm text-[11px] sm:text-xs break-all">public/assets/sounds/sirine.mp3</code></p>
+                                <p class="text-ant-secondary text-[11px] sm:text-xs">Sirine ini akan otomatis berbunyi bersama pop-up peringatan saat sistem mendeteksi ada ibu hamil yang berada pada <strong>Siaga 1 Persalinan (H-1 / Hari Ini / Besok)</strong>.</p>
                             </div>
                         `,
                         icon: 'warning',
                         confirmButtonText: 'Matikan Sirine',
-                        confirmButtonColor: '#e11d48',
+                        confirmButtonColor: '#ff4d4f',
                         allowOutsideClick: false,
                         customClass: {
-                            popup: 'rounded-2xl sm:rounded-3xl shadow-2xl border border-rose-100 !w-[92vw] !max-w-md !p-4 sm:!p-6 !m-auto',
-                            confirmButton: 'rounded-xl font-bold px-6 py-2.5 text-xs sm:text-sm shadow-md !w-full sm:!w-auto'
+                            popup: 'rounded-ant-lg shadow-ant-dropdown border border-danger-100 !w-[92vw] !max-w-md !p-4 sm:!p-6 !m-auto',
+                            confirmButton: 'rounded-ant font-bold px-6 py-2.5 text-xs sm:text-sm shadow-ant-card !w-full sm:!w-auto'
                         }
                     }).then(() => {
                         this.stopSirine();
@@ -1047,35 +1047,35 @@
                         const daysAgo = Math.abs(diffDays);
                         return {
                             label: `Lewat HPL (+${daysAgo} hr)`,
-                            color: 'bg-rose-600 text-white animate-pulse',
+                            color: 'bg-danger-600 text-white animate-pulse',
                             isImminent: true,
                             days: diffDays
                         };
                     } else if (diffDays === 0) {
                         return {
                             label: 'HPL HARI INI!',
-                            color: 'bg-rose-500 text-white font-black animate-bounce',
+                            color: 'bg-danger-500 text-white font-black animate-bounce',
                             isImminent: true,
                             days: 0
                         };
                     } else if (diffDays === 1) {
                         return {
                             label: 'SIAGA H-1!',
-                            color: 'bg-rose-500 text-white font-extrabold',
+                            color: 'bg-danger-500 text-white font-extrabold',
                             isImminent: true,
                             days: 1
                         };
                     } else if (diffDays <= 7) {
                         return {
                             label: `H-${diffDays} (1 Mgg)`,
-                            color: 'bg-amber-100 text-amber-800 border border-amber-300 font-bold',
+                            color: 'bg-warning-100 text-warning-700 border border-warning-300 font-bold',
                             isImminent: false,
                             days: diffDays
                         };
                     } else if (diffDays <= 30) {
                         return {
                             label: `H-${diffDays}`,
-                            color: 'bg-blue-100 text-blue-800 border border-blue-300 font-medium',
+                            color: 'bg-primary-100 text-primary-700 border border-primary-300 font-medium',
                             isImminent: false,
                             days: diffDays
                         };
@@ -1108,10 +1108,10 @@
                             text: 'Saat ini tidak ada data ibu hamil dengan HPL Hari Ini atau Besok (H-1).',
                             icon: 'info',
                             confirmButtonText: 'Tutup',
-                            confirmButtonColor: '#ec4899',
+                            confirmButtonColor: '#1677ff',
                             customClass: {
-                                popup: 'rounded-2xl sm:rounded-3xl !w-[90vw] !max-w-sm !p-4 sm:!p-6 !m-auto',
-                                confirmButton: 'rounded-xl font-bold px-6 py-2.5 text-xs sm:text-sm !w-full sm:!w-auto'
+                                popup: 'rounded-ant-lg shadow-ant-dropdown !w-[90vw] !max-w-sm !p-4 sm:!p-6 !m-auto',
+                                confirmButton: 'rounded-ant font-bold px-6 py-2.5 text-xs sm:text-sm !w-full sm:!w-auto'
                             }
                         });
                         return;
@@ -1124,18 +1124,18 @@
                     let patientListHtml = '<div class="space-y-2 mt-3 max-h-56 sm:max-h-60 overflow-y-auto pr-1 text-left">';
                     this.imminentDeliveries.forEach((p, idx) => {
                         const ristiBadge = p.status_risti && p.status_risti.toLowerCase().includes('tinggi')
-                            ? '<span class="px-2 py-0.5 bg-rose-100 text-rose-700 text-[10px] font-bold rounded-full whitespace-nowrap">RISTI</span>'
-                            : '<span class="px-2 py-0.5 bg-emerald-100 text-emerald-700 text-[10px] font-semibold rounded-full whitespace-nowrap">Normal</span>';
+                            ? '<span class="px-2 py-0.5 bg-danger-50 text-danger-700 text-[10px] font-bold rounded-ant-sm whitespace-nowrap">RISTI</span>'
+                            : '<span class="px-2 py-0.5 bg-success-50 text-success-700 text-[10px] font-semibold rounded-ant-sm whitespace-nowrap">Normal</span>';
 
                         const status = this.getHplStatus(p.hpl, p.tanggal_bersalin);
-                        const statusBadge = status ? `<span class="px-2 py-0.5 rounded text-[10px] ${status.color}">${status.label}</span>` : '';
+                        const statusBadge = status ? `<span class="px-2 py-0.5 rounded-ant-sm text-[10px] ${status.color}">${status.label}</span>` : '';
 
                         patientListHtml += `
-                            <div class="p-2.5 sm:p-3 bg-rose-50/80 border border-rose-200 rounded-xl sm:rounded-2xl flex items-start sm:items-center justify-between gap-2 text-xs">
+                            <div class="p-2.5 sm:p-3 bg-danger-50 border border-danger-100 rounded-ant flex items-start sm:items-center justify-between gap-2 text-xs">
                                 <div class="min-w-0 flex-1">
-                                    <div class="font-bold text-slate-800 text-xs sm:text-sm break-words">${idx + 1}. ${p.nama_lengkap} (${p.umur || '-'} th)</div>
-                                    <div class="text-slate-500 text-[10px] sm:text-[11px] mt-0.5 break-words">NIK: ${p.nik || '-'} | Kel: ${p.kelurahan || '-'}, ${p.kabupaten || '-'}</div>
-                                    <div class="text-rose-700 font-semibold text-[10px] sm:text-[11px] mt-0.5 flex items-center gap-1.5 flex-wrap">
+                                    <div class="font-bold text-ant-title text-xs sm:text-sm break-words">${idx + 1}. ${p.nama_lengkap} (${p.umur || '-'} th)</div>
+                                    <div class="text-ant-secondary text-[10px] sm:text-[11px] mt-0.5 break-words">NIK: ${p.nik || '-'} | Kel: ${p.kelurahan || '-'}, ${p.kabupaten || '-'}</div>
+                                    <div class="text-danger-600 font-semibold text-[10px] sm:text-[11px] mt-0.5 flex items-center gap-1.5 flex-wrap">
                                         <span>HPL: ${p.hpl ? p.hpl.substring(0, 10) : '-'}</span>
                                         ${statusBadge}
                                     </div>
@@ -1149,28 +1149,28 @@
                     patientListHtml += '</div>';
 
                     Swal.fire({
-                        title: `<span class="text-rose-600 flex items-center justify-center gap-1.5 sm:gap-2 text-base sm:text-xl font-bold leading-snug">
-                            <span class="animate-ping inline-flex h-2.5 w-2.5 sm:h-3 sm:w-3 rounded-full bg-rose-500 opacity-75 shrink-0"></span>
+                        title: `<span class="text-danger flex items-center justify-center gap-1.5 sm:gap-2 text-base sm:text-xl font-bold leading-snug">
+                            <span class="animate-ping inline-flex h-2.5 w-2.5 sm:h-3 sm:w-3 rounded-full bg-danger opacity-75 shrink-0"></span>
                             <span>🚨 PERINGATAN SIAGA PERSALINAN (H-1)!</span>
                         </span>`,
                         html: `
-                            <div class="text-xs sm:text-sm text-slate-600">
-                                <p class="font-bold text-slate-800">Ditemukan <span class="text-rose-600 font-extrabold text-sm sm:text-base">${count} Ibu Hamil</span> dengan HPL <u>Hari Ini / Besok (H-1)</u>!</p>
-                                <p class="text-[11px] sm:text-xs text-slate-500 mt-1">Sirine siaga diaktifkan. Segera hubungi keluarga & bidan desa untuk persiapan persalinan.</p>
+                            <div class="text-xs sm:text-sm text-ant-text">
+                                <p class="font-bold text-ant-title">Ditemukan <span class="text-danger font-extrabold text-sm sm:text-base">${count} Ibu Hamil</span> dengan HPL <u>Hari Ini / Besok (H-1)</u>!</p>
+                                <p class="text-[11px] sm:text-xs text-ant-secondary mt-1">Sirine siaga diaktifkan. Segera hubungi keluarga & bidan desa untuk persiapan persalinan.</p>
                                 ${patientListHtml}
                             </div>
                         `,
                         icon: 'warning',
                         confirmButtonText: 'Matikan Sirine & Siapkan Pertolongan',
-                        confirmButtonColor: '#e11d48',
+                        confirmButtonColor: '#ff4d4f',
                         allowOutsideClick: false,
                         didOpen: () => {
                             // Coba jalankan kembali sirine saat modal SweetAlert telah terbuka
                             this.playSirine();
                         },
                         customClass: {
-                            popup: 'rounded-2xl sm:rounded-3xl shadow-2xl border-2 border-rose-200 !w-[94vw] !max-w-lg !p-4 sm:!p-6 !m-auto',
-                            confirmButton: 'rounded-xl font-bold px-4 sm:px-6 py-2.5 sm:py-3 text-xs sm:text-sm shadow-md !w-full sm:!w-auto'
+                            popup: 'rounded-ant-lg shadow-ant-dropdown border-2 border-danger-100 !w-[94vw] !max-w-lg !p-4 sm:!p-6 !m-auto',
+                            confirmButton: 'rounded-ant font-bold px-4 sm:px-6 py-2.5 sm:py-3 text-xs sm:text-sm shadow-ant-card !w-full sm:!w-auto'
                         }
                     }).then(() => {
                         this.stopSirine();
@@ -1185,10 +1185,10 @@
                             text: 'Saat ini tidak ada ibu hamil dengan HPL dalam 30 hari ke depan.',
                             icon: 'info',
                             confirmButtonText: 'Tutup',
-                            confirmButtonColor: '#f59e0b',
+                            confirmButtonColor: '#faad14',
                             customClass: {
-                                popup: 'rounded-2xl sm:rounded-3xl !w-[90vw] !max-w-sm !p-4 sm:!p-6 !m-auto',
-                                confirmButton: 'rounded-xl font-bold px-6 py-2.5 text-xs sm:text-sm !w-full sm:!w-auto'
+                                popup: 'rounded-ant-lg shadow-ant-dropdown !w-[90vw] !max-w-sm !p-4 sm:!p-6 !m-auto',
+                                confirmButton: 'rounded-ant font-bold px-6 py-2.5 text-xs sm:text-sm !w-full sm:!w-auto'
                             }
                         });
                         return;
@@ -1204,28 +1204,28 @@
                             ? Math.round((hplDate - today) / (1000 * 60 * 60 * 24))
                             : null;
                         const sisaLabel = sisaHari !== null
-                            ? `<span class="font-bold text-amber-700">H-${sisaHari}</span>`
+                            ? `<span class="font-bold text-warning-700">H-${sisaHari}</span>`
                             : '-';
 
                         const ristiBadge = p.status_risti && p.status_risti.toLowerCase().includes('tinggi')
-                            ? '<span class="px-2 py-0.5 bg-rose-100 text-rose-700 text-[10px] font-bold rounded-full whitespace-nowrap">RISTI</span>'
-                            : '<span class="px-2 py-0.5 bg-emerald-100 text-emerald-700 text-[10px] font-semibold rounded-full whitespace-nowrap">Normal</span>';
+                            ? '<span class="px-2 py-0.5 bg-danger-50 text-danger-700 text-[10px] font-bold rounded-ant-sm whitespace-nowrap">RISTI</span>'
+                            : '<span class="px-2 py-0.5 bg-success-50 text-success-700 text-[10px] font-semibold rounded-ant-sm whitespace-nowrap">Normal</span>';
 
                         const urgencyBg = sisaHari !== null && sisaHari <= 7
-                            ? 'bg-orange-50 border-orange-200'
-                            : 'bg-amber-50/80 border-amber-200';
+                            ? 'bg-warning-50 border-warning-300'
+                            : 'bg-warning-50 border-warning-200';
 
                         patientListHtml += `
-                            <div class="p-2.5 sm:p-3 ${urgencyBg} border rounded-xl sm:rounded-2xl flex items-start sm:items-center justify-between gap-2 text-xs">
+                            <div class="p-2.5 sm:p-3 ${urgencyBg} border rounded-ant flex items-start sm:items-center justify-between gap-2 text-xs">
                                 <div class="min-w-0 flex-1">
-                                    <div class="font-bold text-slate-800 text-xs sm:text-sm break-words">${idx + 1}. ${p.nama_lengkap} (${p.umur || '-'} th)</div>
-                                    <div class="text-slate-500 text-[10px] sm:text-[11px] mt-0.5 break-words">NIK: ${p.nik || '-'} | Kel: ${p.kelurahan || '-'}, ${p.kabupaten || '-'}</div>
+                                    <div class="font-bold text-ant-title text-xs sm:text-sm break-words">${idx + 1}. ${p.nama_lengkap} (${p.umur || '-'} th)</div>
+                                    <div class="text-ant-secondary text-[10px] sm:text-[11px] mt-0.5 break-words">NIK: ${p.nik || '-'} | Kel: ${p.kelurahan || '-'}, ${p.kabupaten || '-'}</div>
                                     <div class="text-[10px] sm:text-[11px] mt-0.5">
-                                        <span class="text-slate-600">HPL: ${p.hpl ? p.hpl.substring(0, 10) : '-'}</span>
-                                        <span class="mx-1 text-slate-400">·</span>
+                                        <span class="text-ant-text">HPL: ${p.hpl ? p.hpl.substring(0, 10) : '-'}</span>
+                                        <span class="mx-1 text-ant-disabled">·</span>
                                         ${sisaLabel}
                                     </div>
-                                    ${p.no_telepon ? `<div class="text-[10px] text-slate-400 mt-0.5">📞 ${p.no_telepon}${p.nama_suami ? ' (Suami: ' + p.nama_suami + ')' : ''}</div>` : ''}
+                                    ${p.no_telepon ? `<div class="text-[10px] text-ant-disabled mt-0.5">📞 ${p.no_telepon}${p.nama_suami ? ' (Suami: ' + p.nama_suami + ')' : ''}</div>` : ''}
                                 </div>
                                 <div class="text-right shrink-0 mt-0.5 sm:mt-0">
                                     ${ristiBadge}
@@ -1236,24 +1236,24 @@
                     patientListHtml += '</div>';
 
                     Swal.fire({
-                        title: `<span class="text-amber-600 flex items-center justify-center gap-1.5 sm:gap-2 text-base sm:text-xl font-bold leading-snug">
+                        title: `<span class="text-warning-600 flex items-center justify-center gap-1.5 sm:gap-2 text-base sm:text-xl font-bold leading-snug">
                             <span>📅 PERSIAPAN PERSALINAN H-30</span>
                         </span>`,
                         html: `
-                            <div class="text-xs sm:text-sm text-slate-600">
-                                <p class="font-bold text-slate-800">Ditemukan <span class="text-amber-600 font-extrabold text-sm sm:text-base">${list.length} Ibu Hamil</span> dengan HPL dalam <u>30 hari ke depan</u>.</p>
-                                <p class="text-[11px] sm:text-xs text-slate-500 mt-1">Segera verifikasi kelengkapan P4K: donor darah, tabungan, transportasi, dan pendamping persalinan.</p>
+                            <div class="text-xs sm:text-sm text-ant-text">
+                                <p class="font-bold text-ant-title">Ditemukan <span class="text-warning-600 font-extrabold text-sm sm:text-base">${list.length} Ibu Hamil</span> dengan HPL dalam <u>30 hari ke depan</u>.</p>
+                                <p class="text-[11px] sm:text-xs text-ant-secondary mt-1">Segera verifikasi kelengkapan P4K: donor darah, tabungan, transportasi, dan pendamping persalinan.</p>
                                 ${patientListHtml}
                             </div>
                         `,
                         icon: 'warning',
-                        iconColor: '#f59e0b',
+                        iconColor: '#faad14',
                         confirmButtonText: 'Mengerti, Siapkan P4K',
-                        confirmButtonColor: '#f59e0b',
+                        confirmButtonColor: '#faad14',
                         allowOutsideClick: true,
                         customClass: {
-                            popup: 'rounded-2xl sm:rounded-3xl shadow-2xl border-2 border-amber-200 !w-[94vw] !max-w-lg !p-4 sm:!p-6 !m-auto',
-                            confirmButton: 'rounded-xl font-bold px-4 sm:px-6 py-2.5 sm:py-3 text-xs sm:text-sm shadow-md !w-full sm:!w-auto'
+                            popup: 'rounded-ant-lg shadow-ant-dropdown border-2 border-warning-200 !w-[94vw] !max-w-lg !p-4 sm:!p-6 !m-auto',
+                            confirmButton: 'rounded-ant font-bold px-4 sm:px-6 py-2.5 sm:py-3 text-xs sm:text-sm shadow-ant-card !w-full sm:!w-auto'
                         }
                     });
                 },

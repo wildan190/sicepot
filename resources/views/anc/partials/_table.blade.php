@@ -1,50 +1,49 @@
                 <!-- DATA TABLE SECTION -->
-                <div class="bg-white rounded-2xl shadow-xs border border-slate-200/80 overflow-hidden">
+                <div class="ant-card overflow-hidden">
                     <div
-                        class="p-5 border-b border-slate-200/80 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                        class="ant-card-head flex-col sm:flex-row sm:items-center gap-3">
                         <div>
-                            <h3 class="font-bold text-base text-slate-800">Daftar Rekam Pemeriksaan Ibu Hamil (ANC)</h3>
-                            <p class="text-xs text-slate-500">Data dapat di-edit langsung secara realtime melalui tombol
+                            <h3 class="ant-card-title">Daftar Rekam Pemeriksaan Ibu Hamil (ANC)</h3>
+                            <p class="ant-text-secondary mt-1">Data dapat di-edit langsung secara realtime melalui tombol
                                 aksi di setiap baris</p>
                         </div>
                         <span
-                            class="text-xs font-medium px-3 py-1.5 bg-slate-100 text-slate-600 rounded-lg self-start sm:self-auto"
+                            class="ant-tag ant-tag-gray self-start sm:self-auto"
                             x-text="'Menampilkan (' + (patientsData.data ? patientsData.data.length : 0) + ' dari ' + patientsData.total + ' total rekam data)'"></span>
                     </div>
 
                     <div class="overflow-x-auto">
-                        <table class="w-full text-left text-xs">
-                            <thead
-                                class="bg-slate-50/80 text-slate-600 font-semibold uppercase tracking-wider border-b border-slate-200/80">
+                        <table class="ant-table">
+                            <thead>
                                 <tr>
-                                    <th class="px-4 py-3">Nama & NIK</th>
-                                    <th class="px-4 py-3">Nama Suami & Telp</th>
-                                    <th class="px-4 py-3">Umur & G-P-A</th>
-                                    <th class="px-4 py-3">Usia Hamil & Kunjungan</th>
-                                    <th class="px-4 py-3">HPL / TP</th>
-                                    <th class="px-4 py-3">Wilayah (Kab / Kel)</th>
-                                    <th class="px-4 py-3">LiLA & Hb</th>
-                                    <th class="px-4 py-3">Status RISTI & Risiko</th>
-                                    <th class="px-4 py-3">Poedji Rochjati</th>
-                                    <th class="px-4 py-3">Rekomendasi Faskes</th>
-                                    <th class="px-4 py-3 text-center">Aksi</th>
+                                    <th>Nama & NIK</th>
+                                    <th>Nama Suami & Telp</th>
+                                    <th>Umur & G-P-A</th>
+                                    <th>Usia Hamil & Kunjungan</th>
+                                    <th>HPL / TP</th>
+                                    <th>Wilayah (Kab / Kel)</th>
+                                    <th>LiLA & Hb</th>
+                                    <th>Status RISTI & Risiko</th>
+                                    <th>Poedji Rochjati</th>
+                                    <th>Rekomendasi Faskes</th>
+                                    <th class="text-center">Aksi</th>
                                 </tr>
                             </thead>
-                            <tbody class="divide-y divide-slate-100">
+                            <tbody>
                                 <template x-for="p in (patientsData.data || [])" :key="p.id">
-                                    <tr class="hover:bg-pink-50/20 transition-colors">
-                                        <td class="px-4 py-3">
-                                            <div class="font-semibold text-slate-800 text-sm"
+                                    <tr>
+                                        <td>
+                                            <div class="font-semibold text-ant-title text-sm"
                                                 x-text="p.nama_lengkap || '-'"></div>
-                                            <div class="text-slate-400 text-[11px]" x-text="'NIK: ' + (p.nik || '-')">
+                                            <div class="text-ant-secondary text-[11px]" x-text="'NIK: ' + (p.nik || '-')">
                                             </div>
                                         </td>
-                                        <td class="px-4 py-3 text-slate-600">
-                                            <div class="font-medium text-slate-700"
+                                        <td class="text-ant-text">
+                                            <div class="font-medium text-ant-text"
                                                 x-text="p.nama_suami ? 'Tn. ' + p.nama_suami : '-'"></div>
                                             <template x-if="p.no_telepon">
                                                 <div
-                                                    class="text-[11px] text-emerald-600 font-semibold flex items-center gap-1 mt-0.5">
+                                                    class="text-[11px] text-success-600 font-semibold flex items-center gap-1 mt-0.5">
                                                     <svg class="w-3 h-3" fill="none" stroke="currentColor"
                                                         viewBox="0 0 24 24">
                                                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -56,27 +55,27 @@
                                                 </div>
                                             </template>
                                         </td>
-                                        <td class="px-4 py-3 whitespace-nowrap text-slate-600">
+                                        <td class="whitespace-nowrap text-ant-text">
                                             <span class="font-medium"
                                                 x-text="(p.umur !== null ? p.umur + ' th' : '-')"></span>
                                             <template x-if="p.tanggal_lahir">
-                                                <div class="text-[10px] text-slate-400"
+                                                <div class="text-[10px] text-ant-secondary"
                                                     x-text="p.tanggal_lahir ? p.tanggal_lahir.substring(0, 10) : ''">
                                                 </div>
                                             </template>
-                                            <div class="text-[11px] text-pink-600 font-semibold"
+                                            <div class="text-[11px] text-primary font-semibold"
                                                 x-text="'G' + (p.gravida || 1) + 'P' + (p.para || 0) + 'A' + (p.abortus || 0)">
                                             </div>
                                         </td>
-                                        <td class="px-4 py-3">
-                                            <div class="font-semibold text-slate-700"
+                                        <td>
+                                            <div class="font-semibold text-ant-text"
                                                 x-text="p.usia_kehamilan ? p.usia_kehamilan + ' mgg' : (p.kunjungan_ke || '-')">
                                             </div>
-                                            <div class="text-[11px] text-pink-600 font-medium"
+                                            <div class="text-[11px] text-primary font-medium"
                                                 x-text="p.kunjungan_ke || ''"></div>
                                         </td>
-                                        <td class="px-4 py-3 whitespace-nowrap">
-                                            <div class="font-medium text-slate-800"
+                                        <td class="whitespace-nowrap">
+                                            <div class="font-medium text-ant-title"
                                                 x-text="p.hpl ? p.hpl.substring(0, 10) : '-'"></div>
                                             <template x-if="getHplStatus(p.hpl, p.tanggal_bersalin)">
                                                 <span
@@ -86,75 +85,75 @@
                                                 </span>
                                             </template>
                                         </td>
-                                        <td class="px-4 py-3">
-                                            <div class="font-medium text-slate-700" x-text="p.kelurahan || '-'"></div>
-                                            <div class="text-[11px] text-slate-400" x-text="p.kabupaten || '-'"></div>
+                                        <td>
+                                            <div class="font-medium text-ant-text" x-text="p.kelurahan || '-'"></div>
+                                            <div class="text-[11px] text-ant-secondary" x-text="p.kabupaten || '-'"></div>
                                         </td>
-                                        <td class="px-4 py-3 whitespace-nowrap">
+                                        <td class="whitespace-nowrap">
                                             <div class="flex items-center gap-1.5">
-                                                <span class="font-semibold text-slate-700"
+                                                <span class="font-semibold text-ant-text"
                                                     x-text="p.lila ? p.lila + ' cm' : (p.hb ? p.hb + ' g/dL' : '-')"></span>
                                                 <template x-if="p.lila && parseFloat(p.lila) < 23.5">
                                                     <span
-                                                        class="px-1.5 py-0.2 bg-amber-100 text-amber-800 border border-amber-300 rounded text-[9px] font-black">KEK</span>
+                                                        class="ant-tag ant-tag-gold text-[9px] font-black">KEK</span>
                                                 </template>
                                             </div>
                                             <template x-if="p.status_anemia && p.status_anemia !== '-'">
                                                 <span :class="{
-                                                    'bg-rose-50 text-rose-700 border-rose-200': p.status_anemia.toLowerCase().includes('anemia'),
-                                                    'bg-emerald-50 text-emerald-700 border-emerald-200': !p.status_anemia.toLowerCase().includes('anemia')
-                                                }" class="px-1.5 py-0.5 rounded text-[10px] font-semibold border inline-block mt-0.5"
+                                                    'ant-tag-red': p.status_anemia.toLowerCase().includes('anemia'),
+                                                    'ant-tag-green': !p.status_anemia.toLowerCase().includes('anemia')
+                                                }" class="ant-tag mt-0.5"
                                                     x-text="p.status_anemia"></span>
                                             </template>
                                         </td>
-                                        <td class="px-4 py-3">
+                                        <td>
                                             <div>
                                                 <template
                                                     x-if="p.status_risti && p.status_risti.toLowerCase().includes('tinggi')">
                                                     <span
-                                                        class="px-2 py-0.5 bg-rose-50 text-rose-700 border border-rose-200 rounded-md text-[10px] font-bold inline-block">
+                                                        class="ant-tag ant-tag-red">
                                                         RISTI
                                                     </span>
                                                 </template>
                                                 <template
                                                     x-if="!p.status_risti || !p.status_risti.toLowerCase().includes('tinggi')">
                                                     <span
-                                                        class="px-2 py-0.5 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-md text-[10px] font-semibold inline-block">
+                                                        class="ant-tag ant-tag-green">
                                                         Normal
                                                     </span>
                                                 </template>
                                             </div>
                                             <template x-if="p.faktor_risiko">
-                                                <div class="text-[10px] text-rose-600 font-semibold mt-0.5 max-w-[140px] truncate"
+                                                <div class="text-[10px] text-danger-600 font-semibold mt-0.5 max-w-[140px] truncate"
                                                     :title="p.faktor_risiko" x-text="p.faktor_risiko"></div>
                                             </template>
                                         </td>
-                                        <td class="px-4 py-3 whitespace-nowrap">
+                                        <td class="whitespace-nowrap">
                                             <div class="flex items-center gap-1.5">
                                                 <span :class="{
-                                                    'bg-emerald-100 text-emerald-800 border-emerald-300': p.kategori_poedji_rochjati === 'KRR',
-                                                    'bg-amber-100 text-amber-800 border-amber-300': p.kategori_poedji_rochjati === 'KRT',
-                                                    'bg-rose-100 text-rose-800 border-rose-300': p.kategori_poedji_rochjati === 'KRST',
-                                                    'bg-slate-100 text-slate-600 border-slate-200': !p.kategori_poedji_rochjati
-                                                }" class="px-2 py-0.5 rounded-md font-bold text-[11px] border"
+                                                    'ant-tag-green': p.kategori_poedji_rochjati === 'KRR',
+                                                    'ant-tag-gold': p.kategori_poedji_rochjati === 'KRT',
+                                                    'ant-tag-red': p.kategori_poedji_rochjati === 'KRST',
+                                                    'ant-tag-gray': !p.kategori_poedji_rochjati
+                                                }" class="ant-tag font-bold"
                                                     x-text="p.kategori_poedji_rochjati || 'KRR'"></span>
-                                                <span class="text-slate-500 text-[11px] font-semibold"
+                                                <span class="text-ant-secondary text-[11px] font-semibold"
                                                     x-text="'(' + (p.skor_poedji_rochjati ?? 2) + ')'"></span>
                                             </div>
                                         </td>
-                                        <td class="px-4 py-3">
-                                            <span class="text-slate-700 font-medium text-[11px]"
+                                        <td>
+                                            <span class="text-ant-text font-medium text-[11px]"
                                                 x-text="p.rekomendasi_faskes || 'Bidan / BPM / Puskesmas'"></span>
                                             <template x-if="p.calon_pendonor">
-                                                <div class="text-[10px] text-rose-600 font-semibold mt-0.5"
+                                                <div class="text-[10px] text-danger-600 font-semibold mt-0.5"
                                                     x-text="'Donor: ' + p.calon_pendonor"></div>
                                             </template>
                                         </td>
-                                        <td class="px-4 py-3 whitespace-nowrap text-center">
+                                        <td class="whitespace-nowrap text-center">
                                             <div class="flex items-center justify-center gap-1">
                                                 <!-- View / Detail Pasien Modal -->
                                                 <button @click="openViewModal(p)" type="button"
-                                                    class="p-1.5 text-pink-600 hover:text-pink-800 hover:bg-pink-50 rounded-lg transition-colors cursor-pointer"
+                                                    class="p-1.5 text-primary hover:bg-primary-50 rounded-ant transition-colors cursor-pointer"
                                                     title="Lihat Rekam Lengkap Ibu Hamil">
                                                     <svg class="w-4 h-4" fill="none" stroke="currentColor"
                                                         viewBox="0 0 24 24">
@@ -170,7 +169,7 @@
 
                                                 <!-- WhatsApp Direct Quick Reminder -->
                                                 <button @click="openWhatsAppModal(p)" type="button"
-                                                    class="p-1.5 text-emerald-600 hover:text-emerald-800 hover:bg-emerald-50 rounded-lg transition-colors cursor-pointer"
+                                                    class="p-1.5 text-success hover:bg-success-50 rounded-ant transition-colors cursor-pointer"
                                                     title="Kirim Pesan WhatsApp (wa.me)">
                                                     <svg class="w-4 h-4" fill="none" stroke="currentColor"
                                                         viewBox="0 0 24 24">
@@ -183,7 +182,7 @@
 
                                                 <!-- Skrining Duplikasi -->
                                                 <button @click="openDuplicateModal(p)" type="button"
-                                                    class="p-1.5 text-amber-600 hover:text-amber-800 hover:bg-amber-50 rounded-lg transition-colors cursor-pointer"
+                                                    class="p-1.5 text-warning-600 hover:bg-warning-50 rounded-ant transition-colors cursor-pointer"
                                                     title="Skrining Data Ganda / Lintas Wilayah">
                                                     <svg class="w-4 h-4" fill="none" stroke="currentColor"
                                                         viewBox="0 0 24 24">
@@ -196,7 +195,7 @@
 
                                                 <!-- Rekam Jejak / Cohort Timeline -->
                                                 <button @click="openTimelineModal(p)" type="button"
-                                                    class="p-1.5 text-indigo-600 hover:text-indigo-800 hover:bg-indigo-50 rounded-lg transition-colors cursor-pointer"
+                                                    class="p-1.5 text-primary hover:bg-primary-50 rounded-ant transition-colors cursor-pointer"
                                                     title="Rekam Jejak Pasien (Cohort Timeline)">
                                                     <svg class="w-4 h-4" fill="none" stroke="currentColor"
                                                         viewBox="0 0 24 24">
@@ -208,16 +207,16 @@
 
                                                 <!-- AI Triage (Gemini) -->
                                                 <button @click="openAiTriage(p)" type="button"
-                                                    class="p-1.5 text-purple-600 hover:text-purple-800 hover:bg-purple-50 rounded-lg transition-colors cursor-pointer"
+                                                    class="p-1.5 text-[#722ed1] hover:bg-[#f9f0ff] rounded-ant transition-colors cursor-pointer"
                                                     title="AI Triage & Deteksi Anomali (Google Gemini)">
                                                     <span
-                                                        class="text-xs font-black px-1 py-0.5 bg-purple-100 text-purple-700 rounded">AI</span>
+                                                        class="text-xs font-black px-1 py-0.5 bg-[#f9f0ff] text-[#531dab] rounded-ant-sm">AI</span>
                                                 </button>
 
                                                 @can('edit-data')
                                                 <!-- Edit Pasien -->
                                                 <button @click="openEditModal(p)" type="button"
-                                                    class="p-1.5 text-pink-600 hover:text-pink-900 hover:bg-pink-50 rounded-lg transition-colors cursor-pointer"
+                                                    class="p-1.5 text-primary hover:bg-primary-50 rounded-ant transition-colors cursor-pointer"
                                                     title="Edit Data Realtime">
                                                     <svg class="w-4 h-4" fill="none" stroke="currentColor"
                                                         viewBox="0 0 24 24">
@@ -230,7 +229,7 @@
 
                                                 <!-- Catat Kelahiran & Siarkan Alert Realtime -->
                                                 <button @click="openRecordBirthModal(p)" type="button"
-                                                    class="p-1.5 text-amber-600 hover:text-amber-800 hover:bg-amber-50 rounded-lg transition-colors cursor-pointer"
+                                                    class="p-1.5 text-warning-600 hover:bg-warning-50 rounded-ant transition-colors cursor-pointer"
                                                     title="Catat Kelahiran & Kirim Alert Realtime">
                                                     <span class="text-sm leading-none">Birth Report</span>
                                                 </button>
@@ -239,7 +238,7 @@
                                                 @can('delete-data')
                                                 <!-- Hapus Pasien -->
                                                 <button @click="deletePatient(p)" type="button"
-                                                    class="p-1.5 text-rose-500 hover:text-rose-700 hover:bg-rose-50 rounded-lg transition-colors cursor-pointer"
+                                                    class="p-1.5 text-danger hover:bg-danger-50 rounded-ant transition-colors cursor-pointer"
                                                     title="Hapus Data">
                                                     <svg class="w-4 h-4" fill="none" stroke="currentColor"
                                                         viewBox="0 0 24 24">
@@ -256,7 +255,7 @@
                                 </template>
                                 <template x-if="!patientsData.data || patientsData.data.length === 0">
                                     <tr>
-                                        <td colspan="11" class="text-center py-8 text-slate-400">
+                                        <td colspan="11" class="text-center py-8 text-ant-secondary">
                                             Tidak ada data ibu hamil yang cocok dengan filter yang dipilih. Silakan klik
                                             tombol "Import Excel / CSV" atau "Tambah Data".
                                         </td>
@@ -268,20 +267,19 @@
 
                     <!-- PAGINATION CONTROLS -->
                     <div
-                        class="px-5 py-3.5 bg-slate-50 border-t border-slate-200/80 flex items-center justify-between text-xs text-slate-600">
+                        class="px-5 py-3.5 bg-[#fafafa] border-t border-ant-split flex items-center justify-between text-xs text-ant-text">
                         <span
                             x-text="'Halaman ' + (patientsData.current_page || 1) + ' dari ' + (patientsData.last_page || 1)"></span>
                         <div class="flex items-center gap-2">
                             <button :disabled="(patientsData.current_page || 1) <= 1"
                                 @click="changePage((patientsData.current_page || 1) - 1)"
-                                class="px-3 py-1.5 rounded-lg border border-slate-300 bg-white hover:bg-slate-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors cursor-pointer">Sebelumnya</button>
+                                class="ant-btn ant-btn-default">Sebelumnya</button>
                             <button :disabled="(patientsData.current_page || 1) >= (patientsData.last_page || 1)"
                                 @click="changePage((patientsData.current_page || 1) + 1)"
-                                class="px-3 py-1.5 rounded-lg border border-slate-300 bg-white hover:bg-slate-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors cursor-pointer">Berikutnya</button>
+                                class="ant-btn ant-btn-default">Berikutnya</button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
 
