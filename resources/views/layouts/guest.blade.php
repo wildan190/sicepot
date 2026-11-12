@@ -5,32 +5,30 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'Laravel') }}</title>
+        <title>{{ config('app.name', 'SICEPOT') }}</title>
 
         <!-- Favicon -->
         <link rel="icon" type="image/png" href="{{ asset('images/favicon.png') }}">
         <link rel="shortcut icon" type="image/png" href="{{ asset('images/favicon.png') }}">
 
-        <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600,700,800&display=swap" rel="stylesheet" />
-
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="font-sans antialiased text-slate-800 bg-slate-950 selection:bg-indigo-500 selection:text-white min-h-screen relative overflow-x-hidden">
-        <!-- Ambient Background Glow & Decorative Gradients -->
-        <div class="fixed inset-0 pointer-events-none overflow-hidden z-0">
-            <div class="absolute -top-40 -left-40 w-96 h-96 bg-indigo-600/25 rounded-full blur-3xl animate-pulse" style="animation-duration: 7s;"></div>
-            <div class="absolute top-1/3 -right-32 w-80 h-80 bg-teal-500/20 rounded-full blur-3xl animate-pulse" style="animation-duration: 9s;"></div>
-            <div class="absolute -bottom-32 left-1/3 w-96 h-96 bg-pink-600/15 rounded-full blur-3xl animate-pulse" style="animation-duration: 8s;"></div>
-            
-            <!-- Subtle Grid Pattern -->
-            <div class="absolute inset-0 bg-[linear-gradient(to_right,#ffffff08_1px,transparent_1px),linear-gradient(to_bottom,#ffffff08_1px,transparent_1px)] bg-[size:32px_32px] opacity-40"></div>
-        </div>
+    <body class="min-h-screen bg-ant-layout font-sans">
+        <div class="flex min-h-screen flex-col items-center justify-center px-4 py-10">
+            <div class="{{ $wide ? 'lg:hidden' : '' }} mb-6 flex flex-col items-center gap-2">
+                <img src="{{ asset('images/logo.png') }}" alt="SICEPOT" class="h-12 w-12 rounded-ant-lg object-cover">
+                <div class="text-center">
+                    <h1 class="text-[18px] font-semibold text-ant-title">SICEPOT</h1>
+                    <p class="text-[12px] text-ant-secondary">Sistem Cepat Post &amp; Tracking</p>
+                </div>
+            </div>
 
-        <div class="relative z-10 min-h-screen flex flex-col justify-center items-center p-4 sm:p-6 lg:p-8">
-            {{ $slot }}
+            <div class="w-full {{ $wide ? 'max-w-5xl' : 'sm:max-w-md' }}">
+                {{ $slot }}
+            </div>
+
+            <p class="mt-6 text-[12px] text-ant-secondary">&copy; {{ now()->year }} SICEPOT</p>
         </div>
     </body>
 </html>

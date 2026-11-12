@@ -10,47 +10,47 @@
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 40%, #1a1a3e 100%);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #f5f5f5;
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 2rem 1rem;
-            color: #fff;
+            color: #595959;
         }
         .card {
             background: #fff;
-            border-radius: 28px;
+            border-radius: 8px;
             padding: 3rem 2.5rem;
             max-width: 480px;
             width: 100%;
             text-align: center;
-            box-shadow: 0 30px 70px rgba(0,0,0,.4);
-            color: #1e293b;
+            border: 1px solid #f0f0f0;
+            box-shadow: 0 1px 2px 0 rgba(0,0,0,0.03), 0 1px 6px -1px rgba(0,0,0,0.02), 0 2px 4px 0 rgba(0,0,0,0.02);
+            color: #595959;
         }
         .icon-wrap {
             width: 80px; height: 80px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #059669, #34d399);
+            background: #52c41a;
             display: flex; align-items: center; justify-content: center;
             margin: 0 auto 1.5rem;
-            box-shadow: 0 8px 24px rgba(5,150,105,.35);
             animation: pop .5s cubic-bezier(.36,1.4,.64,1) both;
         }
         @keyframes pop {
             from { transform: scale(.4); opacity: 0; }
             to   { transform: scale(1);  opacity: 1; }
         }
-        h1 { font-size: 1.75rem; font-weight: 900; color: #1e293b; margin-bottom: .5rem; }
-        .sub { font-size: .9rem; color: #64748b; line-height: 1.7; margin-bottom: 2rem; }
+        h1 { font-size: 1.75rem; font-weight: 800; color: #262626; margin-bottom: .5rem; }
+        .sub { font-size: .9rem; color: #8c8c8c; line-height: 1.7; margin-bottom: 2rem; }
         .info-box {
-            background: #f0fdf4;
-            border: 1.5px solid #bbf7d0;
-            border-radius: 14px;
+            background: #f6ffed;
+            border: 1px solid #b7eb8f;
+            border-radius: 6px;
             padding: 1rem 1.25rem;
             font-size: .8rem;
-            color: #065f46;
+            color: #237804;
             text-align: left;
             line-height: 1.7;
             margin-bottom: 2rem;
@@ -58,20 +58,19 @@
         .info-box strong { font-weight: 700; }
         .btn {
             display: inline-flex; align-items: center; gap: .5rem;
-            padding: .8rem 2rem;
-            background: linear-gradient(135deg, #3b82f6, #4f46e5);
+            padding: .65rem 2rem;
+            background: #1677ff;
             color: #fff;
             font-family: inherit;
             font-size: .875rem;
-            font-weight: 700;
-            border: none;
-            border-radius: 12px;
+            font-weight: 600;
+            border: 1px solid #1677ff;
+            border-radius: 6px;
             text-decoration: none;
             cursor: pointer;
-            box-shadow: 0 4px 16px rgba(59,130,246,.35);
-            transition: opacity .2s;
+            transition: background .2s, border-color .2s;
         }
-        .btn:hover { opacity: .88; }
+        .btn:hover { background: #4096ff; border-color: #4096ff; }
     </style>
 </head>
 <body>

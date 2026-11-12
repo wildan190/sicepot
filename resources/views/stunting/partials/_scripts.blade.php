@@ -101,28 +101,28 @@
                     },
 
                     getTbuBadgeClass(val) {
-                        if (val === 'Sangat Pendek') return 'bg-red-100 text-red-700 border border-red-200';
-                        if (val === 'Pendek') return 'bg-amber-100 text-amber-700 border border-amber-200';
-                        if (val === 'Normal') return 'bg-green-100 text-green-700 border border-green-200';
-                        if (val === 'Tinggi') return 'bg-blue-100 text-blue-700 border border-blue-200';
-                        return 'bg-slate-100 text-slate-600 border border-slate-200';
+                        if (val === 'Sangat Pendek') return 'bg-danger-100 text-danger-700 border border-danger-200';
+                        if (val === 'Pendek') return 'bg-warning-100 text-warning-700 border border-warning-200';
+                        if (val === 'Normal') return 'bg-success-100 text-success-700 border border-success-200';
+                        if (val === 'Tinggi') return 'bg-primary-100 text-primary-700 border border-primary-200';
+                        return 'bg-ant-split text-ant-text border border-ant-border';
                     },
 
                     getBbuBadgeClass(val) {
-                        if (['Sangat Kurang'].includes(val)) return 'bg-red-100 text-red-700 border border-red-200';
-                        if (['Kurang'].includes(val)) return 'bg-amber-100 text-amber-700 border border-amber-200';
-                        if (['Normal', 'Gizi Baik'].includes(val)) return 'bg-green-100 text-green-700 border border-green-200';
-                        if (['Risiko Lebih', 'Risiko Gizi Lebih'].includes(val)) return 'bg-yellow-100 text-yellow-700 border border-yellow-200';
-                        if (['Lebih', 'Gizi Lebih', 'Obesitas'].includes(val)) return 'bg-purple-100 text-purple-700 border border-purple-200';
-                        return 'bg-slate-100 text-slate-600 border border-slate-200';
+                        if (['Sangat Kurang'].includes(val)) return 'bg-danger-100 text-danger-700 border border-danger-200';
+                        if (['Kurang'].includes(val)) return 'bg-warning-100 text-warning-700 border border-warning-200';
+                        if (['Normal', 'Gizi Baik'].includes(val)) return 'bg-success-100 text-success-700 border border-success-200';
+                        if (['Risiko Lebih', 'Risiko Gizi Lebih'].includes(val)) return 'bg-warning-100 text-warning-700 border border-warning-200';
+                        if (['Lebih', 'Gizi Lebih', 'Obesitas'].includes(val)) return 'bg-[#f9f0ff] text-[#722ed1] border border-[#efdbff]';
+                        return 'bg-ant-split text-ant-text border border-ant-border';
                     },
 
                     getBbtbBadgeClass(val) {
-                        if (['Gizi Kurang', 'Kurang'].includes(val)) return 'bg-amber-100 text-amber-700 border border-amber-200';
-                        if (['Gizi Baik', 'Normal'].includes(val)) return 'bg-green-100 text-green-700 border border-green-200';
-                        if (['Risiko Gizi Lebih'].includes(val)) return 'bg-yellow-100 text-yellow-700 border border-yellow-200';
-                        if (['Gizi Lebih', 'Obesitas'].includes(val)) return 'bg-purple-100 text-purple-700 border border-purple-200';
-                        return 'bg-slate-100 text-slate-600 border border-slate-200';
+                        if (['Gizi Kurang', 'Kurang'].includes(val)) return 'bg-warning-100 text-warning-700 border border-warning-200';
+                        if (['Gizi Baik', 'Normal'].includes(val)) return 'bg-success-100 text-success-700 border border-success-200';
+                        if (['Risiko Gizi Lebih'].includes(val)) return 'bg-warning-100 text-warning-700 border border-warning-200';
+                        if (['Gizi Lebih', 'Obesitas'].includes(val)) return 'bg-[#f9f0ff] text-[#722ed1] border border-[#efdbff]';
+                        return 'bg-ant-split text-ant-text border border-ant-border';
                     },
 
                     applyFilters(page = 1) {
@@ -174,7 +174,7 @@
                                 labels: ['Normal', 'Pendek', 'Sangat Pendek'],
                                 datasets: [{
                                     data: [{{ $normalCount }}, {{ $pendekCount }}, {{ $sangatPendekCount }}],
-                                    backgroundColor: ['#22c55e', '#fbbf24', '#ef4444'],
+                                    backgroundColor: ['#52c41a', '#faad14', '#ff4d4f'],
                                     borderWidth: 2,
                                     borderColor: '#fff',
                                 }]
@@ -189,7 +189,7 @@
                                 labels: ['Gizi Baik', 'Gizi Kurang', 'Sangat Kurang', 'Risiko Lebih', 'Gizi Lebih/Obesitas'],
                                 datasets: [{
                                     data: [{{ $bbuGiziBaikCount }}, {{ $bbuKurangCount }}, {{ $bbuSangatKurangCount }}, {{ $bbuRisikoLebihCount }}, {{ $bbuLebihCount + $bbuObesitasCount }}],
-                                    backgroundColor: ['#10b981', '#fbbf24', '#ef4444', '#facc15', '#a78bfa'],
+                                    backgroundColor: ['#52c41a', '#faad14', '#ff4d4f', '#faad14', '#722ed1'],
                                     borderWidth: 2,
                                     borderColor: '#fff',
                                 }]
@@ -204,7 +204,7 @@
                                 labels: ['Laki-laki', 'Perempuan'],
                                 datasets: [{
                                     data: [{{ $lakiLaki }}, {{ $perempuan }}],
-                                    backgroundColor: ['#3b82f6', '#f472b6'],
+                                    backgroundColor: ['#1677ff', '#eb2f96'],
                                     borderWidth: 2,
                                     borderColor: '#fff',
                                 }]
@@ -222,19 +222,19 @@
                                     {
                                         label: 'Normal',
                                         data: desaData.map(d => d.normal),
-                                        backgroundColor: '#22c55e',
+                                        backgroundColor: '#52c41a',
                                         borderRadius: 4,
                                     },
                                     {
                                         label: 'Pendek',
                                         data: desaData.map(d => d.pendek),
-                                        backgroundColor: '#fbbf24',
+                                        backgroundColor: '#faad14',
                                         borderRadius: 4,
                                     },
                                     {
                                         label: 'Sangat Pendek',
                                         data: desaData.map(d => d.sangat_pendek),
-                                        backgroundColor: '#ef4444',
+                                        backgroundColor: '#ff4d4f',
                                         borderRadius: 4,
                                     },
                                 ]
@@ -313,7 +313,7 @@
                                     const x = bar.x;
                                     const yHigh = yScale.getPixelForValue(item.high);
                                     const yLow = yScale.getPixelForValue(item.low);
-                                    const color = item.isBullish ? '#10b981' : '#f43f5e';
+                                    const color = item.isBullish ? '#52c41a' : '#ff4d4f';
 
                                     ctx.strokeStyle = color;
                                     ctx.lineWidth = 2;
@@ -350,8 +350,8 @@
                                         {
                                             label: 'Rentang Lilin (Body)',
                                             data: candleDataset.map(c => c.barRange),
-                                            backgroundColor: candleDataset.map(c => c.isBullish ? 'rgba(16, 185, 129, 0.85)' : 'rgba(244, 63, 94, 0.85)'),
-                                            borderColor: candleDataset.map(c => c.isBullish ? '#059669' : '#e11d48'),
+                                            backgroundColor: candleDataset.map(c => c.isBullish ? 'rgba(82, 196, 26, 0.85)' : 'rgba(255, 77, 79, 0.85)'),
+                                            borderColor: candleDataset.map(c => c.isBullish ? '#389e0d' : '#d9363e'),
                                             borderWidth: 1.5,
                                             borderRadius: 4,
                                             borderSkipped: false,
@@ -451,8 +451,8 @@
                             this.monthlyChart._candleMeta = newCandleData;
                             this.monthlyChart.data.labels = newMonthLabels;
                             this.monthlyChart.data.datasets[0].data = newCandleData.map(c => c.barRange);
-                            this.monthlyChart.data.datasets[0].backgroundColor = newCandleData.map(c => c.isBullish ? 'rgba(16, 185, 129, 0.85)' : 'rgba(244, 63, 94, 0.85)');
-                            this.monthlyChart.data.datasets[0].borderColor = newCandleData.map(c => c.isBullish ? '#059669' : '#e11d48');
+                            this.monthlyChart.data.datasets[0].backgroundColor = newCandleData.map(c => c.isBullish ? 'rgba(82, 196, 26, 0.85)' : 'rgba(255, 77, 79, 0.85)');
+                            this.monthlyChart.data.datasets[0].borderColor = newCandleData.map(c => c.isBullish ? '#389e0d' : '#d9363e');
                             this.monthlyChart.update();
                         }
                     },

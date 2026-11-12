@@ -15,47 +15,27 @@
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
         :root {
-            --blue:   #3b82f6;
-            --blue-d: #1d4ed8;
-            --indigo: #4f46e5;
-            --slate:  #1e293b;
-            --muted:  #64748b;
-            --light:  #f8fafc;
-            --border: #e2e8f0;
+            /* ── Palet Ant Design v5 (seed token #1677ff) ── */
+            --primary:  #1677ff;
+            --primary-h:#4096ff;
+            --success:  #52c41a;
+            --warning:  #faad14;
+            --danger:   #ff4d4f;
+            --title:    #262626;
+            --text:     #595959;
+            --secondary:#8c8c8c;
+            --disabled: #bfbfbf;
+            --border:   #d9d9d9;
+            --split:    #f0f0f0;
+            --layout:   #f5f5f5;
         }
 
         body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 40%, #1a1a3e 100%);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #f5f5f5;
             min-height: 100vh;
             padding: 2rem 1rem 4rem;
-            color: #1e293b;
-        }
-
-        /* ── Animated background blobs ── */
-        body::before, body::after {
-            content: '';
-            position: fixed;
-            border-radius: 50%;
-            filter: blur(80px);
-            opacity: 0.15;
-            pointer-events: none;
-        }
-        body::before {
-            width: 600px; height: 600px;
-            background: #3b82f6;
-            top: -200px; right: -150px;
-            animation: drift 12s ease-in-out infinite alternate;
-        }
-        body::after {
-            width: 500px; height: 500px;
-            background: #8b5cf6;
-            bottom: -150px; left: -100px;
-            animation: drift 15s ease-in-out infinite alternate-reverse;
-        }
-        @keyframes drift {
-            from { transform: translate(0, 0) scale(1); }
-            to   { transform: translate(30px, 20px) scale(1.05); }
+            color: #595959;
         }
 
         .page-wrap {
@@ -69,34 +49,35 @@
         .header {
             text-align: center;
             margin-bottom: 2rem;
-            color: white;
+            color: #262626;
         }
         .header .badge {
             display: inline-flex;
             align-items: center;
             gap: .5rem;
-            background: rgba(59,130,246,.25);
-            border: 1px solid rgba(59,130,246,.4);
-            color: #93c5fd;
+            background: #e6f4ff;
+            border: 1px solid #91caff;
+            color: #0958d9;
             font-size: 11px;
-            font-weight: 700;
-            letter-spacing: .08em;
+            font-weight: 600;
+            letter-spacing: .06em;
             text-transform: uppercase;
             padding: .3rem .8rem;
-            border-radius: 999px;
+            border-radius: 6px;
             margin-bottom: 1rem;
         }
         .header h1 {
             font-size: clamp(1.5rem, 4vw, 2.25rem);
-            font-weight: 900;
+            font-weight: 800;
             letter-spacing: -.02em;
             line-height: 1.15;
             margin-bottom: .5rem;
+            color: #262626;
         }
-        .header h1 span { color: #60a5fa; }
+        .header h1 span { color: #1677ff; }
         .header p {
             font-size: .9rem;
-            color: rgba(255,255,255,.65);
+            color: #8c8c8c;
             line-height: 1.6;
             max-width: 480px;
             margin: 0 auto;
@@ -105,7 +86,7 @@
         /* ── Alert messages ── */
         .alert {
             padding: 1rem 1.25rem;
-            border-radius: 14px;
+            border-radius: 8px;
             font-size: .875rem;
             margin-bottom: 1.5rem;
             display: flex;
@@ -113,27 +94,28 @@
             gap: .75rem;
         }
         .alert-error {
-            background: #fff1f2;
-            border: 1px solid #fecdd3;
-            color: #be123c;
+            background: #fff2f0;
+            border: 1px solid #ffccc7;
+            color: #cf1322;
         }
         .alert-icon { flex-shrink: 0; margin-top: 2px; }
 
         /* ── Card ── */
         .card {
             background: #fff;
-            border-radius: 24px;
+            border-radius: 8px;
             padding: 2rem;
-            box-shadow: 0 25px 60px rgba(0,0,0,.35), 0 0 0 1px rgba(255,255,255,.06);
+            border: 1px solid #f0f0f0;
+            box-shadow: 0 1px 2px 0 rgba(0,0,0,0.03), 0 1px 6px -1px rgba(0,0,0,0.02), 0 2px 4px 0 rgba(0,0,0,0.02);
         }
 
         /* ── Section titles ── */
         .section-title {
             font-size: .7rem;
-            font-weight: 800;
-            letter-spacing: .1em;
+            font-weight: 700;
+            letter-spacing: .08em;
             text-transform: uppercase;
-            color: #94a3b8;
+            color: #8c8c8c;
             margin: 1.75rem 0 .875rem;
             display: flex;
             align-items: center;
@@ -143,7 +125,7 @@
             content: '';
             flex: 1;
             height: 1px;
-            background: #f1f5f9;
+            background: #f0f0f0;
         }
 
         /* ── Form grid ── */
@@ -161,23 +143,23 @@
         /* ── Field ── */
         .field { display: flex; flex-direction: column; gap: .35rem; }
         .field label {
-            font-size: .75rem;
-            font-weight: 600;
-            color: #475569;
+            font-size: .8125rem;
+            font-weight: 500;
+            color: #595959;
         }
-        .field label .req { color: #e11d48; margin-left: 2px; }
+        .field label .req { color: #ff4d4f; margin-left: 2px; }
 
         .field input,
         .field select,
         .field textarea {
             width: 100%;
-            padding: .65rem 1rem;
+            padding: .5rem .75rem;
             font-size: .875rem;
             font-family: inherit;
-            border: 1.5px solid #e2e8f0;
-            border-radius: 12px;
-            background: #f8fafc;
-            color: #1e293b;
+            border: 1px solid #d9d9d9;
+            border-radius: 6px;
+            background: #fff;
+            color: #262626;
             transition: border-color .2s, box-shadow .2s, background .2s;
             outline: none;
             appearance: none;
@@ -185,15 +167,15 @@
         .field input:focus,
         .field select:focus,
         .field textarea:focus {
-            border-color: #3b82f6;
+            border-color: #1677ff;
             background: #fff;
-            box-shadow: 0 0 0 3px rgba(59,130,246,.12);
+            box-shadow: 0 0 0 2px rgba(5,145,255,.10);
         }
         .field input.is-error,
-        .field select.is-error { border-color: #f43f5e; }
+        .field select.is-error { border-color: #ff4d4f; }
         .field .field-error {
-            font-size: .7rem;
-            color: #f43f5e;
+            font-size: .72rem;
+            color: #ff4d4f;
             font-weight: 500;
         }
 
@@ -210,15 +192,15 @@
             align-items: center;
             justify-content: center;
             gap: .4rem;
-            padding: .6rem 1rem;
-            border-radius: 10px;
-            border: 1.5px solid #e2e8f0;
+            padding: .55rem 1rem;
+            border-radius: 6px;
+            border: 1px solid #d9d9d9;
             font-size: .8rem;
-            font-weight: 600;
+            font-weight: 500;
             cursor: pointer;
             transition: all .2s;
-            background: #f8fafc;
-            color: #64748b;
+            background: #fff;
+            color: #595959;
             user-select: none;
         }
         .toggle-group input[type="radio"] { display: none; }
@@ -226,43 +208,39 @@
             border-color: transparent;
             color: #fff;
         }
-        /* Ya = green */
+        /* Ya = success */
         .toggle-group .opt-ya input:checked + label {
-            background: #059669;
-            box-shadow: 0 2px 8px rgba(5,150,105,.3);
+            background: #52c41a;
         }
-        /* Tidak = rose */
+        /* Tidak = danger */
         .toggle-group .opt-tidak input:checked + label {
-            background: #e11d48;
-            box-shadow: 0 2px 8px rgba(225,29,72,.25);
+            background: #ff4d4f;
         }
-        /* Sudah = green */
+        /* Sudah = success */
         .toggle-group .opt-sudah input:checked + label {
-            background: #059669;
-            box-shadow: 0 2px 8px rgba(5,150,105,.3);
+            background: #52c41a;
         }
-        /* Belum = amber */
+        /* Belum = warning */
         .toggle-group .opt-belum input:checked + label {
-            background: #d97706;
-            box-shadow: 0 2px 8px rgba(217,119,6,.25);
+            background: #faad14;
         }
 
         .toggle-group label:hover {
-            border-color: #94a3b8;
-            background: #f1f5f9;
+            border-color: #4096ff;
+            background: #f0f0f0;
         }
 
         /* ── Skrining card ── */
         .skrining-item {
-            background: #f8fafc;
-            border: 1.5px solid #e2e8f0;
-            border-radius: 14px;
+            background: #fafafa;
+            border: 1px solid #f0f0f0;
+            border-radius: 8px;
             padding: 1rem 1.25rem;
         }
         .skrining-item .item-label {
             font-size: .8rem;
             font-weight: 600;
-            color: #334155;
+            color: #262626;
             margin-bottom: .65rem;
             display: flex;
             align-items: center;
@@ -271,39 +249,38 @@
         .skrining-item .item-label svg { flex-shrink: 0; }
 
         /* ── Error on toggle groups ── */
-        .skrining-item.is-error { border-color: #f43f5e; background: #fff1f2; }
+        .skrining-item.is-error { border-color: #ff4d4f; background: #fff2f0; }
         .skrining-item.is-error .field-error { margin-top: .4rem; }
 
         /* ── Submit button ── */
         .btn-submit {
             width: 100%;
-            padding: .9rem 1.5rem;
-            background: linear-gradient(135deg, #3b82f6, #4f46e5);
+            padding: .75rem 1.5rem;
+            background: #1677ff;
             color: #fff;
             font-family: inherit;
             font-size: .95rem;
-            font-weight: 700;
-            border: none;
-            border-radius: 14px;
+            font-weight: 600;
+            border: 1px solid #1677ff;
+            border-radius: 6px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: .6rem;
-            box-shadow: 0 4px 20px rgba(59,130,246,.4);
-            transition: opacity .2s, transform .15s;
+            transition: background .2s, border-color .2s;
             letter-spacing: .01em;
             margin-top: 1.5rem;
         }
-        .btn-submit:hover { opacity: .92; transform: translateY(-1px); }
-        .btn-submit:active { transform: translateY(0); }
+        .btn-submit:hover { background: #4096ff; border-color: #4096ff; }
+        .btn-submit:active { background: #0958d9; border-color: #0958d9; }
 
         /* ── Privacy note ── */
         .privacy {
             margin-top: 1.25rem;
             text-align: center;
             font-size: .72rem;
-            color: #94a3b8;
+            color: #8c8c8c;
             line-height: 1.6;
         }
         .privacy svg { vertical-align: middle; }
@@ -468,8 +445,8 @@
                 <!-- Batuk > 2 Minggu -->
                 <div class="skrining-item {{ $errors->has('batuk_2_minggu') ? 'is-error' : '' }}">
                     <div class="item-label">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="2"><path d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                        Gejala Batuk lebih dari 2 Minggu <span class="req" style="color:#e11d48">*</span>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#faad14" stroke-width="2"><path d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        Gejala Batuk lebih dari 2 Minggu <span class="req" style="color:#ff4d4f">*</span>
                     </div>
                     <div class="toggle-group">
                         <div class="opt-ya">
@@ -487,8 +464,8 @@
                 <!-- BB Turun -->
                 <div class="skrining-item {{ $errors->has('bb_turun') ? 'is-error' : '' }}">
                     <div class="item-label">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="2"><path d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                        Berat Badan Turun tanpa sebab <span class="req" style="color:#e11d48">*</span>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#faad14" stroke-width="2"><path d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        Berat Badan Turun tanpa sebab <span class="req" style="color:#ff4d4f">*</span>
                     </div>
                     <div class="toggle-group">
                         <div class="opt-ya">
@@ -506,8 +483,8 @@
                 <!-- Keringat Malam -->
                 <div class="skrining-item {{ $errors->has('keringat_malam') ? 'is-error' : '' }}">
                     <div class="item-label">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="2"><path d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                        Keringat Malam berlebihan <span class="req" style="color:#e11d48">*</span>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#faad14" stroke-width="2"><path d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        Keringat Malam berlebihan <span class="req" style="color:#ff4d4f">*</span>
                     </div>
                     <div class="toggle-group">
                         <div class="opt-ya">
@@ -525,8 +502,8 @@
                 <!-- Kontak Erat TB -->
                 <div class="skrining-item {{ $errors->has('kontak_tb') ? 'is-error' : '' }}">
                     <div class="item-label">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87m-4-12a4 4 0 010 7.75"/></svg>
-                        Apakah ada Kontak erat dengan penderita TB? <span class="req" style="color:#e11d48">*</span>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1677ff" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87m-4-12a4 4 0 010 7.75"/></svg>
+                        Apakah ada Kontak erat dengan penderita TB? <span class="req" style="color:#ff4d4f">*</span>
                     </div>
                     <div class="toggle-group">
                         <div class="opt-ya">
@@ -544,8 +521,8 @@
                 <!-- Sudah Pengobatan -->
                 <div class="skrining-item {{ $errors->has('sudah_pengobatan') ? 'is-error' : '' }}">
                     <div class="item-label">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="2"><path d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/></svg>
-                        Apakah sudah melakukan Pengobatan TB? <span class="req" style="color:#e11d48">*</span>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1677ff" stroke-width="2"><path d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/></svg>
+                        Apakah sudah melakukan Pengobatan TB? <span class="req" style="color:#ff4d4f">*</span>
                     </div>
                     <div class="toggle-group">
                         <div class="opt-sudah">
@@ -569,7 +546,7 @@
             </button>
 
             <p class="privacy">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#8c8c8c" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
                 Data Anda bersifat rahasia dan hanya digunakan untuk keperluan pemantauan kesehatan oleh petugas Puskesmas setempat.
             </p>
 

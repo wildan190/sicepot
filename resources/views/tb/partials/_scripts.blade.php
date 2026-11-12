@@ -271,7 +271,7 @@
                                 datasets: [{
                                     label: 'Jumlah Kasus',
                                     data: this.kelurahanChartData.values,
-                                    backgroundColor: 'rgba(99, 102, 241, 0.85)',
+                                    backgroundColor: 'rgba(22, 119, 255, 0.85)',
                                     borderRadius: 6,
                                 }]
                             },
@@ -281,7 +281,7 @@
                                 maintainAspectRatio: false,
                                 plugins: { legend: { display: false } },
                                 scales: {
-                                    x: { grid: { color: '#f1f5f9' } },
+                                    x: { grid: { color: '#f0f0f0' } },
                                     y: { grid: { display: false } }
                                 }
                             }
@@ -300,7 +300,7 @@
                                 labels: this.genderChartData.labels,
                                 datasets: [{
                                     data: this.genderChartData.values,
-                                    backgroundColor: ['#6366f1', '#ec4899'],
+                                    backgroundColor: ['#1677ff', '#eb2f96'],
                                 }]
                             },
                             options: {
@@ -327,12 +327,12 @@
                                 datasets: [{
                                     label: 'Kasus Baru',
                                     data: this.monthlyChartData.values,
-                                    borderColor: '#0284c7',
-                                    backgroundColor: 'rgba(2, 132, 199, 0.1)',
+                                    borderColor: '#1677ff',
+                                    backgroundColor: 'rgba(22, 119, 255, 0.1)',
                                     fill: true,
                                     tension: 0.35,
                                     pointRadius: 4,
-                                    pointBackgroundColor: '#0284c7',
+                                    pointBackgroundColor: '#1677ff',
                                 }]
                             },
                             options: {
@@ -340,7 +340,7 @@
                                 maintainAspectRatio: false,
                                 plugins: { legend: { display: false } },
                                 scales: {
-                                    y: { beginAtZero: true, grid: { color: '#f1f5f9' } },
+                                    y: { beginAtZero: true, grid: { color: '#f0f0f0' } },
                                     x: { grid: { display: false } }
                                 }
                             }
@@ -360,7 +360,7 @@
                                 datasets: [{
                                     label: 'Pasien OAT (TB-03)',
                                     data: this.oatKelurahanChartData.values,
-                                    backgroundColor: 'rgba(244, 63, 94, 0.82)',
+                                    backgroundColor: 'rgba(255, 77, 79, 0.82)',
                                     borderRadius: 6,
                                 }]
                             },
@@ -370,7 +370,7 @@
                                 maintainAspectRatio: false,
                                 plugins: { legend: { display: false } },
                                 scales: {
-                                    x: { beginAtZero: true, grid: { color: '#fef2f2' }, ticks: { precision: 0 } },
+                                    x: { beginAtZero: true, grid: { color: '#fff2f0' }, ticks: { precision: 0 } },
                                     y: { grid: { display: false } }
                                 }
                             }
@@ -938,11 +938,11 @@
                 formatAiContent(content) {
                     if (!content) return '';
                     let formatted = content
-                        .replace(/### (.*?)\n/g, '<h4 class="font-bold text-sm text-slate-800 mt-3 mb-1">$1</h4>')
-                        .replace(/## (.*?)\n/g, '<h3 class="font-bold text-base text-purple-900 mt-4 mb-2 pb-1 border-b border-purple-100">$1</h3>')
-                        .replace(/\*\*(.*?)\*\*/g, '<strong class="font-bold text-slate-900">$1</strong>')
-                        .replace(/\* (.*?)\n/g, '<div class="flex items-start gap-1.5 my-1 ml-2"><span class="text-purple-600 font-bold">•</span><span>$1</span></div>')
-                        .replace(/- (.*?)\n/g, '<div class="flex items-start gap-1.5 my-1 ml-2"><span class="text-purple-600 font-bold">•</span><span>$1</span></div>');
+                        .replace(/### (.*?)\n/g, '<h4 class="font-bold text-sm text-ant-title mt-3 mb-1">$1</h4>')
+                        .replace(/## (.*?)\n/g, '<h3 class="font-bold text-base text-[#531dab] mt-4 mb-2 pb-1 border-b border-[#efdbff]">$1</h3>')
+                        .replace(/\*\*(.*?)\*\*/g, '<strong class="font-bold text-ant-title">$1</strong>')
+                        .replace(/\* (.*?)\n/g, '<div class="flex items-start gap-1.5 my-1 ml-2"><span class="text-[#531dab] font-bold">•</span><span>$1</span></div>')
+                        .replace(/- (.*?)\n/g, '<div class="flex items-start gap-1.5 my-1 ml-2"><span class="text-[#531dab] font-bold">•</span><span>$1</span></div>');
                     return formatted;
                 }
             };

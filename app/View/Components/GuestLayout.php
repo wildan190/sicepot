@@ -8,6 +8,13 @@ use Illuminate\View\View;
 class GuestLayout extends Component
 {
     /**
+     * Tampilan lebar (split-screen) — dipakai halaman login.
+     */
+    public function __construct(public bool $wide = false)
+    {
+    }
+
+    /**
      * Get the view / contents that represents the component.
      */
     public function render(): View
