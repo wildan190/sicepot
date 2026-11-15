@@ -69,19 +69,22 @@
                                         </td>
                                         <td>
                                             <div class="font-semibold text-ant-text"
-                                                x-text="p.usia_kehamilan ? p.usia_kehamilan + ' mgg' : (p.kunjungan_ke || '-')">
+                                                x-text="(p.usia_kehamilan || calculateUsiaKehamilan(p.hpht, p.tanggal_kunjungan)) ? ((p.usia_kehamilan || calculateUsiaKehamilan(p.hpht, p.tanggal_kunjungan)) + ' mgg').replace(' mgg mgg', ' mgg') : (p.kunjungan_ke || '-')">
                                             </div>
                                             <div class="text-[11px] text-primary font-medium"
                                                 x-text="p.kunjungan_ke || ''"></div>
                                         </td>
                                         <td class="whitespace-nowrap">
                                             <div class="font-medium text-ant-title"
-                                                x-text="p.hpl ? p.hpl.substring(0, 10) : '-'"></div>
-                                            <template x-if="getHplStatus(p.hpl, p.tanggal_bersalin)">
+                                                x-text="(p.hpl || calculateHpl(p.hpht)) ? String(p.hpl || calculateHpl(p.hpht)).substring(0, 10) : '-'"></div>
+                                            <template x-if="p.hpht">
+                                                <div class="text-[10px] text-ant-secondary" x-text="'HPHT: ' + String(p.hpht).substring(0, 10)"></div>
+                                            </template>
+                                            <template x-if="getHplStatus(p.hpl || calculateHpl(p.hpht), p.tanggal_bersalin)">
                                                 <span
-                                                    :class="getHplStatus(p.hpl, p.tanggal_bersalin).color"
+                                                    :class="getHplStatus(p.hpl || calculateHpl(p.hpht), p.tanggal_bersalin).color"
                                                     class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-black mt-0.5"
-                                                    x-text="getHplStatus(p.hpl, p.tanggal_bersalin).label">
+                                                    x-text="getHplStatus(p.hpl || calculateHpl(p.hpht), p.tanggal_bersalin).label">
                                                 </span>
                                             </template>
                                         </td>

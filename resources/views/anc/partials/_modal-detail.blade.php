@@ -131,13 +131,13 @@
                                         </div>
                                         <div class="flex justify-between"><span class="text-ant-secondary">Usia
                                                 Kehamilan:</span><span class="font-semibold text-ant-text"
-                                                x-text="viewingPatient?.usia_kehamilan || '-'"></span></div>
+                                                x-text="(viewingPatient?.usia_kehamilan || calculateUsiaKehamilan(viewingPatient?.hpht, viewingPatient?.tanggal_kunjungan)) ? ((viewingPatient?.usia_kehamilan || calculateUsiaKehamilan(viewingPatient?.hpht, viewingPatient?.tanggal_kunjungan)) + ' mgg').replace(' mgg mgg', ' mgg') : '-'"></span></div>
                                         <div class="flex justify-between"><span class="text-ant-secondary">HPHT:</span><span
                                                 class="font-semibold text-ant-text"
                                                 x-text="formatDate(viewingPatient?.hpht)"></span></div>
                                         <div class="flex justify-between"><span class="text-ant-secondary">HPL (Taksiran
                                                 Persalinan):</span><span class="font-bold text-danger"
-                                                x-text="formatDate(viewingPatient?.hpl)"></span></div>
+                                                x-text="formatDate(viewingPatient?.hpl || calculateHpl(viewingPatient?.hpht))"></span></div>
                                         <div class="flex justify-between"><span class="text-ant-secondary">Tgl Kunjungan
                                                 Terakhir:</span><span class="font-semibold text-ant-text"
                                                 x-text="formatDate(viewingPatient?.tanggal_kunjungan)"></span></div>

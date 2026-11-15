@@ -62,6 +62,7 @@
                 showAddModal: false,
                 isSubmittingNewPatient: false,
                 editingPatient: {},
+                addMode: 'manual',     // 'manual' | 'ai'
                 // AI Prompt Add state
                 aiAddStep: 'prompt',   // 'prompt' | 'preview'
                 aiAddPrompt: '',
@@ -297,10 +298,35 @@
                 },
 
                 openAddModal() {
+                    this.addMode = 'manual';
                     this.aiAddStep = 'prompt';
                     this.aiAddPrompt = '';
                     this.aiAddError = '';
-                    this.newPatient = {};
+                    this.newPatient = {
+                        nama_lengkap: '',
+                        nama_suami: '',
+                        nik: '',
+                        no_telepon: '',
+                        tanggal_lahir: '',
+                        umur: null,
+                        gravida: 1,
+                        para: 0,
+                        abortus: 0,
+                        hpht: '',
+                        hpl: '',
+                        usia_kehamilan: '',
+                        kunjungan_ke: 'K1',
+                        lila: '',
+                        hb: '',
+                        tekanan_darah_sistolik: '',
+                        tekanan_darah_diastolik: '',
+                        status_risti: 'Normal',
+                        status_anemia: 'Tidak Anemia',
+                        faktor_risiko: '',
+                        kabupaten: this.selectedKabupaten || 'Kab. Tangerang',
+                        kelurahan: this.selectedKelurahan || '',
+                        alamat_lengkap: ''
+                    };
                     this.showAddModal = true;
                 },
 
@@ -322,6 +348,16 @@
                                 if (v !== null && v !== '') clean[k] = v;
                             });
                             this.newPatient = clean;
+                            // Auto-calculate HPL dan Usia Kehamilan jika HPHT ada
+                            if (this.newPatient.hpht) {
+                                if (!this.newPatient.hpl) {
+                                    this.newPatient.hpl = this.calculateHpl(this.newPatient.hpht);
+                                }
+                                if (!this.newPatient.usia_kehamilan) {
+                                    this.newPatient.usia_kehamilan = this.calculateUsiaKehamilan(this.newPatient.hpht, this.newPatient.tanggal_kunjungan);
+                                }
+                            }
+                            this.autoDetectRiskFactors(this.newPatient);
                             this.aiAddStep = 'preview';
                         } else {
                             this.aiAddError = result.message || 'AI tidak dapat memproses deskripsi ini. Coba tulis lebih lengkap.';
@@ -877,9 +913,152 @@
                     }
                 },
 
+                // ── Kalkulasi Obstetri: HPHT -> HPL, Usia Kehamilan & Deteksi Risiko ──
+                /**
+                 * Rumus HPL Naegele: tgl + 7, bulan - 3, tahun + 1
+                 * (Bulan 1-3: tgl + 7, bulan + 9, tahun tetap)
+                 */
+                calculateHpl(hpht) {
+                    if (!hpht) return '';
+                    try {
+                        const str = String(hpht).trim().substring(0, 10);
+                        const parts = str.split('-');
+                        if (parts.length !== 3) return '';
+                        const year = parseInt(parts[0], 10);
+                        const month = parseInt(parts[1], 10);
+                        const day = parseInt(parts[2], 10);
+                        if (isNaN(year) || isNaN(month) || isNaN(day)) return '';
+
+                        let targetYear = year + 1;
+                        let targetMonth = month - 3;
+                        if (month <= 3) {
+                            targetMonth = month + 9;
+                            targetYear = year;
+                        }
+                        const targetDay = day + 7;
+
+                        // Gunakan Date UTC agar tidak terpengaruh pergeseran timezone browser
+                        const d = new Date(Date.UTC(targetYear, targetMonth - 1, targetDay));
+                        const y = d.getUTCFullYear();
+                        const m = String(d.getUTCMonth() + 1).padStart(2, '0');
+                        const dd = String(d.getUTCDate()).padStart(2, '0');
+                        return `${y}-${m}-${dd}`;
+                    } catch (e) {
+                        return '';
+                    }
+                },
+
+                /**
+                 * Hitung Usia Kehamilan dalam satuan minggu dari HPHT
+                 */
+                calculateUsiaKehamilan(hpht, refDate = null) {
+                    if (!hpht) return '';
+                    try {
+                        const hphtStr = String(hpht).trim().substring(0, 10);
+                        const parts = hphtStr.split('-');
+                        if (parts.length !== 3) return '';
+                        const hphtTime = Date.UTC(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
+
+                        let refTime;
+                        if (refDate) {
+                            const refParts = String(refDate).trim().substring(0, 10).split('-');
+                            refTime = Date.UTC(parseInt(refParts[0], 10), parseInt(refParts[1], 10) - 1, parseInt(refParts[2], 10));
+                        } else {
+                            const now = new Date();
+                            refTime = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate());
+                        }
+
+                        const diffMs = refTime - hphtTime;
+                        if (diffMs < 0) return 0;
+                        const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+                        return Math.floor(diffDays / 7);
+                    } catch (e) {
+                        return '';
+                    }
+                },
+
+                /**
+                 * Event handler ketika HPHT diubah: otomatis hitung HPL & usia_kehamilan
+                 */
+                onHphtChange(targetObj) {
+                    if (!targetObj || !targetObj.hpht) return;
+                    targetObj.hpl = this.calculateHpl(targetObj.hpht);
+                    const uk = this.calculateUsiaKehamilan(targetObj.hpht, targetObj.tanggal_kunjungan);
+                    if (uk !== '' && uk !== null && !isNaN(uk)) {
+                        targetObj.usia_kehamilan = uk;
+                    }
+                    this.autoDetectRiskFactors(targetObj);
+                },
+
+                /**
+                 * Deteksi faktor risiko klinis (KEK, Anemia, HDK, Risti Umur, TB < 145)
+                 */
+                autoDetectRiskFactors(targetObj) {
+                    if (!targetObj) return;
+                    const detected = [];
+                    const lila = parseFloat(targetObj.lila);
+                    if (!isNaN(lila) && lila > 0 && lila < 23.5) {
+                        detected.push('KEK');
+                    }
+                    const hb = parseFloat(String(targetObj.hb || '').replace(',', '.'));
+                    if (!isNaN(hb) && hb > 0 && hb < 11.0) {
+                        detected.push('Anemia');
+                    }
+                    const tdS = parseFloat(targetObj.tekanan_darah_sistolik);
+                    const tdD = parseFloat(targetObj.tekanan_darah_diastolik);
+                    if ((!isNaN(tdS) && tdS >= 140) || (!isNaN(tdD) && tdD >= 90)) {
+                        detected.push('HDK');
+                    }
+                    const umur = parseInt(targetObj.umur, 10);
+                    if (!isNaN(umur)) {
+                        if (umur > 0 && umur < 17) detected.push('Primi Muda (< 17 th)');
+                        else if (umur >= 35) detected.push('Umur Hamil Lanjut (≥ 35 th)');
+                    }
+                    const tb = parseFloat(targetObj.tinggi_badan);
+                    if (!isNaN(tb) && tb > 0 && tb < 145) {
+                        detected.push('TB < 145 cm');
+                    }
+
+                    if (detected.length > 0) {
+                        const existing = targetObj.faktor_risiko ? targetObj.faktor_risiko.split(',').map(s => s.trim()).filter(Boolean) : [];
+                        const merged = Array.from(new Set([...existing, ...detected]));
+                        targetObj.faktor_risiko = merged.join(', ');
+                        if (!targetObj.status_risti || targetObj.status_risti === 'Normal') {
+                            targetObj.status_risti = 'Risiko Tinggi';
+                        }
+                    }
+                },
+
+                /**
+                 * Toggle chip faktor risiko (tambah / hapus dengan 1 klik)
+                 */
+                toggleRiskChip(targetObj, tag) {
+                    if (!targetObj) return;
+                    const existing = targetObj.faktor_risiko ? targetObj.faktor_risiko.split(',').map(s => s.trim()).filter(Boolean) : [];
+                    const idx = existing.indexOf(tag);
+                    if (idx !== -1) {
+                        existing.splice(idx, 1);
+                    } else {
+                        existing.push(tag);
+                    }
+                    targetObj.faktor_risiko = existing.join(', ');
+                    if (existing.length > 0) {
+                        targetObj.status_risti = 'Risiko Tinggi';
+                    }
+                },
+
                 // Realtime Edit Patient
                 openEditModal(patient) {
                     this.editingPatient = JSON.parse(JSON.stringify(patient));
+                    // Jika belum ada HPL tapi ada HPHT, hitung otomatis
+                    if (this.editingPatient.hpht) {
+                        if (!this.editingPatient.hpl) {
+                            this.editingPatient.hpl = this.calculateHpl(this.editingPatient.hpht);
+                        }
+                        if (!this.editingPatient.usia_kehamilan) {
+                            this.editingPatient.usia_kehamilan = this.calculateUsiaKehamilan(this.editingPatient.hpht, this.editingPatient.tanggal_kunjungan);
+                        }
+                    }
                     this.showEditModal = true;
                 },
 

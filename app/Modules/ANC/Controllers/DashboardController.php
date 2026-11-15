@@ -147,6 +147,24 @@ class DashboardController extends Controller
         ];
         $data = array_intersect_key($data, array_flip($allowed));
 
+        // ── Auto compute HPL & usia_kehamilan dari HPHT jika belum ada ─────────
+        if (!empty($data['hpht'])) {
+            if (empty($data['hpl'])) {
+                $data['hpl'] = \App\Modules\ANC\Models\AncPatient::calculateHpl($data['hpht']);
+            }
+            if (empty($data['usia_kehamilan'])) {
+                $data['usia_kehamilan'] = (string) \App\Modules\ANC\Models\AncPatient::calculateUsiaKehamilan($data['hpht'], $data['tanggal_kunjungan'] ?? null);
+            }
+        }
+
+        // ── Auto detect faktor risiko jika belum ada ──────────────────────────
+        if (empty($data['faktor_risiko'])) {
+            $detected = \App\Modules\ANC\Models\AncPatient::detectFaktorRisiko($data);
+            if ($detected) {
+                $data['faktor_risiko'] = $detected;
+            }
+        }
+
         return response()->json(['success' => true, 'data' => $data]);
     }
 
