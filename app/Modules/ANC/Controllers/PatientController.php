@@ -24,6 +24,24 @@ class PatientController extends Controller
     {
         $payload = $request->validated();
         
+        // Auto compute HPL & usia_kehamilan dari HPHT jika belum diisi
+        if (!empty($payload['hpht'])) {
+            if (empty($payload['hpl'])) {
+                $payload['hpl'] = AncPatient::calculateHpl($payload['hpht']);
+            }
+            if (empty($payload['usia_kehamilan'])) {
+                $payload['usia_kehamilan'] = (string) AncPatient::calculateUsiaKehamilan($payload['hpht'], $payload['tanggal_kunjungan'] ?? null);
+            }
+        }
+
+        // Auto detect faktor risiko jika kosong
+        if (empty($payload['faktor_risiko'])) {
+            $detected = AncPatient::detectFaktorRisiko($payload);
+            if ($detected) {
+                $payload['faktor_risiko'] = $detected;
+            }
+        }
+
         // Auto compute Poedji Rochjati risk assessment
         $assessment = \App\Modules\ANC\Services\RiskAssessmentService::calculate($payload);
         $payload['skor_poedji_rochjati']     = $assessment['skor'];
@@ -49,6 +67,16 @@ class PatientController extends Controller
     public function update(UpdatePatientRequest $request, AncPatient $patient)
     {
         $payload = $request->validated();
+
+        // Auto compute HPL & usia_kehamilan dari HPHT jika ada perubahan atau belum diisi
+        if (!empty($payload['hpht'])) {
+            if (empty($payload['hpl'])) {
+                $payload['hpl'] = AncPatient::calculateHpl($payload['hpht']);
+            }
+            if (empty($payload['usia_kehamilan'])) {
+                $payload['usia_kehamilan'] = (string) AncPatient::calculateUsiaKehamilan($payload['hpht'], $payload['tanggal_kunjungan'] ?? $patient->tanggal_kunjungan);
+            }
+        }
 
         // Auto compute Poedji Rochjati risk assessment on update
         $merged = array_merge($patient->toArray(), $payload);

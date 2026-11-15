@@ -482,6 +482,29 @@ class ImportService
             }
         }
 
+        // Auto-calculate HPL from HPHT using rumus: tgl + 7, bulan - 3, tahun + 1
+        if (!empty($data['hpht']) && empty($data['hpl'])) {
+            $data['hpl'] = AncPatient::calculateHpl($data['hpht']);
+        }
+
+        // Auto-calculate usia_kehamilan from HPHT jika belum ada
+        if (!empty($data['hpht']) && empty($data['usia_kehamilan'])) {
+            $data['usia_kehamilan'] = (string) AncPatient::calculateUsiaKehamilan($data['hpht'], $data['tanggal_kunjungan'] ?? null);
+        }
+
+        // Auto-detect and supplement faktor_risiko
+        $detectedRisks = AncPatient::detectFaktorRisiko($data);
+        if (!empty($detectedRisks)) {
+            if (empty($data['faktor_risiko'])) {
+                $data['faktor_risiko'] = $detectedRisks;
+            } else {
+                $existing = array_map('trim', explode(',', (string) $data['faktor_risiko']));
+                $new = array_map('trim', explode(',', $detectedRisks));
+                $merged = array_unique(array_filter(array_merge($existing, $new)));
+                $data['faktor_risiko'] = implode(', ', $merged);
+            }
+        }
+
         // Calculate umur from tanggal_lahir if umur is missing or zero
         if (($data['umur'] === null || $data['umur'] === 0) && !empty($data['tanggal_lahir'])) {
             try {

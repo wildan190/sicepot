@@ -105,7 +105,9 @@
                                                     <th>Telp</th>
                                                     <th>Umur / Tgl Lahir</th>
                                                     <th>G-P-A</th>
+                                                    <th>HPHT</th>
                                                     <th>HPL / TP</th>
+                                                    <th>Usia Hamil</th>
                                                     <th>LiLA</th>
                                                     <th>Kelurahan</th>
                                                     <th>Risiko</th>
@@ -129,7 +131,10 @@
                                                         <td class="text-ant-text"
                                                             x-text="row.gravida ? 'G' + row.gravida + (row.para !== undefined ? 'P' + row.para : '') + (row.abortus !== undefined ? 'A' + row.abortus : '') : '-'">
                                                         </td>
-                                                        <td class="text-ant-text" x-text="row.hpl || '-'"></td>
+                                                        <td class="text-ant-text" x-text="row.hpht || '-'"></td>
+                                                        <td class="text-ant-text font-medium text-danger" x-text="row.hpl || '-'"></td>
+                                                        <td class="text-ant-text font-semibold"
+                                                            x-text="row.usia_kehamilan ? row.usia_kehamilan + ' mgg' : '-'"></td>
                                                         <td class="text-ant-text"
                                                             x-text="row.lila ? row.lila + ' cm' : '-'"></td>
                                                         <td class="text-ant-text" x-text="row.kelurahan || '-'">
