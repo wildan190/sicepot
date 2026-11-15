@@ -80,7 +80,12 @@
                                             <template x-if="p.hpht">
                                                 <div class="text-[10px] text-ant-secondary" x-text="'HPHT: ' + String(p.hpht).substring(0, 10)"></div>
                                             </template>
-                                            <template x-if="getHplStatus(p.hpl || calculateHpl(p.hpht), p.tanggal_bersalin)">
+                                            <template x-if="p.tanggal_bersalin">
+                                                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold mt-0.5 bg-success-50 text-success-700">
+                                                    ✓ Bersalin (<span x-text="p.tanggal_bersalin.substring(0, 10)"></span>)
+                                                </span>
+                                            </template>
+                                            <template x-if="!p.tanggal_bersalin && getHplStatus(p.hpl || calculateHpl(p.hpht), p.tanggal_bersalin)">
                                                 <span
                                                     :class="getHplStatus(p.hpl || calculateHpl(p.hpht), p.tanggal_bersalin).color"
                                                     class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-black mt-0.5"
@@ -231,11 +236,19 @@
                                                 </button>
 
                                                 <!-- Catat Kelahiran & Siarkan Alert Realtime -->
-                                                <button @click="openRecordBirthModal(p)" type="button"
-                                                    class="p-1.5 text-warning-600 hover:bg-warning-50 rounded-ant transition-colors cursor-pointer"
-                                                    title="Catat Kelahiran & Kirim Alert Realtime">
-                                                    <span class="text-sm leading-none">Birth Report</span>
-                                                </button>
+                                                <template x-if="p.tanggal_bersalin">
+                                                    <span class="inline-flex items-center gap-1 px-2 py-1 rounded text-[10px] font-bold bg-success-50 text-success-700 border border-success-200"
+                                                        :title="'Telah bersalin pada ' + p.tanggal_bersalin.substring(0, 10)">
+                                                        ✓ Bersalin
+                                                    </span>
+                                                </template>
+                                                <template x-if="!p.tanggal_bersalin">
+                                                    <button @click="openRecordBirthModal(p)" type="button"
+                                                        class="p-1.5 text-warning-600 hover:bg-warning-50 rounded-ant transition-colors cursor-pointer"
+                                                        title="Catat Kelahiran & Kirim Alert Realtime">
+                                                        <span class="text-sm leading-none">Birth Report</span>
+                                                    </button>
+                                                </template>
                                                 @endcan
 
                                                 @can('delete-data')

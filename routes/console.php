@@ -7,9 +7,23 @@ Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote');
 
+Artisan::command('anc:auto-birth-report', function () {
+    $this->info("Menjalankan Auto Birth Report untuk ibu hamil yang HPL-nya sudah lewat...");
+    $service = app(\App\Modules\ANC\Services\DashboardService::class);
+    $count = $service->autoReportOverdueBirths();
+    $this->info("Selesai! {$count} data ibu hamil yang lewat HPL berhasil dicatat bersalin secara otomatis.");
+})->purpose('Auto birth report untuk ibu hamil yang HPL-nya sudah lewat dari 1 hari');
+
 Artisan::command('anc:sync-pregnancy {--force : Timpa nilai usia_kehamilan dan HPL yang sudah ada}', function () {
     $force = $this->option('force');
     $this->info("Memulai sinkronisasi data kehamilan (HPHT -> HPL, Usia Kehamilan, Faktor Risiko)...");
+
+    // Jalankan auto birth report terlebih dahulu
+    $service = app(\App\Modules\ANC\Services\DashboardService::class);
+    $autoBirthCount = $service->autoReportOverdueBirths();
+    if ($autoBirthCount > 0) {
+        $this->line("- Auto Birth Report: {$autoBirthCount} ibu hamil yang lewat HPL telah dicatat bersalin.");
+    }
 
     $count = 0;
     $updatedHpl = 0;

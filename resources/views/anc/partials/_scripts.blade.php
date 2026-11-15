@@ -1226,8 +1226,8 @@
                         const daysAgo = Math.abs(diffDays);
                         return {
                             label: `Lewat HPL (+${daysAgo} hr)`,
-                            color: 'bg-danger-600 text-white animate-pulse',
-                            isImminent: true,
+                            color: 'bg-gray-500 text-white',
+                            isImminent: false,
                             days: diffDays
                         };
                     } else if (diffDays === 0) {
@@ -1270,8 +1270,20 @@
                     return cleanDate >= todayStr && cleanDate <= in14Str;
                 },
 
+                getValidH1Deliveries() {
+                    const todayStr = this.getLocalDateStr(0);
+                    const tomorrowStr = this.getLocalDateStr(1);
+                    return (this.imminentDeliveries || []).filter(p => {
+                        if (!p.hpl || p.tanggal_bersalin) return false;
+                        const cleanHpl = String(p.hpl).substring(0, 10);
+                        // HANYA HPL Hari Ini dan Besok (H-1). HPL yang sudah lewat sehari gausah masuk lagi.
+                        return cleanHpl >= todayStr && cleanHpl <= tomorrowStr;
+                    });
+                },
+
                 checkAndTriggerH1Alert() {
-                    if (!this.imminentDeliveries || this.imminentDeliveries.length === 0) return;
+                    const valid = this.getValidH1Deliveries();
+                    if (!valid || valid.length === 0) return;
                     if (this.hasTriggeredInitialAlert) return;
                     this.hasTriggeredInitialAlert = true;
 
@@ -1280,7 +1292,8 @@
                 },
 
                 showH1ModalAlert() {
-                    const count = this.imminentDeliveries ? this.imminentDeliveries.length : 0;
+                    const valid = this.getValidH1Deliveries();
+                    const count = valid.length;
                     if (count === 0) {
                         Swal.fire({
                             title: 'Tidak Ada HPL Siaga 1 (H-1)',
@@ -1301,7 +1314,7 @@
 
                     // Generate patient rows HTML
                     let patientListHtml = '<div class="space-y-2 mt-3 max-h-56 sm:max-h-60 overflow-y-auto pr-1 text-left">';
-                    this.imminentDeliveries.forEach((p, idx) => {
+                    valid.forEach((p, idx) => {
                         const ristiBadge = p.status_risti && p.status_risti.toLowerCase().includes('tinggi')
                             ? '<span class="px-2 py-0.5 bg-danger-50 text-danger-700 text-[10px] font-bold rounded-ant-sm whitespace-nowrap">RISTI</span>'
                             : '<span class="px-2 py-0.5 bg-success-50 text-success-700 text-[10px] font-semibold rounded-ant-sm whitespace-nowrap">Normal</span>';

@@ -98,6 +98,9 @@ class DashboardService
      */
     public function getMapData(Request $request): array
     {
+        // Auto report kelahiran untuk bumil yang HPL-nya sudah lewat
+        $this->autoReportOverdueBirths();
+
         $kabupaten = $request->input('kabupaten');
         $kecamatan = $request->input('kecamatan');
 
@@ -109,9 +112,8 @@ class DashboardService
             $query->whereRaw('LOWER(TRIM(kecamatan)) = ?', [strtolower(trim($kecamatan))]);
         }
 
-        $today         = now()->toDateString();
-        $tomorrow      = now()->addDay()->toDateString();
-        $thirtyDaysAgo = now()->subDays(30)->toDateString();
+        $today    = now()->toDateString();
+        $tomorrow = now()->addDay()->toDateString();
 
         $rows = $query
             ->select(
@@ -127,8 +129,8 @@ class DashboardService
                 DB::raw("sum(case when tekanan_darah_sistolik is not null and tekanan_darah_sistolik >= 140 then 1 else 0 end) as total_hiper"),
                 // KRST (highest risk - rujuk RS PONEK)
                 DB::raw("sum(case when kategori_poedji_rochjati = 'KRST' then 1 else 0 end) as total_krst"),
-                // Imminent delivery: HPL H-1 / hari H / lewat HPL dan belum bersalin
-                DB::raw("sum(case when hpl is not null and hpl <= '{$tomorrow}' and hpl >= '{$thirtyDaysAgo}' and tanggal_bersalin is null then 1 else 0 end) as total_imminent"),
+                // Imminent delivery: HPL Hari Ini & Besok (H-1) dan belum bersalin
+                DB::raw("sum(case when hpl is not null and hpl >= '{$today}' and hpl <= '{$tomorrow}' and tanggal_bersalin is null then 1 else 0 end) as total_imminent"),
                 // HIV co-infection
                 DB::raw("sum(case when hiv_status like '%positif%' then 1 else 0 end) as total_hiv")
             )
@@ -229,8 +231,46 @@ class DashboardService
         ];
     }
 
+    /**
+     * Otomatis catat persalinan (Auto Birth Report) untuk ibu hamil yang HPL-nya sudah lewat
+     * (HPL < hari ini) dan belum ada laporan bersalin, tanpa butuh aksi manual dari user.
+     */
+    public function autoReportOverdueBirths(): int
+    {
+        $today = now()->toDateString();
+
+        $overduePatients = AncPatient::whereNotNull('hpl')
+            ->whereNull('tanggal_bersalin')
+            ->whereDate('hpl', '<', $today)
+            ->get();
+
+        $count = 0;
+        foreach ($overduePatients as $patient) {
+            $hplDate = $patient->hpl ? $patient->hpl->toDateString() : $today;
+            $note = $patient->catatan ? ($patient->catatan . ' | Auto birth report (HPL terlewati)') : 'Auto birth report (HPL terlewati)';
+
+            $patient->update([
+                'tanggal_bersalin'      => $hplDate,
+                'status_kehamilan'      => 'Selesai Bersalin',
+                'tempat_bersalin'       => $patient->rekomendasi_faskes ?: 'Puskesmas PONED',
+                'penolong_persalinan'   => 'Bidan Desa / Nakes',
+                'kondisi_bayi'          => 'Lahir Hidup, Sehat & Selamat',
+                'berat_lahir_bayi'      => 3.0,
+                'komplikasi_persalinan' => null,
+                'catatan'               => $note,
+            ]);
+
+            $count++;
+        }
+
+        return $count;
+    }
+
     public function getStatsData(Request $request): array
     {
+        // Jalankan auto birth report agar ibu hamil yang lewat HPL otomatis berstatus bersalin
+        $this->autoReportOverdueBirths();
+
         $kabupaten = $request->input('kabupaten');
         $kelurahan = $request->input('kelurahan');
         $bulan     = $request->input('bulan');
