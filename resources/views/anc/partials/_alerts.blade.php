@@ -1,5 +1,5 @@
                 <!-- PERINGATAN H-1 PERSALINAN (SIAP SIAGA / SIRINE) -->
-                <template x-if="imminentDeliveries && imminentDeliveries.length > 0">
+                <template x-if="getValidH1Deliveries && getValidH1Deliveries().length > 0">
                     <div
                         class="bg-danger-50 rounded-ant-lg p-4 sm:p-5 border border-danger-100 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
                         <div class="flex items-center gap-3.5">
@@ -15,7 +15,7 @@
                                 <div class="flex items-center gap-2">
                                     <span class="ant-tag ant-tag-red font-medium uppercase">Siaga 1 Persalinan (H-1)</span>
                                     <span class="text-xs text-danger-600 font-medium"
-                                        x-text="imminentDeliveries.length + ' Ibu Hamil Siaga Hari Ini / Besok'"></span>
+                                        x-text="getValidH1Deliveries().length + ' Ibu Hamil Siaga Hari Ini / Besok'"></span>
                                 </div>
                                 <h3 class="text-base sm:text-lg font-semibold mt-1 tracking-tight">Peringatan Hari
                                     Perkiraan Lahir (HPL) Hari Ini & Besok!</h3>

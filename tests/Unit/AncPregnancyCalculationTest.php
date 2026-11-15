@@ -107,4 +107,50 @@ class AncPregnancyCalculationTest extends TestCase
         $this->assertNotNull($updated->usia_kehamilan);
         $this->assertStringContainsString('KEK', $updated->faktor_risiko);
     }
+
+    public function test_auto_birth_report_for_overdue_hpl(): void
+    {
+        $yesterday = now()->subDay()->toDateString();
+        $tomorrow = now()->addDay()->toDateString();
+
+        // 1. Pasien yang HPL-nya sudah lewat kemarin (lewat 1 hari)
+        $overdue = AncPatient::create([
+            'nama_lengkap' => 'Ny. Lewat HPL',
+            'hpht' => '2026-02-01',
+            'hpl' => $yesterday,
+            'tanggal_bersalin' => null,
+            'status_kehamilan' => 'Aktif',
+        ]);
+
+        // 2. Pasien yang HPL-nya besok (H-1)
+        $imminent = AncPatient::create([
+            'nama_lengkap' => 'Ny. Siaga Besok',
+            'hpht' => '2026-02-02',
+            'hpl' => $tomorrow,
+            'tanggal_bersalin' => null,
+            'status_kehamilan' => 'Aktif',
+        ]);
+
+        $dashboardService = app(\App\Modules\ANC\Services\DashboardService::class);
+        $autoCount = $dashboardService->autoReportOverdueBirths();
+
+        $this->assertEquals(1, $autoCount);
+
+        // Pasien lewat HPL harus otomatis tercatat bersalin
+        $overdueFresh = $overdue->fresh();
+        $this->assertEquals('Selesai Bersalin', $overdueFresh->status_kehamilan);
+        $this->assertEquals($yesterday, $overdueFresh->tanggal_bersalin->format('Y-m-d'));
+        $this->assertStringContainsString('Auto birth report', $overdueFresh->catatan);
+
+        // Pasien H-1 tetap belum bersalin dan masuk alarm
+        $imminentFresh = $imminent->fresh();
+        $this->assertNull($imminentFresh->tanggal_bersalin);
+
+        // Cek stats data: pasien lewat HPL tidak boleh masuk imminent_deliveries (H-1)
+        $stats = $dashboardService->getStatsData(new \Illuminate\Http\Request());
+        $imminentIds = collect($stats['imminent_deliveries'])->pluck('id')->all();
+
+        $this->assertNotContains($overdue->id, $imminentIds);
+        $this->assertContains($imminent->id, $imminentIds);
+    }
 }
