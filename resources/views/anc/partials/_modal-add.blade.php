@@ -110,7 +110,7 @@
                                         </svg>
                                         Penanggalan Obstetri (Kalkulasi Otomatis)
                                     </span>
-                                    <span class="text-[10px] text-ant-secondary">Rumus Naegele: tgl +7, bln -3, thn +1</span>
+                                    <span class="text-[10px] text-ant-secondary">Isi HPHT saja. HPL dan usia kehamilan terisi sendiri.</span>
                                 </div>
                                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
                                     <div>
@@ -133,13 +133,13 @@
                                     </div>
                                     <div>
                                         <div class="flex items-center justify-between">
-                                            <label class="ant-label font-bold">Usia Kehamilan (Minggu)</label>
-                                            <span class="text-[10px] text-primary font-medium" x-show="newPatient.hpht"
-                                                x-text="'(Auto HPHT)'"></span>
+                                            <label class="ant-label font-bold">Usia Kehamilan (minggu)</label>
+                                            <span class="text-[10px] text-primary font-medium" x-show="newPatient.hpht">Terisi otomatis</span>
                                         </div>
-                                        <input type="number" min="0" max="45" x-model="newPatient.usia_kehamilan"
-                                            placeholder="misal: 24"
+                                        <input type="text" inputmode="numeric" x-model="newPatient.usia_kehamilan"
+                                            placeholder="contoh: 24"
                                             class="ant-input">
+                                        <p class="text-[10px] text-ant-secondary mt-1 leading-snug">Cukup isi tanggal HPHT. Angka minggu ini muncul sendiri. Kalau sudah benar, langsung simpan — tidak perlu diketik ulang.</p>
                                     </div>
                                 </div>
                             </div>

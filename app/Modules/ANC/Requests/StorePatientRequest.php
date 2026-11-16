@@ -55,6 +55,19 @@ class StorePatientRequest extends FormRequest
         return [
             'nama_lengkap.required' => 'Nama lengkap ibu hamil wajib diisi.',
             'umur.integer'          => 'Umur harus berupa angka.',
+            'usia_kehamilan.max'    => 'Usia kehamilan terlalu panjang. Cukup isi angka minggu, contoh: 24.',
         ];
+    }
+
+    protected function prepareForValidation(): void
+    {
+        $usia = $this->input('usia_kehamilan');
+        if ($usia === null || $usia === '') {
+            return;
+        }
+
+        $this->merge([
+            'usia_kehamilan' => trim((string) $usia),
+        ]);
     }
 }

@@ -80,13 +80,14 @@
                             <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
                                 <div>
                                     <div class="flex items-center justify-between">
-                                        <label class="ant-label">Usia Kehamilan (Minggu)</label>
+                                        <label class="ant-label">Usia Kehamilan (minggu)</label>
                                         <span class="text-[10px] text-primary font-medium" x-show="editingPatient.hpht"
-                                            x-text="'(Auto: ' + (calculateUsiaKehamilan(editingPatient.hpht, editingPatient.tanggal_kunjungan) ?? '-') + ' mgg)'"></span>
+                                            x-text="'Dari HPHT: ' + (calculateUsiaKehamilan(editingPatient.hpht, editingPatient.tanggal_kunjungan) ?? '-') + ' minggu'"></span>
                                     </div>
-                                    <input type="number" min="0" max="45" x-model="editingPatient.usia_kehamilan"
-                                        placeholder="misal: 24"
+                                    <input type="text" inputmode="numeric" x-model="editingPatient.usia_kehamilan"
+                                        placeholder="contoh: 24"
                                         class="ant-input">
+                                    <p class="text-[10px] text-ant-secondary mt-1 leading-snug">Angka minggu terisi dari HPHT. Biarkan lalu simpan. Ubah hanya kalau angkanya salah.</p>
                                 </div>
                                 <div>
                                     <label class="ant-label">Kunjungan Ke</label>
