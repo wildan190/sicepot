@@ -61,6 +61,7 @@
                                 <div>
                                     <label class="ant-label">NIK (16 Digit)</label>
                                     <input type="text" x-model="newPatient.nik" placeholder="3603xxxxxxxxxxxx"
+                                        @input="onNikChange(newPatient)"
                                         class="ant-input">
                                 </div>
                                 <div>
@@ -71,16 +72,20 @@
                                 <div>
                                     <label class="ant-label">Tanggal Lahir</label>
                                     <input type="date" x-model="newPatient.tanggal_lahir"
+                                        @input="onTanggalLahirChange(newPatient)"
+                                        @change="onTanggalLahirChange(newPatient)"
                                         class="ant-input">
+                                    <p class="text-[10px] text-ant-secondary mt-1 leading-snug">Bisa dikosongkan kalau NIK sudah diisi. Tanggal lahir terbaca dari NIK.</p>
                                 </div>
                             </div>
 
                             <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
                                 <div>
                                     <label class="ant-label">Umur (Tahun)</label>
-                                    <input type="number" x-model="newPatient.umur" placeholder="Umur"
+                                    <input type="number" x-model="newPatient.umur" placeholder="terisi otomatis"
                                         @input="autoDetectRiskFactors(newPatient)"
                                         class="ant-input">
+                                    <p class="text-[10px] text-ant-secondary mt-1 leading-snug">Terisi sendiri dari tanggal lahir atau NIK. Langsung simpan, tidak perlu diketik.</p>
                                 </div>
                                 <div>
                                     <label class="ant-label">Gravida (G)</label>

@@ -237,9 +237,70 @@ class AncPatient extends Model
         return null;
     }
 
+    /**
+     * Umur dalam tahun dari tanggal lahir.
+     */
+    public static function calculateUmur($tanggalLahir): ?int
+    {
+        if (empty($tanggalLahir)) {
+            return null;
+        }
+
+        try {
+            $age = (int) \Carbon\Carbon::parse($tanggalLahir)->age;
+
+            return ($age >= 0 && $age <= 120) ? $age : null;
+        } catch (\Throwable) {
+            return null;
+        }
+    }
+
+    /**
+     * Tanggal lahir dari NIK 16 digit (hari +40 untuk perempuan).
+     */
+    public static function birthDateFromNik(?string $nik): ?string
+    {
+        $digits = preg_replace('/\D/', '', (string) $nik);
+        if (strlen($digits) !== 16) {
+            return null;
+        }
+
+        $day = (int) substr($digits, 6, 2);
+        $month = (int) substr($digits, 8, 2);
+        $yy = (int) substr($digits, 10, 2);
+        if ($day > 40) {
+            $day -= 40;
+        }
+        if ($day < 1 || $day > 31 || $month < 1 || $month > 12) {
+            return null;
+        }
+
+        $year = $yy > (int) now()->format('y') ? 1900 + $yy : 2000 + $yy;
+        if (now()->year - $year < 10) {
+            $year -= 100;
+        }
+
+        try {
+            return \Carbon\Carbon::createSafe($year, $month, $day)?->toDateString();
+        } catch (\Throwable) {
+            return null;
+        }
+    }
+
     protected static function booted(): void
     {
         static::saving(function (AncPatient $patient) {
+            if (empty($patient->tanggal_lahir) && !empty($patient->nik)) {
+                $dob = static::birthDateFromNik($patient->nik);
+                if ($dob) {
+                    $patient->tanggal_lahir = $dob;
+                }
+            }
+
+            if (empty($patient->umur) && !empty($patient->tanggal_lahir)) {
+                $patient->umur = static::calculateUmur($patient->tanggal_lahir);
+            }
+
             // Auto compute HPL dari HPHT dengan rumus: tgl + 7, bulan - 3, tahun + 1
             if (!empty($patient->hpht) && empty($patient->hpl)) {
                 $patient->hpl = static::calculateHpl($patient->hpht);

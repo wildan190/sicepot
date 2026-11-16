@@ -39,6 +39,7 @@
                                 <div>
                                     <label class="ant-label">NIK</label>
                                     <input type="text" x-model="editingPatient.nik" placeholder="16 digit NIK"
+                                        @input="onNikChange(editingPatient)"
                                         class="ant-input">
                                 </div>
                                 <div>
@@ -50,6 +51,8 @@
                                 <div>
                                     <label class="ant-label">Tanggal Lahir</label>
                                     <input type="date" x-model="editingPatient.tanggal_lahir"
+                                        @input="onTanggalLahirChange(editingPatient)"
+                                        @change="onTanggalLahirChange(editingPatient)"
                                         class="ant-input">
                                 </div>
                             </div>
@@ -58,7 +61,10 @@
                                 <div>
                                     <label class="ant-label">Umur (Thn)</label>
                                     <input type="number" x-model="editingPatient.umur"
+                                        @input="autoDetectRiskFactors(editingPatient)"
+                                        placeholder="terisi otomatis"
                                         class="ant-input">
+                                    <p class="text-[10px] text-ant-secondary mt-1 leading-snug">Terisi sendiri dari tanggal lahir atau NIK.</p>
                                 </div>
                                 <div>
                                     <label class="ant-label">Gravida (G)</label>
