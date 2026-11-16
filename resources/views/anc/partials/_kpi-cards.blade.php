@@ -107,24 +107,24 @@
                         <span class="text-[11px] text-ant-secondary mt-2">DM, Asma, Tiroid, dll</span>
                     </div>
 
-                    <!-- Card 7: Peringatan Persalinan H-1 (Sirine Siaga) -->
-                    <div @click="showH1ModalAlert()"
-                        :class="kpi.total_h1 > 0 ? 'bg-danger-50 border-danger-200 cursor-pointer hover:bg-danger-100' : 'bg-white border-ant-split'"
+                    <!-- Card 7: Peringatan Persalinan H-30 -->
+                    <div @click="showH30ModalAlert()"
+                        :class="kpi.total_h30 > 0 ? 'bg-warning-50 border-warning-200 cursor-pointer hover:bg-warning-100' : 'bg-white border-ant-split'"
                         class="p-4 rounded-ant-lg border shadow-ant-card flex flex-col justify-between transition-all">
                         <div class="flex items-center justify-between">
-                            <span :class="kpi.total_h1 > 0 ? 'text-danger font-semibold' : 'text-ant-secondary'"
-                                class="ant-statistic-title">Siaga H-1 Persalinan</span>
-                            <template x-if="kpi.total_h1 > 0">
+                            <span :class="kpi.total_h30 > 0 ? 'text-warning-600 font-semibold' : 'text-ant-secondary'"
+                                class="ant-statistic-title">Persiapan H-30</span>
+                            <template x-if="kpi.total_h30 > 0">
                                 <span class="relative flex h-2 w-2">
-                                    <span class="relative inline-flex rounded-full h-2 w-2 bg-danger"></span>
+                                    <span class="relative inline-flex rounded-full h-2 w-2 bg-warning"></span>
                                 </span>
                             </template>
                         </div>
                         <div class="mt-2 flex items-baseline justify-between">
-                            <span :class="kpi.total_h1 > 0 ? 'text-danger' : 'text-ant-title'"
-                                class="ant-statistic-content" x-text="kpi.total_h1 || 0">0</span>
+                            <span :class="kpi.total_h30 > 0 ? 'text-warning-600' : 'text-ant-title'"
+                                class="ant-statistic-content" x-text="kpi.total_h30 || 0">0</span>
                             <span
-                                :class="kpi.total_h1 > 0 ? 'bg-danger-100 text-danger' : 'bg-ant-split text-ant-secondary'"
+                                :class="kpi.total_h30 > 0 ? 'bg-warning-100 text-warning-700' : 'bg-ant-split text-ant-secondary'"
                                 class="p-1.5 rounded-ant-sm">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -134,7 +134,7 @@
                             </span>
                         </div>
                         <span class="text-[11px] text-ant-secondary mt-2"
-                            x-text="kpi.total_h1 > 0 ? 'HPL Hari Ini / Besok' : 'Tidak ada pasien H-1'"></span>
+                            x-text="kpi.total_h30 > 0 ? 'HPL dalam 30 hari' : 'Tidak ada pasien H-30'"></span>
                     </div>
 
                 </div>

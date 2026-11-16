@@ -64,7 +64,7 @@
                                     <template x-if="waRecipient === 'ibu'">
                                         <optgroup label="Template Ibu Hamil">
                                             <option value="anc_checkup">Pengingat Jadwal Kontrol ANC</option>
-                                            <option value="h1_alert">Peringatan Siaga HPL / Menjelang Persalinan
+                                            <option value="h1_alert">Peringatan HPL H-30 / Persiapan Persalinan
                                             </option>
                                             <option value="kek_nutrition">Edukasi Gizi & Kepatuhan TTD (Bumil KEK)
                                             </option>

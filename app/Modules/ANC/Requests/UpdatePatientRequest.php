@@ -49,4 +49,27 @@ class UpdatePatientRequest extends FormRequest
             'catatan'                 => 'nullable|string',
         ];
     }
+
+    public function messages(): array
+    {
+        return [
+            'usia_kehamilan.max' => 'Usia kehamilan terlalu panjang. Cukup isi angka minggu, contoh: 24.',
+        ];
+    }
+
+    protected function prepareForValidation(): void
+    {
+        if (! $this->exists('usia_kehamilan')) {
+            return;
+        }
+
+        $usia = $this->input('usia_kehamilan');
+        if ($usia === null || $usia === '') {
+            return;
+        }
+
+        $this->merge([
+            'usia_kehamilan' => trim((string) $usia),
+        ]);
+    }
 }

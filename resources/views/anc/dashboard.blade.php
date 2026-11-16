@@ -5,7 +5,7 @@
     │                                                                          │
     │  Struktur:                                                               │
     │    partials/_header.blade.php          → Page header & action buttons    │
-    │    partials/_alerts.blade.php          → Peringatan H-1 & H-30          │
+    │    partials/_alerts.blade.php          → Peringatan HPL H-30             │
     │    partials/_filter.blade.php          → Filter bar                      │
     │    partials/_kpi-cards.blade.php       → KPI summary cards               │
     │    partials/_charts.blade.php          → Charts & Skor Poedji Rochjati   │

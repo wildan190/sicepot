@@ -173,7 +173,7 @@
                     if (this.waRecipient === 'ibu') {
                         this.waPhone = p.no_telepon || '';
                         if (this.waTemplateType === 'h1_alert') {
-                            this.waMessage = `Halo Ibu ${p.nama_lengkap || ''},\n\nPemberitahuan dari Tim Pelayanan KIA ${kelStr} (SICEPOT):\nBerdasarkan catatan rekam medis, Hari Perkiraan Lahir (HPL) Anda diperkirakan BESOK / Segera (${hplStr}).\n\nMohon pastikan:\n1. Buku KIA & berkas BPJS/KTP sudah siap.\n2. Tas persalinan ibu & bayi siap dibawa.\n3. Suami/Keluarga siaga mendampingi ke faskes rujukan persalinan.\n\nBila mengalami kontraksi teratur atau keluar cairan/flek, segera kunjungi fasyankes terdekat. Semoga persalinan lancar & sehat selalu!`;
+                            this.waMessage = `Halo Ibu ${p.nama_lengkap || ''},\n\nPemberitahuan dari Tim Pelayanan KIA ${kelStr} (SICEPOT):\nBerdasarkan catatan rekam medis, Hari Perkiraan Lahir (HPL) Anda dalam 30 hari ke depan (${hplStr}).\n\nMohon persiapkan:\n1. Buku KIA & berkas BPJS/KTP.\n2. Rencana tempat persalinan, transportasi, dan pendamping.\n3. Tabungan persalinan serta calon pendonor darah.\n\nBila mengalami kontraksi teratur atau keluar cairan/flek, segera kunjungi fasyankes terdekat. Semoga persalinan lancar & sehat selalu!`;
                         } else if (this.waTemplateType === 'kek_nutrition') {
                             this.waMessage = `Halo Ibu ${p.nama_lengkap || ''},\n\nPengingat Kesehatan dari Puskesmas ${kelStr}:\nBerdasarkan hasil pengukuran LiLA Anda (${p.lila || '-'} cm), Anda memerlukan asupan nutrisi ekstra untuk mendukung tumbuh kembang janin yang optimal.\n\nMohon rutin mengonsumsi:\n- Makanan tinggi protein (telur, ikan, ayam, tahu, tempe)\n- Makanan Tambahan (PMT) dari puskesmas\n- Tablet Tambah Darah (TTD) 1 tablet setiap malam\n\nMari bersama wujudkan kehamilan sehat bebas risiko!`;
                         } else {
@@ -287,7 +287,7 @@
                         this.renderCharts();
                         this.initMap();
                         setTimeout(() => {
-                            this.checkAndTriggerH1Alert();
+                            this.checkAndTriggerH30Alert();
                         }, 800);
                     });
 
@@ -353,8 +353,9 @@
                                 if (!this.newPatient.hpl) {
                                     this.newPatient.hpl = this.calculateHpl(this.newPatient.hpht);
                                 }
-                                if (!this.newPatient.usia_kehamilan) {
-                                    this.newPatient.usia_kehamilan = this.calculateUsiaKehamilan(this.newPatient.hpht, this.newPatient.tanggal_kunjungan);
+                                if (!this.newPatient.usia_kehamilan && this.newPatient.usia_kehamilan !== 0) {
+                                    const uk = this.calculateUsiaKehamilan(this.newPatient.hpht, this.newPatient.tanggal_kunjungan);
+                                    this.newPatient.usia_kehamilan = uk === '' || uk === null ? '' : String(uk);
                                 }
                             }
                             this.autoDetectRiskFactors(this.newPatient);
@@ -985,7 +986,7 @@
                     targetObj.hpl = this.calculateHpl(targetObj.hpht);
                     const uk = this.calculateUsiaKehamilan(targetObj.hpht, targetObj.tanggal_kunjungan);
                     if (uk !== '' && uk !== null && !isNaN(uk)) {
-                        targetObj.usia_kehamilan = uk;
+                        targetObj.usia_kehamilan = String(uk);
                     }
                     this.autoDetectRiskFactors(targetObj);
                 },
@@ -1055,11 +1056,22 @@
                         if (!this.editingPatient.hpl) {
                             this.editingPatient.hpl = this.calculateHpl(this.editingPatient.hpht);
                         }
-                        if (!this.editingPatient.usia_kehamilan) {
-                            this.editingPatient.usia_kehamilan = this.calculateUsiaKehamilan(this.editingPatient.hpht, this.editingPatient.tanggal_kunjungan);
+                        if (!this.editingPatient.usia_kehamilan && this.editingPatient.usia_kehamilan !== 0) {
+                            const uk = this.calculateUsiaKehamilan(this.editingPatient.hpht, this.editingPatient.tanggal_kunjungan);
+                            this.editingPatient.usia_kehamilan = uk === '' || uk === null ? '' : String(uk);
+                        } else if (this.editingPatient.usia_kehamilan !== '' && this.editingPatient.usia_kehamilan != null) {
+                            this.editingPatient.usia_kehamilan = String(this.editingPatient.usia_kehamilan);
                         }
                     }
                     this.showEditModal = true;
+                },
+
+                patientPayload(patient) {
+                    const payload = JSON.parse(JSON.stringify(patient));
+                    if (payload.usia_kehamilan !== '' && payload.usia_kehamilan != null) {
+                        payload.usia_kehamilan = String(payload.usia_kehamilan).replace(/\s*mgg\s*$/i, '').trim();
+                    }
+                    return payload;
                 },
 
                 async saveEditPatient() {
@@ -1072,7 +1084,7 @@
                                 'X-CSRF-TOKEN': token,
                                 'Accept': 'application/json'
                             },
-                            body: JSON.stringify(this.editingPatient)
+                            body: JSON.stringify(this.patientPayload(this.editingPatient))
                         });
                         const data = await res.json();
                         if (data.success) {
@@ -1101,7 +1113,7 @@
                         const res = await fetch(`{{ route('anc.patients.store') }}`, {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': token, 'Accept': 'application/json' },
-                            body: JSON.stringify(this.newPatient)
+                            body: JSON.stringify(this.patientPayload(this.newPatient))
                         });
                         const data = await res.json();
                         if (data.success) {
@@ -1281,14 +1293,13 @@
                     });
                 },
 
-                checkAndTriggerH1Alert() {
-                    const valid = this.getValidH1Deliveries();
-                    if (!valid || valid.length === 0) return;
+                checkAndTriggerH30Alert() {
+                    const list = this.upcomingDeliveries || [];
+                    if (!list.length) return;
                     if (this.hasTriggeredInitialAlert) return;
                     this.hasTriggeredInitialAlert = true;
 
-                    // Trigger alert modal
-                    this.showH1ModalAlert();
+                    this.showH30ModalAlert();
                 },
 
                 showH1ModalAlert() {

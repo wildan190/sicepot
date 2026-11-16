@@ -426,7 +426,7 @@ class DashboardService
 
         $patients = (clone $base)->orderByDesc('id')->paginate(15)->withQueryString();
 
-        // H-1 & Siaga Persalinan: HPL hari ini atau besok (belum bersalin).
+        // H-1 tetap dihitung terpisah untuk peta, tetapi bukan peringatan dashboard.
         // Ibu yang sudah lewat HPL dikeluarkan dari alarm meski belum lapor bersalin.
         $today         = now()->toDateString();
         $tomorrow      = now()->addDay()->toDateString();
@@ -440,12 +440,11 @@ class DashboardService
                    'kabupaten', 'kelurahan', 'status_risti', 'faktor_risiko', 'fasyankes_name',
                    'no_telepon', 'nama_suami']);
 
-        // H-30: Ibu hamil dengan HPL dalam 2–30 hari ke depan (belum bersalin)
-        $in2Days  = now()->addDays(2)->toDateString();
+        // Peringatan HPL: ibu hamil dengan HPL hari ini sampai 30 hari ke depan (belum bersalin).
         $in30Days = now()->addDays(30)->toDateString();
         $upcomingDeliveries = AncPatient::whereNotNull('hpl')
             ->whereNull('tanggal_bersalin')
-            ->whereDate('hpl', '>=', $in2Days)
+            ->whereDate('hpl', '>=', $today)
             ->whereDate('hpl', '<=', $in30Days)
             ->orderBy('hpl')
             ->get(['id', 'nama_lengkap', 'nik', 'no_rekam_medis', 'umur', 'hpl', 'hpht',
