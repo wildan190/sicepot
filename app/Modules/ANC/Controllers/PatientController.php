@@ -22,7 +22,7 @@ class PatientController extends Controller
      */
     public function store(StorePatientRequest $request)
     {
-        $payload = $request->validated();
+        $payload = $this->fillUmur($request->validated());
         
         // Auto compute HPL & usia_kehamilan dari HPHT jika belum diisi
         if (!empty($payload['hpht'])) {
@@ -66,7 +66,7 @@ class PatientController extends Controller
      */
     public function update(UpdatePatientRequest $request, AncPatient $patient)
     {
-        $payload = $request->validated();
+        $payload = $this->fillUmur($request->validated());
 
         // Auto compute HPL & usia_kehamilan dari HPHT jika ada perubahan atau belum diisi
         if (!empty($payload['hpht'])) {
@@ -93,6 +93,28 @@ class PatientController extends Controller
             'data'    => $patient->fresh(),
             'risk'    => $assessment,
         ]);
+    }
+
+    /**
+     * Isi tanggal lahir dari NIK, lalu umur dari tanggal lahir, bila masih kosong.
+     */
+    private function fillUmur(array $payload): array
+    {
+        if (empty($payload['tanggal_lahir']) && !empty($payload['nik'])) {
+            $dob = AncPatient::birthDateFromNik($payload['nik']);
+            if ($dob) {
+                $payload['tanggal_lahir'] = $dob;
+            }
+        }
+
+        if ((empty($payload['umur']) || $payload['umur'] === '') && !empty($payload['tanggal_lahir'])) {
+            $umur = AncPatient::calculateUmur($payload['tanggal_lahir']);
+            if ($umur !== null) {
+                $payload['umur'] = $umur;
+            }
+        }
+
+        return $payload;
     }
 
     /**

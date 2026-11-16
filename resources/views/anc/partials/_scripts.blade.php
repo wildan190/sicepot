@@ -348,6 +348,8 @@
                                 if (v !== null && v !== '') clean[k] = v;
                             });
                             this.newPatient = clean;
+                            this.onNikChange(this.newPatient);
+                            this.onTanggalLahirChange(this.newPatient);
                             // Auto-calculate HPL dan Usia Kehamilan jika HPHT ada
                             if (this.newPatient.hpht) {
                                 if (!this.newPatient.hpl) {
@@ -950,6 +952,65 @@
                 },
 
                 /**
+                 * Umur dalam tahun dari tanggal lahir.
+                 */
+                calculateUmur(tanggalLahir) {
+                    if (!tanggalLahir) return null;
+                    const parts = String(tanggalLahir).trim().substring(0, 10).split('-');
+                    if (parts.length !== 3) return null;
+                    const year = parseInt(parts[0], 10);
+                    const month = parseInt(parts[1], 10);
+                    const day = parseInt(parts[2], 10);
+                    if (isNaN(year) || isNaN(month) || isNaN(day)) return null;
+
+                    const now = new Date();
+                    let age = now.getFullYear() - year;
+                    const monthDiff = (now.getMonth() + 1) - month;
+                    if (monthDiff < 0 || (monthDiff === 0 && now.getDate() < day)) {
+                        age--;
+                    }
+                    return (age >= 0 && age <= 120) ? age : null;
+                },
+
+                birthDateFromNik(nik) {
+                    const digits = String(nik || '').replace(/\D/g, '');
+                    if (digits.length !== 16) return '';
+                    let day = parseInt(digits.substring(6, 8), 10);
+                    const month = parseInt(digits.substring(8, 10), 10);
+                    const yy = parseInt(digits.substring(10, 12), 10);
+                    if (day > 40) day -= 40;
+                    if (day < 1 || day > 31 || month < 1 || month > 12 || isNaN(yy)) return '';
+
+                    const now = new Date();
+                    let year = yy > (now.getFullYear() % 100) ? 1900 + yy : 2000 + yy;
+                    if (now.getFullYear() - year < 10) year -= 100;
+
+                    const mm = String(month).padStart(2, '0');
+                    const dd = String(day).padStart(2, '0');
+                    const candidate = `${year}-${mm}-${dd}`;
+                    return this.calculateUmur(candidate) === null ? '' : candidate;
+                },
+
+                onTanggalLahirChange(targetObj) {
+                    if (!targetObj || !targetObj.tanggal_lahir) return;
+                    const umur = this.calculateUmur(targetObj.tanggal_lahir);
+                    if (umur !== null) {
+                        targetObj.umur = umur;
+                        this.autoDetectRiskFactors(targetObj);
+                    }
+                },
+
+                onNikChange(targetObj) {
+                    if (!targetObj) return;
+                    const dob = this.birthDateFromNik(targetObj.nik);
+                    if (!dob) return;
+                    if (!targetObj.tanggal_lahir) {
+                        targetObj.tanggal_lahir = dob;
+                    }
+                    this.onTanggalLahirChange(targetObj);
+                },
+
+                /**
                  * Hitung Usia Kehamilan dalam satuan minggu dari HPHT
                  */
                 calculateUsiaKehamilan(hpht, refDate = null) {
@@ -1051,6 +1112,13 @@
                 // Realtime Edit Patient
                 openEditModal(patient) {
                     this.editingPatient = JSON.parse(JSON.stringify(patient));
+                    if (this.editingPatient.tanggal_lahir) {
+                        this.editingPatient.tanggal_lahir = String(this.editingPatient.tanggal_lahir).substring(0, 10);
+                    }
+                    if (!this.editingPatient.umur) {
+                        this.onNikChange(this.editingPatient);
+                        this.onTanggalLahirChange(this.editingPatient);
+                    }
                     // Jika belum ada HPL tapi ada HPHT, hitung otomatis
                     if (this.editingPatient.hpht) {
                         if (!this.editingPatient.hpl) {
@@ -1070,6 +1138,16 @@
                     const payload = JSON.parse(JSON.stringify(patient));
                     if (payload.usia_kehamilan !== '' && payload.usia_kehamilan != null) {
                         payload.usia_kehamilan = String(payload.usia_kehamilan).replace(/\s*mgg\s*$/i, '').trim();
+                    }
+                    if (!payload.tanggal_lahir) {
+                        const dob = this.birthDateFromNik(payload.nik);
+                        if (dob) payload.tanggal_lahir = dob;
+                    }
+                    if (payload.umur === '' || payload.umur === null || payload.umur === undefined) {
+                        const umur = this.calculateUmur(payload.tanggal_lahir);
+                        payload.umur = umur === null ? null : umur;
+                    } else {
+                        payload.umur = parseInt(payload.umur, 10);
                     }
                     return payload;
                 },
