@@ -13,6 +13,17 @@ class ImportController extends Controller
     public function __construct(protected ImportService $service) {}
 
     /**
+     * Unduh berkas template Excel lengkap (semua kolom) untuk import data Stunting.
+     */
+    public function downloadTemplate()
+    {
+        $filePath = $this->service->generateTemplate();
+        $filename = 'Template_Import_Stunting_' . date('Ymd_His') . '.xlsx';
+
+        return response()->download($filePath, $filename)->deleteFileAfterSend(true);
+    }
+
+    /**
      * Parse and preview an uploaded Excel file before confirmation.
      */
     public function preview(Request $request)

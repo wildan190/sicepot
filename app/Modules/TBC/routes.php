@@ -34,6 +34,7 @@ Route::middleware('role:Admin')->group(function () {
     Route::post('/tb/ai-parse', [DashboardController::class, 'aiParsePatient'])->name('tb.ai.parse');
     Route::post('/tb/import/preview', [ImportController::class, 'preview'])->name('tb.import.preview');
     Route::post('/tb/import/commit', [ImportController::class, 'commit'])->name('tb.import.commit');
+    Route::get('/tb/import/template', [ImportController::class, 'downloadTemplate'])->name('tb.import.template');
     Route::delete('/tb/patients/clear-massive', [PatientController::class, 'clearMassive'])->name('tb.patients.clear-massive');
     Route::post('/tb/patients', [PatientController::class, 'store'])->name('tb.patients.store');
     Route::put('/tb/patients/{patient}', [PatientController::class, 'update'])->name('tb.patients.update');

@@ -5,10 +5,125 @@ namespace App\Modules\Stunting\Services;
 use App\Modules\Stunting\Models\StuntingPatient;
 use Carbon\Carbon;
 use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
 use PhpOffice\PhpSpreadsheet\Shared\Date as ExcelDate;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
+use PhpOffice\PhpSpreadsheet\Style\Border;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
 
 class ImportService
 {
+    /**
+     * Daftar lengkap kolom template Stunting (39 kolom, format baru A–AM).
+     * Posisi kolom dikunci sesuai parser fixed-position pada parseRow() (format 39 kolom),
+     * sehingga berkas template dapat diunggah kembali tanpa kehilangan data (round-trip).
+     */
+    public const TEMPLATE_COLUMNS = [
+        'No',
+        'NIK',
+        'Nama',
+        'JK',
+        'Tgl Lahir',
+        'BB Lahir',
+        'TB Lahir',
+        'Nama Ortu',
+        'Provinsi',
+        'Kabupaten/Kota',
+        'Kecamatan',
+        'Puskesmas',
+        'Desa',
+        'Posyandu',
+        'RT',
+        'RW',
+        'Alamat',
+        'Usia Saat Ukur',
+        'Tgl Ukur',
+        'Berat',
+        'Tinggi',
+        'Cara Ukur',
+        'LiLA',
+        'BB/U',
+        'ZS BB/U',
+        'TB/U',
+        'ZS TB/U',
+        'BB/TB',
+        'ZS BB/TB',
+        'Naik BB',
+        'Vit A',
+        'KPSP',
+        'KIA',
+        'Kelas Ibu',
+        'MBG',
+        'Detail',
+        'Test Mantoux',
+        'Test Hemoglobin',
+        'Konsul Spesialis Anak',
+    ];
+
+    /**
+     * Buat berkas template Excel lengkap (semua kolom) untuk diunduh pengguna.
+     * Mengembalikan path absolut berkas yang dihasilkan.
+     */
+    public function generateTemplate(): string
+    {
+        $headers = self::TEMPLATE_COLUMNS;
+
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setTitle('Template Stunting');
+
+        $lastCol = Coordinate::stringFromColumnIndex(count($headers));
+
+        // Baris judul
+        $sheet->mergeCells("A1:{$lastCol}1");
+        $sheet->setCellValue('A1', 'TEMPLATE IMPORT DATA BALITA STUNTING (e-PPGBM) — LENGKAP SELURUH KOLOM');
+        $sheet->getStyle('A1')->getFont()->setBold(true)->setSize(12);
+        $sheet->getStyle('A1')->getFont()->getColor()->setARGB('FF14532D');
+        $sheet->getStyle('A1')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+        $sheet->getRowDimension(1)->setRowHeight(24);
+
+        // Baris header kolom (baris 2 — data mulai baris 3 sesuai parser fixed-position)
+        foreach ($headers as $idx => $label) {
+            $coord = Coordinate::stringFromColumnIndex($idx + 1) . '2';
+            $sheet->setCellValue($coord, $label);
+        }
+
+        $sheet->getStyle("A2:{$lastCol}2")->applyFromArray([
+            'font'      => ['bold' => true, 'color' => ['argb' => 'FFFFFFFF'], 'size' => 9],
+            'fill'      => ['fillType' => Fill::FILL_SOLID, 'startColor' => ['argb' => 'FF16A34A']],
+            'alignment' => [
+                'horizontal' => Alignment::HORIZONTAL_CENTER,
+                'vertical'   => Alignment::VERTICAL_CENTER,
+                'wrapText'   => true,
+            ],
+            'borders'   => ['allBorders' => ['borderStyle' => Border::BORDER_THIN, 'color' => ['argb' => 'FFBBF7D0']]],
+        ]);
+        $sheet->getRowDimension(2)->setRowHeight(34);
+
+        for ($i = 1; $i <= count($headers); $i++) {
+            $sheet->getColumnDimension(Coordinate::stringFromColumnIndex($i))->setWidth(18);
+        }
+
+        $sheet->freezePane('A3');
+
+        return $this->saveTemplate($spreadsheet, 'Template_Import_Stunting');
+    }
+
+    protected function saveTemplate(Spreadsheet $spreadsheet, string $baseName): string
+    {
+        $dir = storage_path('app/temp_templates');
+        if (!is_dir($dir)) {
+            mkdir($dir, 0755, true);
+        }
+
+        $path = $dir . '/' . $baseName . '_' . date('Ymd_His') . '.xlsx';
+        (new Xlsx($spreadsheet))->save($path);
+
+        return $path;
+    }
+
     /**
      * Parse a numeric cell that may be stored as a time fraction in Excel or comma decimal.
      */
