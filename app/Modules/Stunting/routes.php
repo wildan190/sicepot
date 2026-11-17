@@ -27,6 +27,7 @@ Route::prefix('stunting')->name('stunting.')->group(function () {
         Route::post('/ai/parse', [DashboardController::class, 'aiParsePatient'])->name('ai.parse');
         Route::post('/import/preview', [ImportController::class, 'preview'])->name('import.preview');
         Route::post('/import/commit', [ImportController::class, 'commit'])->name('import.commit');
+        Route::get('/import/template', [ImportController::class, 'downloadTemplate'])->name('import.template');
         Route::post('/import/bulk', [ImportController::class, 'bulkImport'])->name('import.bulk');
         Route::delete('/clear-massive', [DashboardController::class, 'clearMassive'])->name('clear-massive');
         Route::post('/patients', [PatientController::class, 'store'])->name('patients.store');

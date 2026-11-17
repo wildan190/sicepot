@@ -7,9 +7,112 @@ use App\Modules\TBC\Models\TbContactInvestigation;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
 use PhpOffice\PhpSpreadsheet\Shared\Date as ExcelDate;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
+use PhpOffice\PhpSpreadsheet\Style\Border;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
 
 class ImportService
 {
+    /**
+     * Daftar lengkap kolom yang bisa di-import pada modul TBC.
+     * Header sengaja dibuat agar cocok dengan aturan pencocokan pada buildUniversalColumnMap(),
+     * sehingga berkas template dapat diunggah kembali tanpa kehilangan data (round-trip).
+     */
+    public const TEMPLATE_COLUMNS = [
+        'Nama Lengkap',
+        'NIK',
+        'No. Rekam Medis',
+        'No. Register SITB',
+        'No. Register Terduga',
+        'No. Register Pasien',
+        'No. BPJS',
+        'Umur',
+        'Jenis Kelamin',
+        'Pekerjaan',
+        'Kelurahan',
+        'Kecamatan',
+        'Kabupaten/Kota',
+        'Provinsi',
+        'Alamat Lengkap',
+        'Bulan',
+        'Tanggal Daftar',
+        'Tanggal Mulai Pengobatan',
+        'Status Pengobatan',
+        'Tipe Diagnosis',
+        'Lokasi Anatomi',
+        'Riwayat Pengobatan',
+        'Hasil TCM',
+        'Hasil Mikroskopis',
+        'Hasil Diagnosis',
+        'Hasil Akhir Pengobatan',
+        'Status HIV',
+        'Riwayat DM',
+    ];
+
+    /**
+     * Buat berkas template Excel lengkap (semua kolom) untuk diunduh pengguna.
+     * Mengembalikan path absolut berkas yang dihasilkan.
+     */
+    public function generateTemplate(): string
+    {
+        $headers = self::TEMPLATE_COLUMNS;
+
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setTitle('Template TBC');
+
+        $lastCol = Coordinate::stringFromColumnIndex(count($headers));
+
+        // Baris judul
+        $sheet->mergeCells("A1:{$lastCol}1");
+        $sheet->setCellValue('A1', 'TEMPLATE IMPORT DATA PASIEN TBC — LENGKAP SELURUH KOLOM');
+        $sheet->getStyle('A1')->getFont()->setBold(true)->setSize(12);
+        $sheet->getStyle('A1')->getFont()->getColor()->setARGB('FF991B1B');
+        $sheet->getStyle('A1')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+        $sheet->getRowDimension(1)->setRowHeight(24);
+
+        // Baris header kolom
+        foreach ($headers as $idx => $label) {
+            $coord = Coordinate::stringFromColumnIndex($idx + 1) . '2';
+            $sheet->setCellValue($coord, $label);
+        }
+
+        $sheet->getStyle("A2:{$lastCol}2")->applyFromArray([
+            'font'      => ['bold' => true, 'color' => ['argb' => 'FFFFFFFF'], 'size' => 9],
+            'fill'      => ['fillType' => Fill::FILL_SOLID, 'startColor' => ['argb' => 'FFDC2626']],
+            'alignment' => [
+                'horizontal' => Alignment::HORIZONTAL_CENTER,
+                'vertical'   => Alignment::VERTICAL_CENTER,
+                'wrapText'   => true,
+            ],
+            'borders'   => ['allBorders' => ['borderStyle' => Border::BORDER_THIN, 'color' => ['argb' => 'FFFECACA']]],
+        ]);
+        $sheet->getRowDimension(2)->setRowHeight(34);
+
+        for ($i = 1; $i <= count($headers); $i++) {
+            $sheet->getColumnDimension(Coordinate::stringFromColumnIndex($i))->setWidth(20);
+        }
+
+        $sheet->freezePane('A3');
+
+        return $this->saveTemplate($spreadsheet, 'Template_Import_TBC');
+    }
+
+    protected function saveTemplate(Spreadsheet $spreadsheet, string $baseName): string
+    {
+        $dir = storage_path('app/temp_templates');
+        if (!is_dir($dir)) {
+            mkdir($dir, 0755, true);
+        }
+
+        $path = $dir . '/' . $baseName . '_' . date('Ymd_His') . '.xlsx';
+        (new Xlsx($spreadsheet))->save($path);
+
+        return $path;
+    }
+
     /**
      * Universal Header-driven Preview for any Puskesmas Excel / CSV file
      */

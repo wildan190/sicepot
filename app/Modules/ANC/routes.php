@@ -33,6 +33,7 @@ Route::prefix('anc')->name('anc.')->group(function () {
         Route::post('/ai-parse', [DashboardController::class, 'aiParsePatient'])->name('ai.parse');
         Route::post('/import/preview', [ImportController::class, 'preview'])->name('import.preview');
         Route::post('/import/commit', [ImportController::class, 'commit'])->name('import.commit');
+        Route::get('/import/template', [ImportController::class, 'downloadTemplate'])->name('import.template');
         Route::post('/patients', [PatientController::class, 'store'])->name('patients.store');
         Route::put('/patients/{patient}', [PatientController::class, 'update'])->name('patients.update');
         Route::delete('/patients/{patient}', [PatientController::class, 'destroy'])->name('patients.destroy');

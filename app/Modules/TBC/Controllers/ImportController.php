@@ -14,6 +14,17 @@ class ImportController extends Controller
     public function __construct(protected ImportService $service) {}
 
     /**
+     * Unduh berkas template Excel lengkap (semua kolom) untuk import data TBC.
+     */
+    public function downloadTemplate()
+    {
+        $filePath = $this->service->generateTemplate();
+        $filename = 'Template_Import_TBC_' . date('Ymd_His') . '.xlsx';
+
+        return response()->download($filePath, $filename)->deleteFileAfterSend(true);
+    }
+
+    /**
      * Parse and preview an uploaded Excel/CSV file before confirmation.
      */
     public function preview(ImportPreviewRequest $request)
