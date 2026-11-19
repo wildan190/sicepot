@@ -616,6 +616,16 @@ class ImportService
             }
         }
 
+        // ── Status Kehamilan otomatis saat import ────────────────────────────
+        // Prioritas: kolom "Status Kehamilan" dari Excel. Jika kosong tetapi ada
+        // Tanggal Bersalin, otomatis tandai sebagai "Selesai Bersalin" (melahirkan).
+        $normalizedStatus = $this->normalizeStatusKehamilan($data['status_kehamilan'] ?? null);
+        if ($normalizedStatus !== null) {
+            $data['status_kehamilan'] = $normalizedStatus;
+        } elseif (!empty($data['tanggal_bersalin'])) {
+            $data['status_kehamilan'] = 'Selesai Bersalin';
+        }
+
         // Auto-calculate HPL from HPHT using rumus: tgl + 7, bulan - 3, tahun + 1
         if (!empty($data['hpht']) && empty($data['hpl'])) {
             $data['hpl'] = AncPatient::calculateHpl($data['hpht']);
@@ -702,6 +712,35 @@ class ImportService
         }
 
         return $data;
+    }
+
+    /**
+     * Normalisasi teks "Status Kehamilan" dari Excel menjadi status baku SICEPOT.
+     * - "Melahirkan", "Bersalin", "Persalinan", "Lahir" → "Selesai Bersalin"
+     * - "Hamil", "Aktif" → "Aktif"
+     * - "Belum/Tidak ...", status lain (Meninggal, Pindah) → dibiarkan apa adanya
+     */
+    protected function normalizeStatusKehamilan(?string $value): ?string
+    {
+        $raw = trim((string) $value);
+        if ($raw === '') {
+            return null;
+        }
+
+        $lower = strtolower($raw);
+
+        // Masih hamil / belum melahirkan
+        if (preg_match('/\b(belum|tidak)\b/', $lower)
+            || preg_match('/\b(hamil|aktif|pregnan|prenatal)\b/', $lower)) {
+            return 'Aktif';
+        }
+
+        // Sudah melahirkan / bersalin
+        if (preg_match('/\b(bersalin|melahirkan|persalinan|partus|lahir)\b/', $lower)) {
+            return 'Selesai Bersalin';
+        }
+
+        return $raw;
     }
 
     /**
